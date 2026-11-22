@@ -729,93 +729,105 @@ export default function LandingPage() {
       )}
 
       {/* Comprehensive Atmospheric Data Integrity & Scientific Provenance Section */}
-      <section className="bg-surface border hairline border-rule p-6 md:p-8 space-y-6 shadow-sm" aria-label="Scientific Data Integrity and Provenance">
-        <div className="flex flex-col md:flex-row md:items-end justify-between border-b hairline border-rule pb-5 gap-3">
-          <div className="space-y-1.5 max-w-3xl">
-            <div className="flex items-center gap-2 text-xs font-sans uppercase font-bold text-emerald-800 tracking-wider">
+      <section className="bg-surface border hairline border-rule p-6 md:p-8 space-y-6 shadow-sm font-sans" aria-label="Scientific Data Integrity and Provenance">
+        <div className="flex flex-col md:flex-row md:items-end justify-between border-b hairline border-rule pb-5 gap-4">
+          <div className="space-y-2 max-w-3xl">
+            <div className="flex items-center gap-2 font-mono text-2xs uppercase font-bold text-emerald-800 tracking-wider">
               <span className="w-2 h-2 rounded-full bg-emerald-600" />
               <span>Scientific Data Integrity • Spatial Resolution Benchmark</span>
             </div>
-            <h2 className="font-serif text-2xl md:text-3xl font-bold text-ink tracking-tight">
+            <h2 className="font-sans text-2xl md:text-3xl font-bold text-ink tracking-tight">
               Why Roadside Ground Monitors Differ from Regional Atmospheric Grids
             </h2>
-            <p className="text-sm md:text-base text-ink/80 font-sans leading-relaxed">
+            <p className="text-sm md:text-base text-ink-muted font-sans leading-relaxed">
               When comparing air quality platforms across Indian cities (e.g. Pune, Kolkata, or Delhi), users frequently observe apparent divergence between commercial websites and numerical atmospheric models. Here is the peer-reviewed scientific proof of how sampling volume, sensor physics, and meteorological convection operate.
             </p>
           </div>
-          <div className="px-3 py-1.5 bg-paper border border-rule text-ink font-mono text-xs font-bold self-start md:self-auto shrink-0">
-            CPCB NAQI Standard Formula: Identical
+          <div className="px-3.5 py-2 bg-paper border border-rule text-ink font-mono text-xs font-semibold self-start md:self-auto shrink-0 shadow-2xs">
+            CPCB NAQI Standard Formula: <span className="text-emerald-800 font-bold">Identical</span>
           </div>
         </div>
 
         {/* 4-Pillar Comparative Analysis Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Pillar 1: Spatial Sampling Volume */}
-          <div className="p-5 bg-paper border border-rule space-y-2.5 shadow-2xs">
-            <div className="text-xs font-sans font-bold uppercase tracking-wider text-ink/60">
-              01 • Spatial Footprint
+          <div className="p-5 bg-paper border border-rule flex flex-col justify-between space-y-3 shadow-2xs transition-all duration-150 hover:border-ink/60">
+            <div className="space-y-2.5">
+              <div className="flex items-center justify-between font-mono text-2xs uppercase font-semibold tracking-wider text-ink/60 border-b border-rule/50 pb-2">
+                <span>01 // Spatial Footprint</span>
+                <span className="text-3xs px-1.5 py-0.5 bg-surface border border-rule/60 text-ink-muted">Airshed</span>
+              </div>
+              <h3 className="font-sans text-base md:text-lg font-bold text-ink tracking-tight leading-snug">
+                Street Canyon vs. 11 km Airshed
+              </h3>
+              <p className="text-xs md:text-sm text-ink-muted leading-relaxed font-sans font-normal">
+                Roadside sensors capture vehicle tailpipes and brake friction 2 meters above asphalt. SanjhiHawa’s ECMWF CAMS model calculates the integrated ~120 km² regional boundary layer, encompassing parks, residential neighborhoods, and open terrain.
+              </p>
             </div>
-            <h3 className="font-sans text-base md:text-lg font-bold text-ink">
-              Street Canyon vs. 11 km Airshed
-            </h3>
-            <p className="text-xs md:text-sm text-ink/80 leading-relaxed font-sans">
-              Roadside sensors capture vehicle tailpipes and brake friction 2 meters above asphalt. SanjhiHawa’s ECMWF CAMS model calculates the integrated ~120 km² regional boundary layer, encompassing parks, residential neighborhoods, and open terrain.
-            </p>
           </div>
 
           {/* Pillar 2: Sensor Physics & Humidity Bias */}
-          <div className="p-5 bg-paper border border-rule space-y-2.5 shadow-2xs">
-            <div className="text-xs font-sans font-bold uppercase tracking-wider text-ink/60">
-              02 • Physical Detection
+          <div className="p-5 bg-paper border border-rule flex flex-col justify-between space-y-3 shadow-2xs transition-all duration-150 hover:border-ink/60">
+            <div className="space-y-2.5">
+              <div className="flex items-center justify-between font-mono text-2xs uppercase font-semibold tracking-wider text-ink/60 border-b border-rule/50 pb-2">
+                <span>02 // Physical Detection</span>
+                <span className="text-3xs px-1.5 py-0.5 bg-surface border border-rule/60 text-ink-muted">Sensors</span>
+              </div>
+              <h3 className="font-sans text-base md:text-lg font-bold text-ink tracking-tight leading-snug">
+                Laser Scattering vs. Multi-Satellite
+              </h3>
+              <p className="text-xs md:text-sm text-ink-muted leading-relaxed font-sans font-normal">
+                Low-cost optical counters mistake condensed water droplets during high relative humidity or morning inversions for heavy PM2.5 (hygroscopic swelling). CAMS assimilates Sentinel-5P, MODIS, and calibrated reference BAM stations under strict chemical equations.
+              </p>
             </div>
-            <h3 className="font-sans text-base md:text-lg font-bold text-ink">
-              Laser Scattering vs. Multi-Satellite
-            </h3>
-            <p className="text-xs md:text-sm text-ink/80 leading-relaxed font-sans">
-              Low-cost optical counters mistake condensed water droplets during high relative humidity or morning inversions for heavy PM2.5 (hygroscopic swelling). CAMS assimilates Sentinel-5P, MODIS, and calibrated reference BAM stations under strict chemical equations.
-            </p>
           </div>
 
           {/* Pillar 3: Mathematical Determinism */}
-          <div className="p-5 bg-paper border border-rule space-y-2.5 shadow-2xs">
-            <div className="text-xs font-sans font-bold uppercase tracking-wider text-ink/60">
-              03 • Mathematical Proof
+          <div className="p-5 bg-paper border border-rule flex flex-col justify-between space-y-3 shadow-2xs transition-all duration-150 hover:border-ink/60">
+            <div className="space-y-2.5">
+              <div className="flex items-center justify-between font-mono text-2xs uppercase font-semibold tracking-wider text-ink/60 border-b border-rule/50 pb-2">
+                <span>03 // Mathematical Proof</span>
+                <span className="text-3xs px-1.5 py-0.5 bg-surface border border-rule/60 text-ink-muted">Formula</span>
+              </div>
+              <h3 className="font-sans text-base md:text-lg font-bold text-ink tracking-tight leading-snug">
+                Zero Formula Divergence
+              </h3>
+              <p className="text-xs md:text-sm text-ink-muted leading-relaxed font-sans font-normal">
+                For a roadside reading of 98 µg/m³, CPCB piecewise interpolation produces AQI 223. For a regional reading of 29 µg/m³, it produces AQI 49. The mathematical engine is 100% identical; only the physical volume being measured differs.
+              </p>
             </div>
-            <h3 className="font-sans text-base md:text-lg font-bold text-ink">
-              Zero Formula Divergence
-            </h3>
-            <p className="text-xs md:text-sm text-ink/80 leading-relaxed font-sans">
-              For a roadside reading of 98 µg/m³, CPCB piecewise interpolation produces AQI 223. For a regional reading of 29 µg/m³, it produces AQI 49. The mathematical engine is 100% identical; only the physical volume being measured differs.
-            </p>
           </div>
 
           {/* Pillar 4: Public Science vs Hardware Sales */}
-          <div className="p-5 bg-paper border border-rule space-y-2.5 shadow-2xs">
-            <div className="text-xs font-sans font-bold uppercase tracking-wider text-ink/60">
-              04 • Scientific Objectivity
+          <div className="p-5 bg-paper border border-rule flex flex-col justify-between space-y-3 shadow-2xs transition-all duration-150 hover:border-ink/60">
+            <div className="space-y-2.5">
+              <div className="flex items-center justify-between font-mono text-2xs uppercase font-semibold tracking-wider text-ink/60 border-b border-rule/50 pb-2">
+                <span>04 // Scientific Objectivity</span>
+                <span className="text-3xs px-1.5 py-0.5 bg-surface border border-rule/60 text-ink-muted">Governance</span>
+              </div>
+              <h3 className="font-sans text-base md:text-lg font-bold text-ink tracking-tight leading-snug">
+                Public Health vs. Commercial Purifiers
+              </h3>
+              <p className="text-xs md:text-sm text-ink-muted leading-relaxed font-sans font-normal">
+                Commercial platforms are frequently operated by air purifier manufacturers who benefit from displaying localized maximum readings. CAMS is managed by the European Union Earth Observation Programme with zero commercial hardware interest.
+              </p>
             </div>
-            <h3 className="font-sans text-base md:text-lg font-bold text-ink">
-              Public Health vs. Commercial Purifiers
-            </h3>
-            <p className="text-xs md:text-sm text-ink/80 leading-relaxed font-sans">
-              Commercial platforms are frequently operated by air purifier manufacturers who benefit from displaying localized maximum readings. CAMS is managed by the European Union Earth Observation Programme with zero commercial hardware interest.
-            </p>
           </div>
         </div>
 
         {/* Institutional Summary Callout */}
-        <div className="p-4 bg-paper/60 border border-rule flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-xs font-sans text-ink/80">
+        <div className="p-4 bg-paper/70 border border-rule flex flex-col md:flex-row items-start md:items-center justify-between gap-4 font-sans text-xs">
           <div className="space-y-1">
             <strong className="text-ink font-bold block text-sm">
               How SanjhiHawa Applies This in Practice
             </strong>
-            <p className="leading-relaxed">
+            <p className="text-ink-muted leading-relaxed">
               Use regional atmospheric models for household exposure budgeting, daily routine timing, and residential purifier sizing. Use roadside ground monitors when walking directly alongside arterial highways or active construction corridors.
             </p>
           </div>
           <Link
             href="/how-saans-works"
-            className="px-4 py-2.5 bg-ink text-paper font-semibold hover:opacity-90 transition-opacity whitespace-nowrap self-stretch md:self-auto text-center"
+            className="px-4 py-2 bg-ink text-paper font-sans text-xs font-semibold uppercase tracking-wider hover:opacity-90 transition-opacity whitespace-nowrap self-stretch md:self-auto text-center"
           >
             Review Scientific Formulations →
           </Link>
