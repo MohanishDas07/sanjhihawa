@@ -1,0 +1,26 @@
+{
+  "name": "sanjhihawa-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "National Atmospheric Intelligence & Exposure Decision Platform",
+  "scripts": {
+    "test": "npm --prefix apps/web test",
+    "test:unit": "npm --prefix apps/web test",
+    "test:e2e": "npm --prefix apps/web run test:e2e",
+    "test:python": "python tests/test_all.py",
+    "test:all": "npm --prefix apps/web test && python tests/test_all.py",
+    "build": "npm --prefix apps/web run build",
+    "dev": "npm --prefix apps/web run dev",
+    "lint": "python -m ruff check apps/api tests && npx --prefix apps/web tsc -p apps/web/tsconfig.json --noEmit"
+  },
+  "keywords": [
+    "air-quality",
+    "aqi",
+    "cpcb",
+    "inversion",
+    "pm25",
+    "health"
+  ],
+  "author": "SanjhiHawa Team",
+  "license": "Apache-2.0"
+}

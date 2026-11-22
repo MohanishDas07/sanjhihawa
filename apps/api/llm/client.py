@@ -173,7 +173,7 @@ class LLMService:
                 "LLM_BASE_URL", "https://api.openai.com/v1"
             ).rstrip("/")
             self.model = os.environ.get("LLM_MODEL", "gpt-4o-mini")
-            
+
         self.mock_llm = MockLLM()
 
     def stream_chat_sync(

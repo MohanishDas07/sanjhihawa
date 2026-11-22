@@ -6,15 +6,15 @@ Provides deterministic air quality, exposure calculation, and simulation endpoin
 import logging
 import os
 import sys
+
 from dotenv import load_dotenv
-
-# Load environment variables from .env file if present
-load_dotenv()
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from retrieval.index import get_retrieval_index
 from routers import air, chat, community, geocode, health, plan, simulate
+
+# Load environment variables from .env file if present
+load_dotenv()
 
 # Structured Logging - Strict Rule: NO personal health data in logs
 logging.basicConfig(
@@ -66,7 +66,36 @@ class SecurityHeadersMiddleware:
         await self.app(scope, receive, send_wrapper)
 
 
+# Request Body Size Limiter ASGI Middleware (clamps incoming JSON to max 64 KB to prevent payload flooding)
+class RequestBodyLimitMiddleware:
+    def __init__(self, app, max_bytes: int = 65536):
+        self.app = app
+        self.max_bytes = max_bytes
+
+    async def __call__(self, scope, receive, send):
+        if scope["type"] == "http":
+            headers = dict(scope.get("headers", []))
+            content_length = headers.get(b"content-length")
+            if content_length:
+                try:
+                    if int(content_length) > self.max_bytes:
+                        await send({
+                            "type": "http.response.start",
+                            "status": 413,
+                            "headers": [(b"content-type", b"application/json")],
+                        })
+                        await send({
+                            "type": "http.response.body",
+                            "body": b'{"detail": "Request entity too large (max 64 KB)."}',
+                        })
+                        return
+                except ValueError:
+                    pass
+        await self.app(scope, receive, send)
+
+
 app.add_middleware(SecurityHeadersMiddleware)
+app.add_middleware(RequestBodyLimitMiddleware)
 
 # Strict CORS Allowlist (Read from environment for containerized & hosted deployments)
 raw_origins = os.environ.get(

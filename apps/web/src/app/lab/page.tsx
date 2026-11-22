@@ -527,6 +527,8 @@ export default function HomeAirLabPage() {
                 <div key={m.id} className="bg-surface border hairline border-rule">
                   <button
                     onClick={() => setExpandedMyth(isOpen ? null : m.id)}
+                    aria-expanded={isOpen}
+                    aria-controls={`myth-content-${m.id}`}
                     className="w-full text-left p-5 flex items-center justify-between hover:bg-paper/50 transition-colors"
                   >
                     <div>
@@ -543,7 +545,7 @@ export default function HomeAirLabPage() {
                   </button>
 
                   {isOpen && (
-                    <div className="p-5 pt-0 border-t hairline border-rule/50 bg-paper/30 space-y-3 text-sm md:text-base">
+                    <div id={`myth-content-${m.id}`} className="p-5 pt-0 border-t hairline border-rule/50 bg-paper/30 space-y-3 text-sm md:text-base">
                       <p className="leading-relaxed text-ink font-normal">
                         {lang === "hi" ? m.explanationHi : m.explanationEn}
                       </p>

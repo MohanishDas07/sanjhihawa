@@ -183,9 +183,11 @@ export default function SimulatePage() {
                 >
                   <div className="flex items-start space-x-3">
                     <input
+                      id={`intervention-${opt.id}`}
                       type="checkbox"
                       checked={active}
                       onChange={() => {}} // handled by parent div
+                      aria-label={opt.name}
                       className="mt-1 h-4 w-4 rounded border-rule text-ink focus:ring-ink"
                     />
                     <div className="flex-1 space-y-1">
@@ -210,18 +212,23 @@ export default function SimulatePage() {
           {/* Community Scale Slider */}
           <div className="p-4 bg-surface border border-rule space-y-2 mt-4">
             <div className="flex justify-between items-center text-xs font-mono">
-              <span className="font-bold text-ink">{t("simulate.community_slider")}</span>
+              <label htmlFor="community-scale-slider" className="font-bold text-ink">{t("simulate.community_slider")}</label>
               <span className="px-2 py-0.5 bg-paper border border-rule font-bold text-ink">
                 {communityCount} {lang === "hi" ? "परिवार" : lang === "mr" ? "कुटुंबे" : "households"}
               </span>
             </div>
             <input
+              id="community-scale-slider"
               type="range"
               min="1"
               max="1000"
               step="10"
               value={communityCount}
               onChange={(e) => setCommunityCount(parseInt(e.target.value) || 1)}
+              aria-label="Community scale household count"
+              aria-valuemin={1}
+              aria-valuemax={1000}
+              aria-valuenow={communityCount}
               className="w-full accent-ink cursor-pointer"
             />
             <div className="flex justify-between text-2xs font-mono text-ink-muted">

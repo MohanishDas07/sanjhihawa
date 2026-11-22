@@ -346,6 +346,7 @@ export default function OnboardingPage() {
                     onChange={(e) => handleMemberChange(idx, "label", e.target.value)}
                     className="font-semibold text-ink bg-transparent border-b border-rule focus:border-ink focus:outline-none w-full"
                     placeholder="Name / Label"
+                    aria-label={`Member ${idx + 1} name or role`}
                   />
                   <div className="flex items-center space-x-3 text-xs text-ink-muted">
                     <label>
@@ -354,6 +355,7 @@ export default function OnboardingPage() {
                         value={member.age_band}
                         onChange={(e) => handleMemberChange(idx, "age_band", e.target.value)}
                         className="ml-1 font-mono text-xs p-1 bg-surface border border-rule"
+                        aria-label={`Age band for ${member.label || `Member ${idx + 1}`}`}
                       >
                         <option value="infant">Infant (0-2 yr)</option>
                         <option value="child">Child (3-14 yr)</option>
@@ -370,6 +372,7 @@ export default function OnboardingPage() {
                       type="checkbox"
                       checked={member.is_breathing_sensitive}
                       onChange={(e) => handleMemberChange(idx, "is_breathing_sensitive", e.target.checked)}
+                      aria-label={`Breathing Sensitive for ${member.label || `Member ${idx + 1}`}`}
                       className="rounded border-rule text-ink focus:ring-ink"
                     />
                     <span className="font-medium text-red-900 bg-red-100 px-1.5 py-0.5 rounded">
@@ -382,6 +385,7 @@ export default function OnboardingPage() {
                       type="checkbox"
                       checked={!!member.is_outdoor_worker}
                       onChange={(e) => handleMemberChange(idx, "is_outdoor_worker", e.target.checked)}
+                      aria-label={`Outdoor Worker for ${member.label || `Member ${idx + 1}`}`}
                       className="rounded border-rule text-ink focus:ring-ink"
                     />
                     <span className="text-ink-muted">
@@ -502,8 +506,9 @@ export default function OnboardingPage() {
               Current Air Purifier Status
             </label>
             <div className="flex items-center space-x-6">
-              <label className="flex items-center space-x-2 text-sm cursor-pointer">
+              <label htmlFor="has-purifier-yes" className="flex items-center space-x-2 text-sm cursor-pointer">
                 <input
+                  id="has-purifier-yes"
                   type="radio"
                   name="has_purifier"
                   checked={profile.has_purifier}
@@ -512,8 +517,9 @@ export default function OnboardingPage() {
                 />
                 <span>Yes, have an air purifier</span>
               </label>
-              <label className="flex items-center space-x-2 text-sm cursor-pointer">
+              <label htmlFor="has-purifier-no" className="flex items-center space-x-2 text-sm cursor-pointer">
                 <input
+                  id="has-purifier-no"
                   type="radio"
                   name="has_purifier"
                   checked={!profile.has_purifier}

@@ -500,6 +500,8 @@ export default function LandingPage() {
               <button
                 type="button"
                 onClick={() => setShowResolutionDetail(!showResolutionDetail)}
+                aria-expanded={showResolutionDetail}
+                aria-controls="spatial-scale-explanation"
                 className="text-xs font-sans font-bold text-emerald-800 hover:text-emerald-950 underline underline-offset-2 text-left sm:text-right inline-flex items-center gap-1"
               >
                 <span>{showResolutionDetail ? t("landing.audit_collapse") : t("landing.audit_expand")}</span>
@@ -507,7 +509,7 @@ export default function LandingPage() {
             </div>
 
             {showResolutionDetail && (
-              <div className="pt-2 border-t hairline border-rule/60 grid grid-cols-1 md:grid-cols-2 gap-4 text-xs leading-relaxed text-ink/80 animate-fadeIn">
+              <div id="spatial-scale-explanation" className="pt-2 border-t hairline border-rule/60 grid grid-cols-1 md:grid-cols-2 gap-4 text-xs leading-relaxed text-ink/80 animate-fadeIn">
                 <div className="p-3.5 bg-surface border border-rule space-y-1.5">
                   <div className="flex items-center justify-between font-bold text-ink uppercase tracking-wider text-2xs text-amber-900">
                     <span>1. Commercial Roadside Sensors (e.g. aqi.in)</span>

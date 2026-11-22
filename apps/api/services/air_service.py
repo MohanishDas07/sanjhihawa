@@ -88,6 +88,9 @@ def get_db_connection() -> sqlite3.Connection:
 
 _conn = get_db_connection()
 
+# In-memory fast cache (300-second TTL) for sub-millisecond repetitive coordinate evaluation
+_mem_air_cache: dict[tuple[float, float], tuple[float, AirQualityResponse]] = {}
+
 
 def round_coords(lat: float, lon: float) -> tuple[float, float]:
     """Rounds coordinates to approximately 0.1 degree (~11 km) for cache collapsing."""
@@ -636,10 +639,17 @@ def get_air_quality_sync(
     is_offline = os.environ.get("SAANS_OFFLINE") == "1"
     is_testing = os.environ.get("SAANS_TESTING") == "1"
     r_lat, r_lon = round_coords(latitude, longitude)
-    now_ts = int(time.time())
 
+    now = time.time()
     # Check cache unless forced fallback or offline/testing mode
     if not force_fallback and not is_offline and not is_testing:
+        if (r_lat, r_lon) in _mem_air_cache:
+            cached_time, cached_resp = _mem_air_cache[(r_lat, r_lon)]
+            if now - cached_time < 300.0:
+                if city_name:
+                    cached_resp.city = city_name
+                return cached_resp
+
         cursor = _conn.cursor()
         cursor.execute(
             "SELECT cached_at, payload FROM air_cache WHERE lat_rounded = ? AND lon_rounded = ?",
@@ -650,7 +660,9 @@ def get_air_quality_sync(
             data = json.loads(row[1])
             if city_name:
                 data["city"] = city_name
-            return AirQualityResponse(**data)
+            resp = AirQualityResponse(**data)
+            _mem_air_cache[(r_lat, r_lon)] = (now, resp)
+            return resp
 
     fixture, nearest_city, distance_km = find_closest_fixture(latitude, longitude)
     if distance_km > 150.0 and not force_fallback:

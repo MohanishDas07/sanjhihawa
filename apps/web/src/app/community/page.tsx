@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { CommunityAdvisoryResponse } from "@/types/api";
 import { POPULAR_INDIAN_CITIES } from "@/lib/cities";
 import { fetchCommunityAdvisory } from "@/lib/api";
-import { useTranslation, translateCity } from "@/lib/i18n";
+import { useTranslation, translateCity, Language } from "@/lib/i18n";
 
 export default function CommunityPage() {
   const { t, lang, setLanguage } = useTranslation();
@@ -30,10 +30,11 @@ export default function CommunityPage() {
         language: lang,
       });
       setAdvisory(data);
-    } catch (err: any) {
+    } catch (err: unknown) {
       setAdvisory(null);
+      const msg = err instanceof Error ? err.message : String(err);
       setErrorMessage(
-        err?.message || `No live air quality readings available for ${city}. An advisory bulletin cannot be generated without verified data.`
+        msg || `No live air quality readings available for ${city}. An advisory bulletin cannot be generated without verified data.`
       );
     } finally {
       setLoading(false);
@@ -74,8 +75,9 @@ export default function CommunityPage() {
       {/* Control Panel (Hidden during Print) */}
       <div className="no-print p-5 bg-surface border border-rule grid grid-cols-1 sm:grid-cols-4 gap-4 text-xs font-mono">
         <div>
-          <label className="block text-ink-muted mb-1 font-bold">{t("community.org_label")}</label>
+          <label htmlFor="community-org-input" className="block text-ink-muted mb-1 font-bold">{t("community.org_label")}</label>
           <input
+            id="community-org-input"
             type="text"
             value={orgName}
             onChange={(e) => setOrgName(e.target.value)}
@@ -84,10 +86,11 @@ export default function CommunityPage() {
         </div>
 
         <div>
-          <label className="block text-ink-muted mb-1 font-bold">Type:</label>
+          <label htmlFor="community-type-select" className="block text-ink-muted mb-1 font-bold">Type:</label>
           <select
+            id="community-type-select"
             value={orgType}
-            onChange={(e) => setOrgType(e.target.value as any)}
+            onChange={(e) => setOrgType(e.target.value as "rwa" | "school" | "community")}
             className="w-full p-2 border border-rule bg-paper text-ink"
           >
             <option value="rwa">RWA / Apartment Complex</option>
@@ -97,8 +100,9 @@ export default function CommunityPage() {
         </div>
 
         <div>
-          <label className="block text-ink-muted mb-1 font-bold">City / Location:</label>
+          <label htmlFor="community-city-select" className="block text-ink-muted mb-1 font-bold">City / Location:</label>
           <select
+            id="community-city-select"
             value={city}
             onChange={(e) => {
               const selected = POPULAR_INDIAN_CITIES.find((c) => c.name === e.target.value);
@@ -121,10 +125,11 @@ export default function CommunityPage() {
         </div>
 
         <div>
-          <label className="block text-ink-muted mb-1 font-bold">Language:</label>
+          <label htmlFor="community-lang-select" className="block text-ink-muted mb-1 font-bold">Language:</label>
           <select
+            id="community-lang-select"
             value={lang}
-            onChange={(e) => setLanguage(e.target.value as any)}
+            onChange={(e) => setLanguage(e.target.value as Language)}
             className="w-full p-2 border border-rule bg-paper text-ink font-sans"
           >
             <option value="en">English</option>
