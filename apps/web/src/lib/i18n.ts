@@ -51,7 +51,11 @@ export function useTranslation() {
     };
 
     window.addEventListener("saans_lang_changed", onLangChange);
-    return () => window.removeEventListener("saans_lang_changed", onLangChange);
+    window.addEventListener("storage", onLangChange);
+    return () => {
+      window.removeEventListener("saans_lang_changed", onLangChange);
+      window.removeEventListener("storage", onLangChange);
+    };
   }, []);
 
   const setLanguage = (newLang: Language) => {

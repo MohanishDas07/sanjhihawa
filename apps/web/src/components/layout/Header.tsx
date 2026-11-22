@@ -3,17 +3,15 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslation, Language } from "@/lib/i18n";
 
 export const Header: React.FC = () => {
   const pathname = usePathname();
-  const [lang, setLang] = useState<"en" | "hi" | "mr">("en");
+  const { lang, setLanguage } = useTranslation();
   const [elderMode, setElderMode] = useState<boolean>(false);
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    const savedLang = localStorage.getItem("saans_lang") as "en" | "hi" | "mr";
-    if (savedLang) setLang(savedLang);
-
     const savedElder = localStorage.getItem("saans_elder_mode") === "1";
     if (savedElder) {
       setElderMode(true);
@@ -21,11 +19,8 @@ export const Header: React.FC = () => {
     }
   }, []);
 
-  const handleLangChange = (newLang: "en" | "hi" | "mr") => {
-    setLang(newLang);
-    localStorage.setItem("saans_lang", newLang);
-    document.documentElement.lang = newLang;
-    window.dispatchEvent(new Event("saans_lang_changed"));
+  const handleLangChange = (newLang: Language) => {
+    setLanguage(newLang);
   };
 
   const toggleElderMode = () => {
@@ -80,26 +75,32 @@ export const Header: React.FC = () => {
           </button>
 
           {/* Language Switcher */}
-          <div className="flex items-center border border-rule bg-surface overflow-hidden">
+          <div className="flex items-center border border-rule bg-surface overflow-hidden" role="group" aria-label="Language selection">
             <button
+              type="button"
               onClick={() => handleLangChange("en")}
-              className={`px-2.5 py-1 text-xs md:text-sm font-medium ${
+              aria-pressed={lang === "en"}
+              className={`px-2.5 py-1 text-xs md:text-sm font-medium transition-colors ${
                 lang === "en" ? "bg-ink text-paper font-bold" : "hover:bg-paper text-ink"
               }`}
             >
               EN
             </button>
             <button
+              type="button"
               onClick={() => handleLangChange("hi")}
-              className={`px-2.5 py-1 text-xs md:text-sm font-devanagari ${
+              aria-pressed={lang === "hi"}
+              className={`px-2.5 py-1 text-xs md:text-sm font-devanagari transition-colors ${
                 lang === "hi" ? "bg-ink text-paper font-bold" : "hover:bg-paper text-ink"
               }`}
             >
               हिन्दी
             </button>
             <button
+              type="button"
               onClick={() => handleLangChange("mr")}
-              className={`px-2.5 py-1 text-xs md:text-sm font-devanagari ${
+              aria-pressed={lang === "mr"}
+              className={`px-2.5 py-1 text-xs md:text-sm font-devanagari transition-colors ${
                 lang === "mr" ? "bg-ink text-paper font-bold" : "hover:bg-paper text-ink"
               }`}
             >
