@@ -14,7 +14,7 @@ export default function HowSaansWorksPage() {
         <span className="font-mono text-xs uppercase tracking-wider text-ink-muted font-bold">
           {lang === "hi" ? "वैज्ञानिक एवं वास्तुकला खुलापन" : lang === "mr" ? "वैज्ञानिक व वास्तुशास्त्रीय पारदर्शकता" : "Scientific & Architectural Openness"}
         </span>
-        <h1 className="font-sans text-3xl md:text-5xl font-extrabold text-ink mt-1 tracking-tight">
+        <h1 className="font-serif text-3xl md:text-5xl font-bold text-ink mt-1">
           {t("how_it_works.title")}
         </h1>
         <p className="text-base md:text-lg text-ink-muted mt-2 max-w-2xl leading-relaxed">
@@ -27,7 +27,7 @@ export default function HowSaansWorksPage() {
         <span className="font-mono text-xs uppercase font-bold tracking-wider text-ink block">
           {lang === "hi" ? "प्रमुख नियम #1" : lang === "mr" ? "प्रमुख नियम #1" : "Cardinal Rule #1"}
         </span>
-        <h2 className="font-sans text-2xl md:text-3xl font-bold text-ink tracking-tight">
+        <h2 className="font-serif text-2xl md:text-3xl font-bold text-ink tracking-tight">
           {t("how_it_works.rule1_title")}
         </h2>
         <p className="text-sm md:text-base text-ink/80 leading-relaxed">
@@ -37,7 +37,7 @@ export default function HowSaansWorksPage() {
 
       {/* Section 1: Physical & Epidemiological Formulas */}
       <section className="space-y-6">
-        <h2 className="font-sans text-2xl font-bold text-ink border-b hairline border-rule pb-2 tracking-tight">
+        <h2 className="font-serif text-2xl font-bold text-ink border-b hairline border-rule pb-2">
           Mathematical & Physical Formulations
         </h2>
 

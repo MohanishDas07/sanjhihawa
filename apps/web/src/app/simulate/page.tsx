@@ -131,7 +131,7 @@ export default function SimulatePage() {
           <span className="font-mono text-xs uppercase tracking-wider text-ink-muted font-bold">
             Dual-Lens Impact Modeling • {translateCity(profile?.city_name || "Delhi", lang)}
           </span>
-          <h1 className="font-sans text-3xl md:text-4xl font-extrabold text-ink mt-1 tracking-tight">
+          <h1 className="font-serif text-3xl md:text-4xl font-bold text-ink mt-1">
             {t("simulate.title")}
           </h1>
           <p className="text-sm md:text-base text-ink-muted mt-1 max-w-2xl leading-relaxed">

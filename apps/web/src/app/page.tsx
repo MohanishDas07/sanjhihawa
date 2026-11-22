@@ -235,7 +235,7 @@ export default function LandingPage() {
               {/* City Title + Regional Corridor Pills + Search */}
               <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                 <div className="flex flex-wrap items-center gap-3">
-                  <h1 className="font-sans text-4xl md:text-6xl font-extrabold tracking-tight text-ink">
+                  <h1 className="font-serif text-4xl md:text-6xl font-bold tracking-tight text-ink">
                     {translateCity(city, lang)}
                   </h1>
 
@@ -583,7 +583,7 @@ export default function LandingPage() {
               <div className="flex items-center space-x-2 text-xs font-sans font-bold uppercase tracking-widest text-ink/60">
                 <span>{t("landing.inversion_eyebrow")}</span>
               </div>
-              <h2 className="font-sans text-2xl md:text-3xl font-bold text-ink mt-1 tracking-tight">
+              <h2 className="font-serif text-2xl md:text-3xl font-bold text-ink mt-1 tracking-tight">
                 {lang === "hi"
                   ? `${translateCity(city, lang)} ${t("landing.inversion_title")}`
                   : lang === "mr"
@@ -733,21 +733,21 @@ export default function LandingPage() {
       )}
 
       {/* Comprehensive Atmospheric Data Integrity & Scientific Provenance Section */}
-      <section className="bg-surface border hairline border-rule p-6 md:p-8 space-y-6 shadow-sm font-sans" aria-label="Scientific Data Integrity and Provenance">
-        <div className="flex flex-col md:flex-row md:items-end justify-between border-b hairline border-rule pb-5 gap-4">
-          <div className="space-y-2 max-w-3xl">
-            <div className="flex items-center gap-2 font-mono text-2xs uppercase font-bold text-emerald-800 tracking-wider">
+      <section className="bg-surface border hairline border-rule p-6 md:p-8 space-y-6 shadow-sm" aria-label="Scientific Data Integrity and Provenance">
+        <div className="flex flex-col md:flex-row md:items-end justify-between border-b hairline border-rule pb-5 gap-3">
+          <div className="space-y-1.5 max-w-3xl">
+            <div className="flex items-center gap-2 text-xs font-sans uppercase font-bold text-emerald-800 tracking-wider">
               <span className="w-2 h-2 rounded-full bg-emerald-600" />
               <span>{t("landing.provenance_eyebrow")}</span>
             </div>
-            <h2 className="font-sans text-2xl md:text-3xl font-bold text-ink tracking-tight">
+            <h2 className="font-serif text-2xl md:text-3xl font-bold text-ink tracking-tight">
               {t("landing.provenance_title")}
             </h2>
-            <p className="text-sm md:text-base text-ink-muted font-sans leading-relaxed">
+            <p className="text-sm md:text-base text-ink/80 font-sans leading-relaxed">
               {t("landing.provenance_desc")}
             </p>
           </div>
-          <div className="px-3.5 py-2 bg-paper border border-rule text-ink font-mono text-xs font-semibold self-start md:self-auto shrink-0 shadow-2xs">
+          <div className="px-3 py-1.5 bg-paper border border-rule text-ink font-mono text-xs font-bold self-start md:self-auto shrink-0">
             {t("landing.formula_identical")}
           </div>
         </div>
@@ -755,83 +755,71 @@ export default function LandingPage() {
         {/* 4-Pillar Comparative Analysis Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Pillar 1: Spatial Sampling Volume */}
-          <div className="p-6 bg-paper border border-rule flex flex-col justify-between space-y-4 shadow-2xs transition-all duration-150 hover:border-ink">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between font-sans text-xs md:text-sm uppercase font-bold tracking-wider text-ink/75 border-b border-rule/50 pb-2">
-                <span>{t("landing.p1_idx")}</span>
-                <span className="text-xs px-2 py-0.5 bg-surface border border-rule/60 text-ink font-bold">{t("landing.p1_tag")}</span>
-              </div>
-              <h3 className="font-sans text-lg md:text-xl font-extrabold text-ink tracking-tight leading-snug">
-                {t("landing.p1_title")}
-              </h3>
-              <p className="text-sm md:text-base text-ink leading-relaxed font-sans font-normal">
-                {t("landing.p1_desc")}
-              </p>
+          <div className="p-5 bg-paper border border-rule space-y-2.5 shadow-2xs">
+            <div className="text-xs font-sans font-bold uppercase tracking-wider text-ink/60">
+              {t("landing.p1_idx")}
             </div>
+            <h3 className="font-sans text-base md:text-lg font-bold text-ink">
+              {t("landing.p1_title")}
+            </h3>
+            <p className="text-xs md:text-sm text-ink/80 leading-relaxed font-sans">
+              {t("landing.p1_desc")}
+            </p>
           </div>
 
           {/* Pillar 2: Sensor Physics & Humidity Bias */}
-          <div className="p-6 bg-paper border border-rule flex flex-col justify-between space-y-4 shadow-2xs transition-all duration-150 hover:border-ink">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between font-sans text-xs md:text-sm uppercase font-bold tracking-wider text-ink/75 border-b border-rule/50 pb-2">
-                <span>{t("landing.p2_idx")}</span>
-                <span className="text-xs px-2 py-0.5 bg-surface border border-rule/60 text-ink font-bold">{t("landing.p2_tag")}</span>
-              </div>
-              <h3 className="font-sans text-lg md:text-xl font-extrabold text-ink tracking-tight leading-snug">
-                {t("landing.p2_title")}
-              </h3>
-              <p className="text-sm md:text-base text-ink leading-relaxed font-sans font-normal">
-                {t("landing.p2_desc")}
-              </p>
+          <div className="p-5 bg-paper border border-rule space-y-2.5 shadow-2xs">
+            <div className="text-xs font-sans font-bold uppercase tracking-wider text-ink/60">
+              {t("landing.p2_idx")}
             </div>
+            <h3 className="font-sans text-base md:text-lg font-bold text-ink">
+              {t("landing.p2_title")}
+            </h3>
+            <p className="text-xs md:text-sm text-ink/80 leading-relaxed font-sans">
+              {t("landing.p2_desc")}
+            </p>
           </div>
 
           {/* Pillar 3: Mathematical Determinism */}
-          <div className="p-6 bg-paper border border-rule flex flex-col justify-between space-y-4 shadow-2xs transition-all duration-150 hover:border-ink">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between font-sans text-xs md:text-sm uppercase font-bold tracking-wider text-ink/75 border-b border-rule/50 pb-2">
-                <span>{t("landing.p3_idx")}</span>
-                <span className="text-xs px-2 py-0.5 bg-surface border border-rule/60 text-ink font-bold">{t("landing.p3_tag")}</span>
-              </div>
-              <h3 className="font-sans text-lg md:text-xl font-extrabold text-ink tracking-tight leading-snug">
-                {t("landing.p3_title")}
-              </h3>
-              <p className="text-sm md:text-base text-ink leading-relaxed font-sans font-normal">
-                {t("landing.p3_desc")}
-              </p>
+          <div className="p-5 bg-paper border border-rule space-y-2.5 shadow-2xs">
+            <div className="text-xs font-sans font-bold uppercase tracking-wider text-ink/60">
+              {t("landing.p3_idx")}
             </div>
+            <h3 className="font-sans text-base md:text-lg font-bold text-ink">
+              {t("landing.p3_title")}
+            </h3>
+            <p className="text-xs md:text-sm text-ink/80 leading-relaxed font-sans">
+              {t("landing.p3_desc")}
+            </p>
           </div>
 
           {/* Pillar 4: Public Science vs Hardware Sales */}
-          <div className="p-6 bg-paper border border-rule flex flex-col justify-between space-y-4 shadow-2xs transition-all duration-150 hover:border-ink">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between font-sans text-xs md:text-sm uppercase font-bold tracking-wider text-ink/75 border-b border-rule/50 pb-2">
-                <span>{t("landing.p4_idx")}</span>
-                <span className="text-xs px-2 py-0.5 bg-surface border border-rule/60 text-ink font-bold">{t("landing.p4_tag")}</span>
-              </div>
-              <h3 className="font-sans text-lg md:text-xl font-extrabold text-ink tracking-tight leading-snug">
-                {t("landing.p4_title")}
-              </h3>
-              <p className="text-sm md:text-base text-ink leading-relaxed font-sans font-normal">
-                {t("landing.p4_desc")}
-              </p>
+          <div className="p-5 bg-paper border border-rule space-y-2.5 shadow-2xs">
+            <div className="text-xs font-sans font-bold uppercase tracking-wider text-ink/60">
+              {t("landing.p4_idx")}
             </div>
+            <h3 className="font-sans text-base md:text-lg font-bold text-ink">
+              {t("landing.p4_title")}
+            </h3>
+            <p className="text-xs md:text-sm text-ink/80 leading-relaxed font-sans">
+              {t("landing.p4_desc")}
+            </p>
           </div>
         </div>
 
         {/* Institutional Summary Callout */}
-        <div className="p-4 bg-paper/70 border border-rule flex flex-col md:flex-row items-start md:items-center justify-between gap-4 font-sans text-xs">
+        <div className="p-4 bg-paper/60 border border-rule flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-xs font-sans text-ink/80">
           <div className="space-y-1">
             <strong className="text-ink font-bold block text-sm">
               {t("landing.applies_title")}
             </strong>
-            <p className="text-ink-muted leading-relaxed">
+            <p className="leading-relaxed">
               {t("landing.applies_desc")}
             </p>
           </div>
           <Link
             href="/how-saans-works"
-            className="px-4 py-2 bg-ink text-paper font-sans text-xs font-semibold uppercase tracking-wider hover:opacity-90 transition-opacity whitespace-nowrap self-stretch md:self-auto text-center"
+            className="px-4 py-2.5 bg-ink text-paper font-semibold hover:opacity-90 transition-opacity whitespace-nowrap self-stretch md:self-auto text-center"
           >
             {t("landing.btn_review_formulas")}
           </Link>
@@ -967,7 +955,7 @@ export default function LandingPage() {
             <span className="font-sans text-xs uppercase tracking-widest text-ink/60 font-bold block mb-1">
               {t("landing.photos_eyebrow")}
             </span>
-            <h2 className="font-sans text-2xl md:text-3xl font-bold text-ink tracking-tight">
+            <h2 className="font-serif text-2xl md:text-3xl font-bold text-ink tracking-tight">
               {t("landing.photos_title")}
             </h2>
           </div>
@@ -1256,7 +1244,7 @@ export default function LandingPage() {
             <span className="font-sans text-xs uppercase tracking-widest text-ink/60 font-bold block mb-1">
               {t("landing.rigor_eyebrow")}
             </span>
-            <h2 className="font-sans text-2xl md:text-3xl font-bold text-ink tracking-tight">
+            <h2 className="font-serif text-2xl md:text-3xl font-bold text-ink tracking-tight">
               {t("landing.rigor_title")}
             </h2>
           </div>

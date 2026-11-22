@@ -100,7 +100,7 @@ export default function HomeAirLabPage() {
         <span className="font-mono text-xs uppercase tracking-wider text-ink-muted font-bold">
           {t("lab.eyebrow")}
         </span>
-        <h1 className="font-sans text-3xl sm:text-4xl font-extrabold mt-1 text-ink tracking-tight">
+        <h1 className="font-serif text-3xl sm:text-4xl font-bold mt-1 text-ink">
           {t("lab.title")}
         </h1>
         <p className="text-sm md:text-base text-ink-muted mt-1 max-w-3xl leading-relaxed">
@@ -115,7 +115,7 @@ export default function HomeAirLabPage() {
             <span className="font-mono text-xs uppercase tracking-wider text-ink-muted font-bold">
               {t("lab.cadr_eyebrow")}
             </span>
-            <h2 className="font-sans text-2xl md:text-3xl font-bold mt-0.5 text-ink tracking-tight">
+            <h2 className="font-serif text-2xl md:text-3xl font-bold mt-0.5 text-ink">
               {t("lab.cadr_title")}
             </h2>
           </div>
@@ -264,7 +264,7 @@ export default function HomeAirLabPage() {
             <span className="font-sans text-xs md:text-sm uppercase tracking-wider text-ink/70 font-bold block">
               PHYSICAL ENVELOPE MANAGEMENT
             </span>
-            <h2 className="font-sans text-2xl md:text-3xl font-extrabold mt-0.5 tracking-tight text-ink">
+            <h2 className="font-serif text-2xl md:text-3xl font-bold mt-0.5 text-ink">
               Room-by-Room Smog Defenses
             </h2>
           </div>
@@ -417,7 +417,7 @@ export default function HomeAirLabPage() {
             <span className="font-sans text-xs md:text-sm uppercase tracking-wider text-ink/70 font-bold block">
               {t("lab.diy_eyebrow")}
             </span>
-            <h2 className="font-sans text-2xl md:text-3xl font-extrabold mt-0.5 tracking-tight text-ink">
+            <h2 className="font-serif text-2xl md:text-3xl font-bold mt-0.5 text-ink">
               {t("lab.diy_title")}
             </h2>
             <p className="text-sm md:text-base text-ink mt-1.5 max-w-3xl leading-relaxed">
@@ -507,7 +507,7 @@ export default function HomeAirLabPage() {
             <span className="font-sans text-xs md:text-sm uppercase tracking-wider text-ink/70 font-bold block">
               {t("lab.myths_eyebrow")}
             </span>
-            <h2 className="font-sans text-2xl md:text-3xl font-extrabold mt-0.5 tracking-tight text-ink">
+            <h2 className="font-serif text-2xl md:text-3xl font-bold mt-0.5 text-ink">
               {t("lab.myths_title")}
             </h2>
             <p className="text-sm md:text-base text-ink mt-1.5 leading-relaxed">
@@ -525,7 +525,7 @@ export default function HomeAirLabPage() {
                     className="w-full text-left p-5 flex items-center justify-between hover:bg-paper/50 transition-colors"
                   >
                     <div>
-                      <span className="font-sans text-base md:text-lg font-bold text-ink block">
+                      <span className="font-serif text-base md:text-lg font-semibold text-ink block">
                         {lang === "hi" ? m.titleHi : m.titleEn}
                       </span>
                       <span className="font-sans text-xs md:text-sm font-extrabold text-[#7A0F2E] uppercase tracking-wider mt-1 block">

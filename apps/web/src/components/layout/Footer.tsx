@@ -14,7 +14,7 @@ export const Footer: React.FC = () => {
           {/* Col 1 (5 cols): Platform Identity & Mission */}
           <div className="lg:col-span-5 space-y-4">
             <div className="space-y-1">
-              <span className="font-sans text-2xl font-extrabold text-ink block tracking-tight">
+              <span className="font-serif text-2xl font-bold text-ink block tracking-tight">
                 सांझी हवा <span className="text-ink/40 font-normal">/</span> SanjhiHawa
               </span>
               <p className="text-xs uppercase tracking-wider font-bold text-emerald-800">

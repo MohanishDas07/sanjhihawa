@@ -58,7 +58,7 @@ export default function YourDayPage() {
             <span>•</span>
             <span>{translateCity(plan?.city || profile?.city_name || "Delhi", lang)}</span>
           </div>
-          <h1 className="font-sans text-3xl md:text-4xl font-extrabold text-ink mt-1 tracking-tight">
+          <h1 className="font-serif text-3xl md:text-4xl font-bold text-ink mt-1">
             {t("your_day.title")}
           </h1>
           <p className="text-sm text-ink-muted mt-1 max-w-2xl">
@@ -173,11 +173,8 @@ export default function YourDayPage() {
                 <span className="font-mono text-xs uppercase text-ink-muted font-bold block">
                   {t("your_day.budget_ring_sub")}
                 </span>
-                <h2 className="font-sans text-2xl md:text-3xl font-bold text-ink tracking-tight">
+                <h2 className="font-serif text-2xl md:text-3xl font-bold text-ink tracking-tight">
                   {t("your_day.budget_ring_title")}
-                </h2>
-              </div>
-                  Household Member Breath Budget
                 </h2>
               </div>
 
@@ -272,7 +269,7 @@ export default function YourDayPage() {
               <span className="font-mono text-xs uppercase text-ink-muted font-bold block">
                 Algorithmically Optimized Windows
               </span>
-              <h2 className="font-sans text-2xl md:text-3xl font-bold text-ink tracking-tight">
+              <h2 className="font-serif text-2xl md:text-3xl font-bold text-ink tracking-tight">
                 {t("your_day.scheduler_title")}
               </h2>
               <p className="text-sm text-ink-muted mt-1 leading-relaxed">
@@ -376,7 +373,7 @@ export default function YourDayPage() {
                 <span className="font-mono text-2xs uppercase text-ink-muted font-bold block">
                   Actionable Interventions
                 </span>
-                <h2 className="font-sans text-2xl font-bold text-ink tracking-tight">
+                <h2 className="font-serif text-2xl font-bold text-ink tracking-tight">
                   {t("your_day.interventions_title")}
                 </h2>
                 <p className="text-xs text-ink-muted mt-1">
