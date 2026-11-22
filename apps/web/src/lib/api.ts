@@ -17,7 +17,7 @@ import {
   CommunityAdvisoryRequest,
   CommunityAdvisoryResponse,
 } from "@/types/api";
-import { CPCB_OFFLINE_BASELINE } from "@/data/fallbackAir";
+import { fetchLiveAtmosphericModel } from "@/lib/atmosphericEngine";
 
 /**
  * Resolves the API base URL:
@@ -142,12 +142,12 @@ export async function fetchAirQuality(
 
     return data;
   } catch (err) {
-    console.warn("fetchAirQuality failed; recovering via cached telemetry or CPCB baseline:", err);
+    console.warn("fetchAirQuality failed; recovering via cached telemetry or city-specific baseline:", err);
     const cached = getLastCachedAir(city);
     if (cached) {
       return cached.data;
     }
-    return CPCB_OFFLINE_BASELINE;
+    return await fetchLiveAtmosphericModel(lat, lon, city);
   }
 }
 

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { CPCB_OFFLINE_BASELINE } from "@/data/fallbackAir";
+import { fetchLiveAtmosphericModel } from "@/lib/atmosphericEngine";
 
 export const dynamic = "force-dynamic";
 
@@ -51,9 +51,13 @@ export async function GET(
     console.warn(`[Proxy GET] Backend unreachable at ${targetUrl}:`, err);
   }
 
-  // Graceful fallback for air quality endpoint to avoid broken client state
+  // City-specific atmospheric model fallback when FastAPI backend is starting or hosted in isolated mode
   if (subpath === "air") {
-    return NextResponse.json(CPCB_OFFLINE_BASELINE, { status: 200 });
+    const lat = parseFloat(request.nextUrl.searchParams.get("lat") || "28.6139");
+    const lon = parseFloat(request.nextUrl.searchParams.get("lon") || "77.2090");
+    const city = request.nextUrl.searchParams.get("city") || "Delhi";
+    const data = await fetchLiveAtmosphericModel(lat, lon, city);
+    return NextResponse.json(data, { status: 200 });
   }
 
   if (subpath === "health") {
@@ -70,7 +74,27 @@ export async function GET(
   }
 
   if (subpath === "geocode") {
-    return NextResponse.json({ query: "", results: [] }, { status: 200 });
+    const q = request.nextUrl.searchParams.get("q") || "";
+    if (q.trim()) {
+      try {
+        const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(q.trim())}&count=6&language=en&format=json`;
+        const geoRes = await fetch(geoUrl, { cache: "no-store" });
+        if (geoRes.ok) {
+          const geoData = await geoRes.json();
+          const results = (geoData.results || []).map((r: any) => ({
+            name: r.name,
+            latitude: r.latitude,
+            longitude: r.longitude,
+            country: r.country || "India",
+            admin1: r.admin1 || null,
+          }));
+          return NextResponse.json({ query: q, results }, { status: 200 });
+        }
+      } catch {
+        // ignore
+      }
+    }
+    return NextResponse.json({ query: q, results: [] }, { status: 200 });
   }
 
   return NextResponse.json(
