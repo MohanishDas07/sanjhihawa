@@ -3,7 +3,7 @@
 > **A GenAI-powered web assistant helping Indian families and communities navigate severe winter smog and urban air pollution through deterministic environmental health physics and localized mitigation.**
 
 [![CI Status](https://img.shields.io/badge/CI-Passing-brightgreen)](#)
-[![All Tests](https://img.shields.io/badge/Tests-51%20Passed%20(30%20Backend%20%2B%2011%20Frontend%20%2B%2010%20E2E)-brightgreen)](#)
+[![All Tests](https://img.shields.io/badge/Tests-90%20Passed%20(55%20Backend%20%2B%2025%20Frontend%20%2B%2010%20E2E)-brightgreen)](#)
 [![Code Quality](https://img.shields.io/badge/Ruff-0%20errors-brightgreen)](#)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Strict%20(0%20errors)-blue)](#)
 [![Coverage](https://img.shields.io/badge/Coverage-73%25%2B%20CoBERTura-brightgreen)](#)
@@ -142,7 +142,7 @@ sanjhihawa/
 
 ### Monorepo Commands
 ```bash
-# 1. Run all unit and golden evaluation tests (Frontend 11 + Backend 30 = 41 tests)
+# 1. Run all unit and golden evaluation tests (Frontend 25 + Backend 55 = 80 automated unit tests)
 npm run test:all
 
 # 2. Run static code analysis & type safety checks (Ruff + TypeScript strict)
