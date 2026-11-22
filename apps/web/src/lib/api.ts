@@ -18,10 +18,36 @@ import {
   CommunityAdvisoryResponse,
 } from "@/types/api";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+/**
+ * Resolves the API base URL:
+ * - On Vercel server-side runtime: uses the service binding URL in API_SERVICE_URL (or API_URL) + "/api/v1"
+ * - In local development: defaults to "http://localhost:8000/api/v1"
+ * - In production browser: uses relative "/api/v1" which Vercel rewrites to the FastAPI service under the same domain
+ * - Can be overridden anytime via NEXT_PUBLIC_API_URL
+ */
+export function getApiBaseUrl(): string {
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL.replace(/\/$/, "");
+  }
+  if (typeof window === "undefined") {
+    const internalUrl = process.env.API_SERVICE_URL || process.env.API_URL;
+    if (internalUrl) {
+      return `${internalUrl.replace(/\/$/, "")}/api/v1`;
+    }
+    return "http://localhost:8000/api/v1";
+  }
+  if (
+    typeof window !== "undefined" &&
+    (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
+  ) {
+    return "http://localhost:8000/api/v1";
+  }
+  return "/api/v1";
+}
 
 async function fetchJSON<T>(endpoint: string, options?: RequestInit): Promise<T> {
-  const url = `${API_BASE}${endpoint}`;
+  const base = getApiBaseUrl();
+  const url = `${base}${endpoint}`;
   try {
     const res = await fetch(url, {
       ...options,

@@ -4,11 +4,13 @@
   "private": true,
   "description": "National Atmospheric Intelligence & Exposure Decision Platform",
   "scripts": {
-    "test": "npm --prefix apps/web test",
-    "test:unit": "npm --prefix apps/web test",
-    "test:e2e": "npm --prefix apps/web run test:e2e",
-    "test:python": "python tests/test_all.py",
+    "test": "npm --prefix apps/web test && python tests/test_all.py",
     "test:all": "npm --prefix apps/web test && python tests/test_all.py",
+    "test:unit": "npm --prefix apps/web test",
+    "test:a11y": "node --test apps/web/test/accessibility.test.mjs",
+    "test:python": "python tests/test_all.py",
+    "test:coverage": "coverage run --source=apps/api tests/test_all.py && coverage report",
+    "test:e2e": "npm --prefix apps/web run test:e2e",
     "build": "npm --prefix apps/web run build",
     "dev": "npm --prefix apps/web run dev",
     "lint": "python -m ruff check apps/api tests && npx --prefix apps/web tsc -p apps/web/tsconfig.json --noEmit"
