@@ -12,6 +12,9 @@ const cspHeader = `
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  images: {
+    unoptimized: true,
+  },
   headers: async () => [
     {
       source: "/:path*",

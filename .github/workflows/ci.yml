@@ -63,9 +63,9 @@ jobs:
         run: |
           cd apps/web && npm run build
 
-      - name: Install Playwright Chromium
+      - name: Install Playwright Chromium with Dependencies
         run: |
-          cd apps/web && npx playwright install chromium
+          cd apps/web && npx playwright install --with-deps chromium
 
       - name: Run Playwright E2E Tests
         run: |
