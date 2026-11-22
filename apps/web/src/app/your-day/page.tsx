@@ -56,7 +56,7 @@ export default function YourDayPage() {
             <span>•</span>
             <span>{plan?.city || profile?.city_name}</span>
           </div>
-          <h1 className="font-serif text-3xl md:text-4xl font-bold text-ink mt-1">
+          <h1 className="font-sans text-3xl md:text-4xl font-extrabold text-ink mt-1 tracking-tight">
             Your Day's Breath Budget & Routine
           </h1>
           <p className="text-sm text-ink-muted mt-1 max-w-2xl">
@@ -126,7 +126,7 @@ export default function YourDayPage() {
                 <span className="font-mono text-xs uppercase text-ink-muted block font-bold">
                   1. Outdoor Activity & Walk
                 </span>
-                <p className="font-serif text-lg font-bold text-ink">
+                <p className="font-sans text-lg font-bold text-ink">
                   Shift all exercise to midday
                 </p>
                 <p className="text-sm text-ink-muted leading-relaxed">
@@ -139,7 +139,7 @@ export default function YourDayPage() {
                 <span className="font-mono text-xs uppercase text-ink-muted block font-bold">
                   2. Respiratory Defense
                 </span>
-                <p className="font-serif text-lg font-bold text-ink">
+                <p className="font-sans text-lg font-bold text-ink">
                   ISI/BIS N95 for all road transits
                 </p>
                 <p className="text-sm text-ink-muted leading-relaxed">
@@ -154,7 +154,7 @@ export default function YourDayPage() {
                 <span className="font-mono text-xs uppercase text-ink-muted block font-bold">
                   3. Indoor Smog Sealing
                 </span>
-                <p className="font-serif text-lg font-bold text-ink">
+                <p className="font-sans text-lg font-bold text-ink">
                   Damp towel door draft stop
                 </p>
                 <p className="text-sm text-ink-muted leading-relaxed">
@@ -171,7 +171,7 @@ export default function YourDayPage() {
                 <span className="font-mono text-xs uppercase text-ink-muted font-bold block">
                   Deterministic Exposure Metric
                 </span>
-                <h2 className="font-serif text-2xl md:text-3xl font-bold text-ink">
+                <h2 className="font-sans text-2xl md:text-3xl font-bold text-ink tracking-tight">
                   Household Member Breath Budget
                 </h2>
               </div>
@@ -267,7 +267,7 @@ export default function YourDayPage() {
               <span className="font-mono text-xs uppercase text-ink-muted font-bold block">
                 Algorithmically Optimized Windows
               </span>
-              <h2 className="font-serif text-2xl md:text-3xl font-bold text-ink">
+              <h2 className="font-sans text-2xl md:text-3xl font-bold text-ink tracking-tight">
                 Flexible Routine Placement (Avoiding Peak Inversion)
               </h2>
               <p className="text-sm text-ink-muted mt-1 leading-relaxed">
@@ -280,7 +280,7 @@ export default function YourDayPage() {
                 <div key={item.activity_id} className="p-5 bg-paper border border-rule space-y-3">
                   <div className="flex justify-between items-start">
                     <div>
-                      <h3 className="font-serif text-lg font-bold text-ink">{item.name_en}</h3>
+                      <h3 className="font-sans text-lg font-bold text-ink">{item.name_en}</h3>
                       <span className="text-sm font-devanagari text-ink-muted">{item.name_hi}</span>
                     </div>
                     <span className="px-2.5 py-1 bg-green-100 text-green-900 border border-green-300 font-mono text-xs font-bold">
@@ -370,7 +370,7 @@ export default function YourDayPage() {
                 <span className="font-mono text-2xs uppercase text-ink-muted font-bold block">
                   Actionable Interventions
                 </span>
-                <h2 className="font-serif text-2xl font-bold text-ink">
+                <h2 className="font-sans text-2xl font-bold text-ink tracking-tight">
                   Ranked Recommendations by Exposure Saved Per Rupee
                 </h2>
                 <p className="text-xs text-ink-muted mt-1">
@@ -434,7 +434,7 @@ export default function YourDayPage() {
                       >
                         {rec.tier_label}
                       </span>
-                      <h3 className="font-serif text-base font-bold text-ink">{rec.name_en}</h3>
+                      <h3 className="font-sans text-base font-bold text-ink">{rec.name_en}</h3>
                     </div>
                     <p className="text-xs text-ink-muted leading-relaxed">
                       {rec.description_en}

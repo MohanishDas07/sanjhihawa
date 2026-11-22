@@ -111,7 +111,7 @@ export default function HomeAirLabPage() {
         <span className="font-mono text-xs uppercase tracking-wider text-ink-muted font-bold">
           PRACTICAL INDOOR DEFENSE • NO-NONSENSE SCIENCE
         </span>
-        <h1 className="font-serif text-3xl sm:text-4xl font-bold mt-1 text-ink">
+        <h1 className="font-sans text-3xl sm:text-4xl font-extrabold mt-1 text-ink tracking-tight">
           {lang === "hi" ? "होम एयर लैब (Home Air Lab)" : "Home Air Lab"}
         </h1>
         <p className="text-sm md:text-base text-ink-muted mt-1 max-w-3xl leading-relaxed">
@@ -127,7 +127,7 @@ export default function HomeAirLabPage() {
             <span className="font-mono text-xs uppercase tracking-wider text-ink-muted font-bold">
               DETERMINISTIC PURIFIER FORMULA
             </span>
-            <h2 className="font-serif text-2xl md:text-3xl font-bold mt-0.5 text-ink">
+            <h2 className="font-sans text-2xl md:text-3xl font-bold mt-0.5 text-ink tracking-tight">
               CADR Sizing Calculator
             </h2>
           </div>
@@ -276,7 +276,7 @@ export default function HomeAirLabPage() {
             <span className="font-mono text-xs uppercase tracking-wider text-ink-muted">
               PHYSICAL ENVELOPE MANAGEMENT
             </span>
-            <h2 className="font-serif text-2xl font-bold mt-0.5">
+            <h2 className="font-sans text-2xl font-bold mt-0.5 tracking-tight text-ink">
               Room-by-Room Smog Defenses
             </h2>
           </div>
@@ -405,7 +405,7 @@ export default function HomeAirLabPage() {
             <span className="font-mono text-xs uppercase tracking-wider text-ink-muted">
               OPEN-SOURCE CLEAN AIR HARDWARE
             </span>
-            <h2 className="font-serif text-2xl font-bold mt-0.5">
+            <h2 className="font-sans text-2xl font-bold mt-0.5 tracking-tight text-ink">
               Build a DIY Corsi-Rosenthal Box (~₹3,500)
             </h2>
             <p className="text-xs text-ink-muted mt-1 max-w-3xl">
@@ -495,7 +495,7 @@ export default function HomeAirLabPage() {
             <span className="font-mono text-xs uppercase tracking-wider text-ink-muted">
               EVIDENCE-BASED CORRECTIONS
             </span>
-            <h2 className="font-serif text-2xl font-bold mt-0.5">
+            <h2 className="font-sans text-2xl font-bold mt-0.5 tracking-tight text-ink">
               Smog Myth-Buster
             </h2>
             <p className="text-xs text-ink-muted mt-1">
@@ -513,7 +513,7 @@ export default function HomeAirLabPage() {
                     className="w-full text-left p-4 flex items-center justify-between hover:bg-paper/50 transition-colors"
                   >
                     <div>
-                      <span className="font-serif text-base font-semibold text-ink block">
+                      <span className="font-sans text-base font-semibold text-ink block">
                         {lang === "hi" ? m.titleHi : m.titleEn}
                       </span>
                       <span className="font-mono text-xs font-bold text-[#7A0F2E] mt-0.5 block">

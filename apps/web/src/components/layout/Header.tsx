@@ -112,7 +112,7 @@ export const Header: React.FC = () => {
       {/* Main Nav Bar */}
       <div className="max-w-7xl mx-auto px-4 py-3.5 flex items-center justify-between">
         <Link href="/" className="group flex items-baseline space-x-2.5">
-          <span className="font-serif text-2xl md:text-4xl font-bold tracking-tight text-ink group-hover:opacity-90">
+          <span className="font-sans text-2xl md:text-3xl font-extrabold tracking-tight text-ink group-hover:opacity-90">
             सांझी हवा / SANJHIHAWA
           </span>
           <span className="font-mono text-2xs md:text-xs uppercase px-2 py-0.5 bg-paper border border-rule text-ink-muted font-medium">

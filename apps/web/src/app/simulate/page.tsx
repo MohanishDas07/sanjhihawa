@@ -127,7 +127,7 @@ export default function SimulatePage() {
       <div className="border-b hairline border-rule pb-4 flex flex-col md:flex-row justify-between items-start md:items-end gap-3">
         <div>
           <span className="font-mono text-xs uppercase tracking-wider text-ink-muted font-bold">Dual-Lens Impact Modeling</span>
-          <h1 className="font-serif text-3xl md:text-4xl font-bold text-ink mt-1">
+          <h1 className="font-sans text-3xl md:text-4xl font-extrabold text-ink mt-1 tracking-tight">
             What-If Simulator & Community Multiplier
           </h1>
           <p className="text-sm md:text-base text-ink-muted mt-1 max-w-2xl leading-relaxed">
@@ -187,7 +187,7 @@ export default function SimulatePage() {
                     />
                     <div className="flex-1 space-y-1">
                       <div className="flex items-center justify-between">
-                        <span className="font-serif text-base font-bold text-ink">
+                        <span className="font-sans text-base font-bold text-ink">
                           {opt.name}
                         </span>
                         <span className="font-mono text-2xs px-2 py-0.5 bg-paper border border-rule text-ink-muted">

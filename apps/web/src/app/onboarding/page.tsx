@@ -137,7 +137,7 @@ export default function OnboardingPage() {
       <div className="border-b hairline border-rule pb-4 flex flex-col sm:flex-row justify-between sm:items-end gap-3">
         <div>
           <span className="font-mono text-xs uppercase tracking-wider text-ink-muted font-bold">Household Setup</span>
-          <h1 className="font-serif text-3xl md:text-4xl font-bold text-ink mt-1">
+          <h1 className="font-sans text-3xl md:text-4xl font-extrabold text-ink mt-1 tracking-tight">
             Build Your Household's Profile
           </h1>
           <p className="text-sm md:text-base text-ink-muted mt-1 leading-relaxed">
@@ -561,7 +561,7 @@ export default function OnboardingPage() {
                       : "border-rule bg-surface text-ink-muted hover:border-ink"
                   }`}
                 >
-                  <span className="block font-serif text-sm">{tier.title}</span>
+                  <span className="block font-sans font-bold text-sm text-ink">{tier.title}</span>
                   <span className="block text-2xs text-ink-muted mt-1 leading-normal">{tier.desc}</span>
                 </button>
               ))}

@@ -7,7 +7,7 @@ export default function HowSaansWorksPage() {
       {/* Header */}
       <div className="border-b hairline border-rule pb-4">
         <span className="font-mono text-xs uppercase tracking-wider text-ink-muted font-bold">Scientific & Architectural Openness</span>
-        <h1 className="font-serif text-3xl md:text-5xl font-bold text-ink mt-1">
+        <h1 className="font-sans text-3xl md:text-5xl font-extrabold text-ink mt-1 tracking-tight">
           How SanjhiHawa Works
         </h1>
         <p className="text-base md:text-lg text-ink-muted mt-2 max-w-2xl leading-relaxed">
@@ -21,7 +21,7 @@ export default function HowSaansWorksPage() {
         <span className="font-mono text-xs uppercase font-bold tracking-wider text-ink block">
           Cardinal Rule #1
         </span>
-        <h2 className="font-serif text-2xl md:text-3xl font-bold text-ink">
+        <h2 className="font-sans text-2xl md:text-3xl font-bold text-ink tracking-tight">
           The LLM Never Does The Math
         </h2>
         <p className="text-sm md:text-base text-ink/80 leading-relaxed">
@@ -35,7 +35,7 @@ export default function HowSaansWorksPage() {
 
       {/* Section 1: Physical & Epidemiological Formulas */}
       <section className="space-y-6">
-        <h2 className="font-serif text-2xl font-bold text-ink border-b hairline border-rule pb-2">
+        <h2 className="font-sans text-2xl font-bold text-ink border-b hairline border-rule pb-2 tracking-tight">
           Mathematical & Physical Formulations
         </h2>
 
@@ -112,7 +112,7 @@ export default function HowSaansWorksPage() {
 
       {/* Section 2: Privacy Model */}
       <section className="space-y-4">
-        <h2 className="font-serif text-2xl font-bold text-ink border-b hairline border-rule pb-2">
+        <h2 className="font-sans text-2xl font-bold text-ink border-b hairline border-rule pb-2 tracking-tight">
           Privacy by Design & Zero Server Persistence
         </h2>
         <div className="p-5 bg-surface border border-rule space-y-3 text-sm text-ink-muted leading-relaxed">
@@ -130,7 +130,7 @@ export default function HowSaansWorksPage() {
 
       {/* Section 3: Data Sources & Standards */}
       <section className="space-y-4">
-        <h2 className="font-serif text-2xl font-bold text-ink border-b hairline border-rule pb-2">
+        <h2 className="font-sans text-2xl font-bold text-ink border-b hairline border-rule pb-2 tracking-tight">
           Real Atmospheric Telemetry & Scientific Standards
         </h2>
         <div className="overflow-x-auto border border-rule">

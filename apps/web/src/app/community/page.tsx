@@ -49,7 +49,7 @@ export default function CommunityPage() {
       <div className="border-b hairline border-rule pb-4 no-print flex flex-col sm:flex-row justify-between sm:items-end gap-3">
         <div>
           <span className="font-mono text-xs uppercase tracking-wider text-ink-muted font-bold">Citizen & Institutional Defense</span>
-          <h1 className="font-serif text-3xl md:text-4xl font-bold text-ink mt-1">
+          <h1 className="font-sans text-3xl md:text-4xl font-extrabold text-ink mt-1 tracking-tight">
             Community & School Advisory Card
           </h1>
           <p className="text-sm md:text-base text-ink-muted mt-1 max-w-xl leading-relaxed">
@@ -156,7 +156,7 @@ export default function CommunityPage() {
               <span className="font-mono text-2xs uppercase tracking-widest text-ink font-bold block">
                 COMMUNITY HEALTH BULLETIN • PUBLIC NOTICE
               </span>
-              <h2 className="font-serif text-2xl md:text-3xl font-extrabold text-ink mt-1">
+              <h2 className="font-sans text-2xl md:text-3xl font-extrabold text-ink mt-1 tracking-tight">
                 {advisory.organization_name}
               </h2>
               <div className="font-mono text-xs text-ink-muted mt-1">
@@ -185,7 +185,7 @@ export default function CommunityPage() {
 
           {/* Headline Alert */}
           <div
-            className="p-4 font-serif text-lg font-bold border-l-4"
+            className="p-4 font-sans text-lg font-bold border-l-4"
             style={{
               backgroundColor: "#FFF5F5",
               borderColor: advisory.aqi_color_hex,

@@ -158,7 +158,7 @@ export default function ChatPage() {
             <span className="font-mono text-xs md:text-sm uppercase tracking-wider text-ink-muted font-bold">
               {lang === "hi" ? "आर्टिफिशियल इंटेलिजेंस सहायक" : lang === "mr" ? "कृत्रिम बुद्धिमत्ता सहाय्यक" : "GENAI AIR ASSISTANT"}
             </span>
-            <h1 className="font-serif text-3xl md:text-4xl font-bold mt-1 text-ink">
+            <h1 className="font-sans text-3xl md:text-4xl font-extrabold mt-1 text-ink tracking-tight">
               {lang === "hi" ? "सांझी हवा से पूछें (Ask SanjhiHawa)" : lang === "mr" ? "सांझी हवा विचारा" : "Ask SanjhiHawa"}
             </h1>
             <p className="text-sm md:text-base text-ink-muted mt-1 max-w-2xl leading-relaxed">
@@ -169,7 +169,7 @@ export default function ChatPage() {
           </div>
 
           {/* Child Mode Switch */}
-          <div className="flex items-center space-x-2 bg-surface border hairline border-rule p-2.5 rounded-sm">
+          <div className="flex items-center space-x-2 bg-surface border hairline border-rule p-2.5 rounded-sm shrink-0 whitespace-nowrap self-start sm:self-auto">
             <input
               type="checkbox"
               id="child-toggle"
@@ -177,7 +177,7 @@ export default function ChatPage() {
               onChange={(e) => setSimplifyForChild(e.target.checked)}
               className="cursor-pointer accent-ink w-4 h-4"
             />
-            <label htmlFor="child-toggle" className="text-xs md:text-sm font-mono text-ink cursor-pointer select-none font-medium">
+            <label htmlFor="child-toggle" className="text-xs md:text-sm font-mono text-ink cursor-pointer select-none font-medium whitespace-nowrap">
               {lang === "hi"
                 ? "१० वर्षीय बच्चे के लिए सरल समझाएं"
                 : lang === "mr"

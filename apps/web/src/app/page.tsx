@@ -245,7 +245,7 @@ export default function LandingPage() {
               {/* City Title + Regional Corridor Pills + Search */}
               <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                 <div className="flex flex-wrap items-center gap-3">
-                  <h1 className="font-serif text-4xl md:text-6xl font-bold tracking-tight text-ink">
+                  <h1 className="font-sans text-4xl md:text-6xl font-extrabold tracking-tight text-ink">
                     {city}
                   </h1>
 
@@ -587,7 +587,7 @@ export default function LandingPage() {
                 <span>•</span>
                 <span>Diurnal Temperature Inversion Cycle</span>
               </div>
-              <h2 className="font-serif text-2xl md:text-3xl font-bold text-ink mt-1 tracking-tight">
+              <h2 className="font-sans text-2xl md:text-3xl font-bold text-ink mt-1 tracking-tight">
                 24-Hour Diurnal Exposure Forecast for {city}
               </h2>
               <p className="text-sm md:text-base text-ink/80 mt-1 max-w-2xl leading-relaxed font-normal">
@@ -963,7 +963,7 @@ export default function LandingPage() {
             <span className="font-sans text-xs uppercase tracking-widest text-ink/60 font-bold block mb-1">
               Field Documentary Records • Winter Inversion Episodes
             </span>
-            <h2 className="font-serif text-2xl md:text-3xl font-bold text-ink tracking-tight">
+            <h2 className="font-sans text-2xl md:text-3xl font-bold text-ink tracking-tight">
               Photographic evidence of atmospheric boundary-layer trapping across primary Indian metropolitan basins.
             </h2>
           </div>
@@ -1252,7 +1252,7 @@ export default function LandingPage() {
             <span className="font-sans text-xs uppercase tracking-widest text-ink/60 font-bold block mb-1">
               Architectural & Mathematical Rigor
             </span>
-            <h2 className="font-serif text-2xl md:text-3xl font-bold text-ink tracking-tight">
+            <h2 className="font-sans text-2xl md:text-3xl font-bold text-ink tracking-tight">
               How SanjhiHawa Computes Without Hallucination
             </h2>
           </div>

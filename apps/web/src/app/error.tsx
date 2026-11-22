@@ -20,7 +20,7 @@ export default function GlobalError({
         <span className="font-mono text-xs uppercase tracking-wider text-amber-800 font-bold block">
           Application Notice
         </span>
-        <h1 className="font-serif text-2xl font-bold text-ink">
+        <h1 className="font-sans text-2xl font-bold text-ink tracking-tight">
           Unable to Load Interface
         </h1>
       </div>
