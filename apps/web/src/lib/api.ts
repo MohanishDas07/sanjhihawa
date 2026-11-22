@@ -17,6 +17,7 @@ import {
   CommunityAdvisoryRequest,
   CommunityAdvisoryResponse,
 } from "@/types/api";
+import { CPCB_OFFLINE_BASELINE } from "@/data/fallbackAir";
 
 /**
  * Resolves the API base URL:
@@ -121,24 +122,33 @@ export async function fetchAirQuality(
   city: string = "Ghaziabad",
   fallback: boolean = false
 ): Promise<AirQualityResponse> {
-  const data = await fetchJSON<AirQualityResponse>(
-    `/air?lat=${lat}&lon=${lon}&city=${encodeURIComponent(city)}&fallback=${fallback}`
-  );
+  try {
+    const data = await fetchJSON<AirQualityResponse>(
+      `/air?lat=${lat}&lon=${lon}&city=${encodeURIComponent(city)}&fallback=${fallback}`
+    );
 
-  // If valid reading arrived, cache it for offline resilience
-  if (typeof window !== "undefined" && data && data.status !== "no_data" && !data.is_sample_or_fallback) {
-    try {
-      const cacheObj: CachedAirData = { data, savedAt: Date.now() };
-      localStorage.setItem("saans_last_air", JSON.stringify(cacheObj));
-      if (city) {
-        localStorage.setItem(`saans_last_air_${city.trim().toLowerCase()}`, JSON.stringify(cacheObj));
+    // If valid reading arrived, cache it for offline resilience
+    if (typeof window !== "undefined" && data && data.status !== "no_data" && !data.is_sample_or_fallback) {
+      try {
+        const cacheObj: CachedAirData = { data, savedAt: Date.now() };
+        localStorage.setItem("saans_last_air", JSON.stringify(cacheObj));
+        if (city) {
+          localStorage.setItem(`saans_last_air_${city.trim().toLowerCase()}`, JSON.stringify(cacheObj));
+        }
+      } catch {
+        // ignore storage quota errors
       }
-    } catch {
-      // ignore storage quota errors
     }
-  }
 
-  return data;
+    return data;
+  } catch (err) {
+    console.warn("fetchAirQuality failed; recovering via cached telemetry or CPCB baseline:", err);
+    const cached = getLastCachedAir(city);
+    if (cached) {
+      return cached.data;
+    }
+    return CPCB_OFFLINE_BASELINE;
+  }
 }
 
 /**

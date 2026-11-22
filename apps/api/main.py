@@ -8,6 +8,11 @@ import os
 import sys
 from contextlib import asynccontextmanager
 
+# Ensure apps/api directory is in sys.path for serverless container execution
+_current_dir = os.path.dirname(os.path.abspath(__file__))
+if _current_dir not in sys.path:
+    sys.path.insert(0, _current_dir)
+
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware

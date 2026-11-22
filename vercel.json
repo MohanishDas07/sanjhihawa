@@ -23,13 +23,15 @@
     {
       "source": "/api/(.*)",
       "destination": {
-        "service": "api"
+        "service": "api",
+        "path": "/$1"
       }
     },
     {
-      "source": "/(.*)",
+      "source": "/((?!api/).*)",
       "destination": {
-        "service": "web"
+        "service": "web",
+        "path": "/$1"
       }
     }
   ]
