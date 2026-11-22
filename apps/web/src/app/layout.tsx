@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "SanjhiHawa - Clean Air Assistant & Breath Budget Engine",
   description: "Navigate severe winter smog with personalized low-exposure routines, indoor hacks, and sustainable alternatives.",
   keywords: ["air quality", "AQI", "PM2.5", "Breath Budget", "Delhi smog", "Ghaziabad", "indoor air", "HEPA purifier"],
+  manifest: "/manifest.webmanifest",
 };
 
 export default function RootLayout({

@@ -62,3 +62,13 @@ jobs:
       - name: Build Next.js
         run: |
           cd apps/web && npm run build
+
+      - name: Install Playwright Chromium
+        run: |
+          cd apps/web && npx playwright install chromium
+
+      - name: Run Playwright E2E Tests
+        run: |
+          cd apps/web && npm run test:e2e
+        env:
+          CI: true

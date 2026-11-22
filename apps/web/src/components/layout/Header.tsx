@@ -76,6 +76,7 @@ export const Header: React.FC = () => {
         <div className="flex items-center space-x-3">
           {/* Elder Mode Toggle */}
           <button
+            id="elder-mode-toggle"
             type="button"
             onClick={toggleElderMode}
             aria-pressed={elderMode}

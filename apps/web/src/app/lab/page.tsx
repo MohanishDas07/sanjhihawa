@@ -234,7 +234,7 @@ export default function HomeAirLabPage() {
                   <span className="text-sm md:text-base font-sans text-ink/70">({requiredCadrCfm} CFM)</span>
                 </div>
                 <p className="text-sm md:text-base text-ink mt-3 leading-relaxed">
-                  For your <strong>{Math.round(volumeM3 * 10) / 10} m³</strong> room, this purifier size will completely exchange all air every <strong>{minutesPerExchange} minutes</strong>, providing approximately <strong>80-85%</strong> reduction in indoor PM2.5 in a sealed room.
+                  For your <strong>{Math.round(volumeM3 * 10) / 10} m³</strong> ({unit === "ft" ? `${(length * width * height).toLocaleString()} cu ft` : `${Math.round(volumeM3 * 35.3147).toLocaleString()} cu ft`}) room, this purifier size will completely exchange all air every <strong>{minutesPerExchange} minutes</strong>, providing approximately <strong>80-85%</strong> reduction in indoor PM2.5 in a sealed room.
                 </p>
               </div>
 
@@ -272,7 +272,7 @@ export default function HomeAirLabPage() {
             </h2>
           </div>
 
-          <div className="flex flex-wrap border-b border-rule gap-1">
+          <div className="flex flex-wrap border-b border-rule gap-1" role="tablist" aria-label="Room defenses">
             {(
               [
                 { id: "bedroom", label: "Bedroom (Sleep Haven)" },
@@ -283,6 +283,8 @@ export default function HomeAirLabPage() {
             ).map((tab) => (
               <button
                 key={tab.id}
+                role="tab"
+                aria-selected={activeRoom === tab.id}
                 onClick={() => setActiveRoom(tab.id)}
                 className={`px-5 py-3 text-sm md:text-base font-sans font-bold transition-all border-b-2 -mb-[2px] ${
                   activeRoom === tab.id

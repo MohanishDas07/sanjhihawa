@@ -7,26 +7,33 @@ import mr from "@/messages/mr.json";
 
 export type Language = "en" | "hi" | "mr";
 
-const translations: Record<Language, any> = {
+type TranslationSchema = typeof en;
+export type Leaves<T> = T extends object
+  ? { [K in keyof T]: `${Exclude<K, symbol>}${Leaves<T[K]> extends never ? "" : `.${Leaves<T[K]>}`}` }[keyof T]
+  : never;
+
+export type TranslationKey = Leaves<TranslationSchema> | (string & {});
+
+const translations: Record<Language, TranslationSchema> = {
   en,
   hi,
   mr,
 };
 
-export function getTranslation(lang: Language, path: string): string {
+export function getTranslation(lang: Language, path: TranslationKey): string {
   const dict = translations[lang] || translations.en;
   const parts = path.split(".");
-  let current: any = dict;
+  let current: unknown = dict;
 
   for (const part of parts) {
     if (current && typeof current === "object" && part in current) {
-      current = current[part];
+      current = (current as Record<string, unknown>)[part];
     } else {
       // Fallback to English
-      let fallback: any = translations.en;
+      let fallback: unknown = translations.en;
       for (const fPart of parts) {
         if (fallback && typeof fallback === "object" && fPart in fallback) {
-          fallback = fallback[fPart];
+          fallback = (fallback as Record<string, unknown>)[fPart];
         } else {
           return path;
         }
@@ -65,7 +72,7 @@ export function useTranslation() {
     window.dispatchEvent(new Event("saans_lang_changed"));
   };
 
-  const t = (path: string) => getTranslation(lang, path);
+  const t = (path: TranslationKey) => getTranslation(lang, path);
 
   return { t, lang, setLanguage };
 }

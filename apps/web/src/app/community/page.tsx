@@ -7,7 +7,7 @@ import { fetchCommunityAdvisory } from "@/lib/api";
 import { useTranslation, translateCity } from "@/lib/i18n";
 
 export default function CommunityPage() {
-  const { t, lang } = useTranslation();
+  const { t, lang, setLanguage } = useTranslation();
   const [orgName, setOrgName] = useState<string>("Vasundhara Enclave RWA");
   const [orgType, setOrgType] = useState<"rwa" | "school" | "community">("rwa");
   const [city, setCity] = useState<string>("Ghaziabad");
@@ -124,7 +124,7 @@ export default function CommunityPage() {
           <label className="block text-ink-muted mb-1 font-bold">Language:</label>
           <select
             value={lang}
-            onChange={(e) => setLang(e.target.value as any)}
+            onChange={(e) => setLanguage(e.target.value as any)}
             className="w-full p-2 border border-rule bg-paper text-ink font-sans"
           >
             <option value="en">English</option>
