@@ -36,12 +36,9 @@ export function getApiBaseUrl(): string {
     }
     return "http://localhost:8000/api/v1";
   }
-  if (
-    typeof window !== "undefined" &&
-    (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
-  ) {
-    return "http://localhost:8000/api/v1";
-  }
+  // Client-side: use relative "/api/v1"
+  // Next.js dev server rewrites /api/v1 to http://localhost:8000/api/v1
+  // Vercel multi-service rewrites /api/(.*) to the FastAPI backend service
   return "/api/v1";
 }
 

@@ -15,6 +15,14 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  rewrites: async () => [
+    {
+      source: "/api/v1/:path*",
+      destination: process.env.API_SERVICE_URL
+        ? `${process.env.API_SERVICE_URL}/api/v1/:path*`
+        : "http://localhost:8000/api/v1/:path*",
+    },
+  ],
   headers: async () => [
     {
       source: "/:path*",

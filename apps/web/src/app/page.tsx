@@ -12,6 +12,7 @@ import { ScientificProvenanceSection } from "@/components/landing/ScientificProv
 import { SpatialBenchmarkGrid } from "@/components/landing/SpatialBenchmarkGrid";
 import { DocumentaryGallery } from "@/components/landing/DocumentaryGallery";
 import { MathematicalRigorSection } from "@/components/landing/MathematicalRigorSection";
+import { CPCB_OFFLINE_BASELINE } from "@/data/fallbackAir";
 
 const REGIONAL_METROS = [
   { name: "Delhi", label: "Delhi NCR", lat: 28.6139, lon: 77.2090, region: "Indo-Gangetic Plain", inversionType: "Severe Surface Inversion" },
@@ -88,10 +89,11 @@ export default function LandingPage() {
       if (cached) {
         setCachedInfo(cached);
         setAirData(cached.data);
-        setErrorMessage(`Could not reach the air service. Showing ${formatReadingAge(cached.savedAt)}.`);
+        setErrorMessage(`Could not reach the live air service. Showing cached reading (${formatReadingAge(cached.savedAt)}).`);
       } else {
-        setAirData(null);
-        setErrorMessage("Could not reach the air service. Please check your connection and retry.");
+        // Fallback to CPCB reference baseline with transparent disclaimer so page remains functional
+        setAirData(CPCB_OFFLINE_BASELINE);
+        setErrorMessage("Could not reach the live air service. Displaying CPCB reference baseline data in offline mode.");
       }
     } finally {
       setLoading(false);

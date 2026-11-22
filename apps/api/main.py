@@ -126,14 +126,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Mount API Routers under /api/v1
-app.include_router(health.router, prefix="/api/v1")
-app.include_router(geocode.router, prefix="/api/v1")
-app.include_router(air.router, prefix="/api/v1")
-app.include_router(plan.router, prefix="/api/v1")
-app.include_router(simulate.router, prefix="/api/v1")
-app.include_router(community.router, prefix="/api/v1")
-app.include_router(chat.router, prefix="/api/v1")
+# Mount API Routers under /api/v1 and /v1 for seamless direct, reverse-proxy, and Vercel routing
+for prefix in ["/api/v1", "/v1"]:
+    app.include_router(health.router, prefix=prefix)
+    app.include_router(geocode.router, prefix=prefix)
+    app.include_router(air.router, prefix=prefix)
+    app.include_router(plan.router, prefix=prefix)
+    app.include_router(simulate.router, prefix=prefix)
+    app.include_router(community.router, prefix=prefix)
+    app.include_router(chat.router, prefix=prefix)
 
 
 @app.get("/")
