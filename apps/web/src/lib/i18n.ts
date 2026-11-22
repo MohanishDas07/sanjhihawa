@@ -65,3 +65,99 @@ export function useTranslation() {
 
   return { t, lang, setLanguage };
 }
+
+export const CITY_TRANSLATIONS: Record<Language, Record<string, string>> = {
+  en: {
+    "Delhi": "Delhi",
+    "Delhi NCR": "Delhi NCR",
+    "Kolkata": "Kolkata",
+    "Mumbai": "Mumbai",
+    "Bengaluru": "Bengaluru",
+    "Lucknow": "Lucknow",
+    "Hyderabad": "Hyderabad",
+    "Pune": "Pune",
+    "Ghaziabad": "Ghaziabad",
+    "Noida": "Noida",
+    "Gurugram": "Gurugram",
+    "Patna": "Patna",
+    "Kanpur": "Kanpur",
+    "Varanasi": "Varanasi",
+    "Ahmedabad": "Ahmedabad",
+    "Chennai": "Chennai",
+    "Jaipur": "Jaipur"
+  },
+  hi: {
+    "Delhi": "दिल्ली",
+    "Delhi NCR": "दिल्ली NCR",
+    "Kolkata": "कोलकाता",
+    "Mumbai": "मुंबई",
+    "Bengaluru": "बेंगलुरु",
+    "Lucknow": "लखनऊ",
+    "Hyderabad": "हैदराबाद",
+    "Pune": "पुणे",
+    "Ghaziabad": "गाजियाबाद",
+    "Noida": "नोएडा",
+    "Gurugram": "गुरुग्राम",
+    "Patna": "पटना",
+    "Kanpur": "कानपुर",
+    "Varanasi": "वाराणसी",
+    "Ahmedabad": "अहमदाबाद",
+    "Chennai": "चेन्नई",
+    "Jaipur": "जयपुर"
+  },
+  mr: {
+    "Delhi": "दिल्ली",
+    "Delhi NCR": "दिल्ली NCR",
+    "Kolkata": "कोलकाता",
+    "Mumbai": "मुंबई",
+    "Bengaluru": "बेंगलुरु",
+    "Lucknow": "लखनऊ",
+    "Hyderabad": "हैदराबाद",
+    "Pune": "पुणे",
+    "Ghaziabad": "गाझियाबाद",
+    "Noida": "नोएडा",
+    "Gurugram": "गुरुग्राम",
+    "Patna": "पाटणा",
+    "Kanpur": "कानपूर",
+    "Varanasi": "वाराणसी",
+    "Ahmedabad": "अहमदाबाद",
+    "Chennai": "चेन्नई",
+    "Jaipur": "जयपूर"
+  }
+};
+
+export const AQI_BAND_TRANSLATIONS: Record<Language, Record<string, string>> = {
+  en: {
+    "good": "Good",
+    "satisfactory": "Satisfactory",
+    "moderate": "Moderate",
+    "poor": "Poor",
+    "very_poor": "Very Poor",
+    "severe": "Severe"
+  },
+  hi: {
+    "good": "अच्छा",
+    "satisfactory": "संतोषजनक",
+    "moderate": "मध्यम",
+    "poor": "खराब",
+    "very_poor": "बहुत खराब",
+    "severe": "गंभीर"
+  },
+  mr: {
+    "good": "उत्तम",
+    "satisfactory": "समाधानकारक",
+    "moderate": "मध्यम",
+    "poor": "वाईट",
+    "very_poor": "अत्यंत वाईट",
+    "severe": "गंभीर"
+  }
+};
+
+export function translateCity(cityName: string, lang: Language): string {
+  return CITY_TRANSLATIONS[lang]?.[cityName] || CITY_TRANSLATIONS.en[cityName] || cityName;
+}
+
+export function translateAqiBand(band: string, lang: Language): string {
+  const normalized = band.toLowerCase().replace(/ /g, "_");
+  return AQI_BAND_TRANSLATIONS[lang]?.[normalized] || AQI_BAND_TRANSLATIONS.en[normalized] || band;
+}

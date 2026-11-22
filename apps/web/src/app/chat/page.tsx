@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { sendChatSync, ChatCitation } from "@/lib/api";
 import { getStoredProfile } from "@/lib/storage";
+import { useTranslation } from "@/lib/i18n";
 
 interface Message {
   id: string;
@@ -14,6 +15,8 @@ interface Message {
 }
 
 export default function ChatPage() {
+  const { t, lang } = useTranslation();
+  const [mounted, setMounted] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "intro",
@@ -32,14 +35,11 @@ export default function ChatPage() {
 
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [lang, setLang] = useState<"en" | "hi" | "mr">("en");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const savedLang = (localStorage.getItem("saans_lang") as "en" | "hi" | "mr") || "en";
-    setLang(savedLang);
-
-    // Populate client-side timestamp for the initial welcome message to prevent hydration mismatch
+    setMounted(true);
+    // Populate client-side timestamp for the initial welcome message only after mounting
     setMessages((prev) =>
       prev.map((m) =>
         m.id === "intro" && !m.timestamp
@@ -47,13 +47,6 @@ export default function ChatPage() {
           : m
       )
     );
-
-    const onLangChange = () => {
-      const current = (localStorage.getItem("saans_lang") as "en" | "hi" | "mr") || "en";
-      setLang(current);
-    };
-    window.addEventListener("saans_lang_changed", onLangChange);
-    return () => window.removeEventListener("saans_lang_changed", onLangChange);
   }, []);
 
   useEffect(() => {
@@ -154,22 +147,20 @@ export default function ChatPage() {
       <div className="border-b hairline border-rule pb-4 mb-2">
         <div>
           <span className="font-mono text-xs md:text-sm uppercase tracking-wider text-ink-muted font-bold">
-            {lang === "hi" ? "आर्टिफिशियल इंटेलिजेंस सहायक" : lang === "mr" ? "कृत्रिम बुद्धिमत्ता सहाय्यक" : "GENAI AIR ASSISTANT"}
+            {t("chat.eyebrow")}
           </span>
           <h1 className="font-sans text-3xl md:text-4xl font-extrabold mt-1 text-ink tracking-tight">
-            {lang === "hi" ? "सांझी हवा से पूछें (Ask SanjhiHawa)" : lang === "mr" ? "सांझी हवा विचारा" : "Ask SanjhiHawa"}
+            {t("chat.title")}
           </h1>
           <p className="text-sm md:text-base text-ink-muted mt-1 max-w-2xl leading-relaxed">
-            {lang === "hi"
-              ? "हवा विज्ञान, N95 मास्क, ट्रू HEPA प्यूरीफायर और दिनचर्या पर सवाल पूछें। संख्याएं केवल गणितीय इंजन से आती हैं।"
-              : "Grounded in our deterministic exposure engine and peer-reviewed air science. The LLM never hallucinates numbers."}
+            {t("chat.subtitle")}
           </p>
         </div>
       </div>
 
       {/* Quick Prompts Bar */}
       <div className="mb-4">
-        <div className="font-mono text-xs text-ink-muted font-bold mb-2">QUICK SCIENCE QUERIES:</div>
+        <div className="font-mono text-xs text-ink-muted font-bold mb-2">{t("chat.quick_queries_title")}</div>
         <div className="flex flex-wrap gap-2">
           {quickPrompts.map((p, idx) => (
             <button
@@ -229,7 +220,7 @@ export default function ChatPage() {
               </div>
 
               <span className="text-[10px] font-mono text-ink-muted mt-1 px-1" suppressHydrationWarning>
-                {m.sender === "user" ? "You" : "SanjhiHawa"} {m.timestamp ? `• ${m.timestamp}` : ""}
+                {m.sender === "user" ? "You" : "SanjhiHawa"} {mounted && m.timestamp ? `• ${m.timestamp}` : ""}
               </span>
             </div>
           ))}
@@ -253,13 +244,7 @@ export default function ChatPage() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder={
-              lang === "hi"
-                ? "प्रदूषण, N95 मास्क, या प्यूरीफायर पर सवाल पूछें..."
-                : lang === "mr"
-                ? "हवेची गुणवत्ता किंवा उपायांबद्दल विचारा..."
-                : "Ask about winter smog, N95 masks, purifier sizing, or routine optimization..."
-            }
+            placeholder={t("chat.input_placeholder")}
             disabled={loading}
             className="flex-1 bg-paper border border-rule px-3 py-2 text-sm text-ink placeholder:text-ink-muted focus:outline-none focus:border-ink font-sans"
           />
@@ -269,7 +254,7 @@ export default function ChatPage() {
             disabled={loading || !input.trim()}
             className="px-5 py-2 bg-ink text-paper text-sm font-semibold hover:bg-ink-muted transition-colors disabled:opacity-50 font-mono uppercase"
           >
-            {loading ? "..." : lang === "hi" ? "भेजें" : lang === "mr" ? "पाठवा" : "Send"}
+            {loading ? "..." : t("chat.btn_send")}
           </button>
         </div>
     </div>

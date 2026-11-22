@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "@/lib/i18n";
 
 export default function HomeAirLabPage() {
-  const [lang, setLang] = useState<"en" | "hi" | "mr">("en");
+  const { t, lang } = useTranslation();
 
   // Purifier Sizing Calculator States
   const [unit, setUnit] = useState<"ft" | "m">("ft");
@@ -17,18 +18,6 @@ export default function HomeAirLabPage() {
 
   // Active Myth Tab
   const [expandedMyth, setExpandedMyth] = useState<string | null>("plants");
-
-  useEffect(() => {
-    const savedLang = (localStorage.getItem("saans_lang") as "en" | "hi" | "mr") || "en";
-    setLang(savedLang);
-
-    const onLangChange = () => {
-      const current = (localStorage.getItem("saans_lang") as "en" | "hi" | "mr") || "en";
-      setLang(current);
-    };
-    window.addEventListener("saans_lang_changed", onLangChange);
-    return () => window.removeEventListener("saans_lang_changed", onLangChange);
-  }, []);
 
   // Compute Volume in m³
   const volumeM3 =
@@ -109,14 +98,13 @@ export default function HomeAirLabPage() {
       {/* Page Title */}
       <div className="border-b hairline border-rule pb-4">
         <span className="font-mono text-xs uppercase tracking-wider text-ink-muted font-bold">
-          PRACTICAL INDOOR DEFENSE • NO-NONSENSE SCIENCE
+          {t("lab.eyebrow")}
         </span>
         <h1 className="font-sans text-3xl sm:text-4xl font-extrabold mt-1 text-ink tracking-tight">
-          {lang === "hi" ? "होम एयर लैब (Home Air Lab)" : "Home Air Lab"}
+          {t("lab.title")}
         </h1>
         <p className="text-sm md:text-base text-ink-muted mt-1 max-w-3xl leading-relaxed">
-          Clean air is achieved through mechanical filtration and physical envelope management, not folklore.
-          Calculate exact CADR purifier sizing, explore room-by-room interventions, inspect the DIY Corsi-Rosenthal Box, and debunk pervasive smog myths.
+          {t("lab.subtitle")}
         </p>
       </div>
 
@@ -125,10 +113,10 @@ export default function HomeAirLabPage() {
         <div className="flex flex-col md:flex-row md:items-center justify-between border-b hairline border-rule pb-4 mb-6">
           <div>
             <span className="font-mono text-xs uppercase tracking-wider text-ink-muted font-bold">
-              DETERMINISTIC PURIFIER FORMULA
+              {t("lab.cadr_eyebrow")}
             </span>
             <h2 className="font-sans text-2xl md:text-3xl font-bold mt-0.5 text-ink tracking-tight">
-              CADR Sizing Calculator
+              {t("lab.cadr_title")}
             </h2>
           </div>
             <div className="flex items-center space-x-2 mt-2 md:mt-0">
@@ -403,10 +391,10 @@ export default function HomeAirLabPage() {
         <section className="bg-surface border hairline border-rule p-6">
           <div className="border-b hairline border-rule pb-4 mb-6">
             <span className="font-mono text-xs uppercase tracking-wider text-ink-muted">
-              OPEN-SOURCE CLEAN AIR HARDWARE
+              {t("lab.diy_eyebrow")}
             </span>
             <h2 className="font-sans text-2xl font-bold mt-0.5 tracking-tight text-ink">
-              Build a DIY Corsi-Rosenthal Box (~₹3,500)
+              {t("lab.diy_title")}
             </h2>
             <p className="text-xs text-ink-muted mt-1 max-w-3xl">
               Invented by environmental engineer Dr. Richard Corsi and Jim Rosenthal. Delivers clean air delivery rates (CADR &gt; 400 m³/h) matching ₹20,000 commercial purifiers at a fraction of the cost, with 5x longer filter life.
@@ -493,10 +481,10 @@ export default function HomeAirLabPage() {
         <section className="space-y-4">
           <div className="border-b hairline border-rule pb-2">
             <span className="font-mono text-xs uppercase tracking-wider text-ink-muted">
-              EVIDENCE-BASED CORRECTIONS
+              {t("lab.myths_eyebrow")}
             </span>
             <h2 className="font-sans text-2xl font-bold mt-0.5 tracking-tight text-ink">
-              Smog Myth-Buster
+              {t("lab.myths_title")}
             </h2>
             <p className="text-xs text-ink-muted mt-1">
               Click any common winter smog belief to inspect its physical mechanism and peer-reviewed consensus.

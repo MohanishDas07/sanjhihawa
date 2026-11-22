@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { simulateInterventions } from "@/lib/api";
 import { getStoredProfile } from "@/lib/storage";
 import { SimulateResponse, HouseholdProfile } from "@/types/api";
+import { useTranslation, translateCity } from "@/lib/i18n";
 
 const SIMULATOR_OPTIONS = [
   {
@@ -58,6 +59,7 @@ const SIMULATOR_OPTIONS = [
 ];
 
 export default function SimulatePage() {
+  const { t, lang } = useTranslation();
   const [profile, setProfile] = useState<HouseholdProfile | null>(null);
   const [selectedIds, setSelectedIds] = useState<string[]>([
     "shift_ventilation_afternoon",
@@ -126,13 +128,14 @@ export default function SimulatePage() {
       {/* Header */}
       <div className="border-b hairline border-rule pb-4 flex flex-col md:flex-row justify-between items-start md:items-end gap-3">
         <div>
-          <span className="font-mono text-xs uppercase tracking-wider text-ink-muted font-bold">Dual-Lens Impact Modeling</span>
+          <span className="font-mono text-xs uppercase tracking-wider text-ink-muted font-bold">
+            Dual-Lens Impact Modeling • {translateCity(profile?.city_name || "Delhi", lang)}
+          </span>
           <h1 className="font-sans text-3xl md:text-4xl font-extrabold text-ink mt-1 tracking-tight">
-            What-If Simulator & Community Multiplier
+            {t("simulate.title")}
           </h1>
           <p className="text-sm md:text-base text-ink-muted mt-1 max-w-2xl leading-relaxed">
-            Evaluate side by side: <strong>What you breathe</strong> (personal dose reduction) and{" "}
-            <strong>What you stop emitting</strong> (grams PM2.5 and kg CO2e avoided).
+            {t("simulate.subtitle")}
           </p>
         </div>
 
@@ -142,13 +145,13 @@ export default function SimulatePage() {
             onClick={selectAllZero}
             className="px-3 py-1.5 border border-rule bg-surface hover:bg-paper text-ink"
           >
-            ₹0 Free Protocol
+            {t("simulate.btn_preset_free")}
           </button>
           <button
             onClick={selectFullShield}
             className="px-3 py-1.5 bg-ink text-paper hover:opacity-90 font-bold"
           >
-            Full Shield Mode
+            {t("simulate.btn_preset_full")}
           </button>
         </div>
       </div>
@@ -158,10 +161,10 @@ export default function SimulatePage() {
         <div className="lg:col-span-7 space-y-4">
           <div className="flex justify-between items-center border-b hairline border-rule pb-2">
             <span className="font-mono text-xs uppercase tracking-wider font-bold text-ink">
-              Select Interventions to Apply
+              {t("simulate.select_title")}
             </span>
             <span className="font-mono text-xs text-ink-muted">
-              {selectedIds.length} of {SIMULATOR_OPTIONS.length} active
+              {selectedIds.length} {t("simulate.active_count")} {SIMULATOR_OPTIONS.length} {lang === "hi" ? "सक्रिय" : lang === "mr" ? "सक्रिय" : "active"}
             </span>
           </div>
 
@@ -207,9 +210,9 @@ export default function SimulatePage() {
           {/* Community Scale Slider */}
           <div className="p-4 bg-surface border border-rule space-y-2 mt-4">
             <div className="flex justify-between items-center text-xs font-mono">
-              <span className="font-bold text-ink">Community Collective View:</span>
+              <span className="font-bold text-ink">{t("simulate.community_slider")}</span>
               <span className="px-2 py-0.5 bg-paper border border-rule font-bold text-ink">
-                {communityCount} households
+                {communityCount} {lang === "hi" ? "परिवार" : lang === "mr" ? "कुटुंबे" : "households"}
               </span>
             </div>
             <input

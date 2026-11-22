@@ -15,9 +15,11 @@ import {
 } from "@/lib/storage";
 import { searchCities } from "@/lib/api";
 import { POPULAR_INDIAN_CITIES, CityOption } from "@/lib/cities";
+import { useTranslation, translateCity } from "@/lib/i18n";
 
 export default function OnboardingPage() {
   const router = useRouter();
+  const { t, lang } = useTranslation();
   const [profile, setProfile] = useState<HouseholdProfile>(DEMO_GHAZIABAD_PROFILE);
   const [step, setStep] = useState<number>(1);
   const [savedSuccess, setSavedSuccess] = useState<boolean>(false);
@@ -136,21 +138,23 @@ export default function OnboardingPage() {
       {/* Page Header */}
       <div className="border-b hairline border-rule pb-4 flex flex-col sm:flex-row justify-between sm:items-end gap-3">
         <div>
-          <span className="font-mono text-xs uppercase tracking-wider text-ink-muted font-bold">Household Setup</span>
+          <span className="font-mono text-xs uppercase tracking-wider text-ink-muted font-bold">
+            01 // Local-First Exposure Onboarding
+          </span>
           <h1 className="font-sans text-3xl md:text-4xl font-extrabold text-ink mt-1 tracking-tight">
-            Build Your Household's Profile
+            {t("onboarding.title")}
           </h1>
           <p className="text-sm md:text-base text-ink-muted mt-1 leading-relaxed">
-            Stored strictly in your browser. Used to calculate personalized Breath Budgets and exposure deltas.
+            {t("onboarding.subtitle")}
           </p>
         </div>
 
         <button
           onClick={handleLoadStandardTemplate}
-          className="self-start sm:self-auto font-mono text-xs px-3 py-1.5 bg-paper border border-rule hover:bg-surface text-ink transition-colors"
+          className="self-start sm:self-auto font-mono text-xs px-3 py-1.5 bg-paper border border-rule hover:bg-surface text-ink transition-colors font-bold"
           title="Fill with standard 4-member household template"
         >
-          Standard Family Template
+          {t("onboarding.btn_load_demo")}
         </button>
       </div>
 

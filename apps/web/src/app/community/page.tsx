@@ -4,14 +4,15 @@ import React, { useState, useEffect } from "react";
 import { CommunityAdvisoryResponse } from "@/types/api";
 import { POPULAR_INDIAN_CITIES } from "@/lib/cities";
 import { fetchCommunityAdvisory } from "@/lib/api";
+import { useTranslation, translateCity } from "@/lib/i18n";
 
 export default function CommunityPage() {
+  const { t, lang } = useTranslation();
   const [orgName, setOrgName] = useState<string>("Vasundhara Enclave RWA");
   const [orgType, setOrgType] = useState<"rwa" | "school" | "community">("rwa");
   const [city, setCity] = useState<string>("Ghaziabad");
   const [lat, setLat] = useState<number>(28.6692);
   const [lon, setLon] = useState<number>(77.4538);
-  const [lang, setLang] = useState<"en" | "hi" | "mr">("en");
   const [advisory, setAdvisory] = useState<CommunityAdvisoryResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -48,12 +49,14 @@ export default function CommunityPage() {
       {/* Header */}
       <div className="border-b hairline border-rule pb-4 no-print flex flex-col sm:flex-row justify-between sm:items-end gap-3">
         <div>
-          <span className="font-mono text-xs uppercase tracking-wider text-ink-muted font-bold">Citizen & Institutional Defense</span>
+          <span className="font-mono text-xs uppercase tracking-wider text-ink-muted font-bold">
+            Citizen & Institutional Defense • {translateCity(city, lang)}
+          </span>
           <h1 className="font-sans text-3xl md:text-4xl font-extrabold text-ink mt-1 tracking-tight">
-            Community & School Advisory Card
+            {t("community.title")}
           </h1>
           <p className="text-sm md:text-base text-ink-muted mt-1 max-w-xl leading-relaxed">
-            Generate clean, printable bulletins for Resident Welfare Associations (RWAs), apartment notices, and school noticeboards.
+            {t("community.subtitle")}
           </p>
         </div>
 
@@ -64,14 +67,14 @@ export default function CommunityPage() {
           <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/>
           </svg>
-          <span>Print / Export PDF</span>
+          <span>{t("community.btn_print")}</span>
         </button>
       </div>
 
       {/* Control Panel (Hidden during Print) */}
       <div className="no-print p-5 bg-surface border border-rule grid grid-cols-1 sm:grid-cols-4 gap-4 text-xs font-mono">
         <div>
-          <label className="block text-ink-muted mb-1 font-bold">Organization Name:</label>
+          <label className="block text-ink-muted mb-1 font-bold">{t("community.org_label")}</label>
           <input
             type="text"
             value={orgName}

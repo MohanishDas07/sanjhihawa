@@ -5,8 +5,10 @@ import Link from "next/link";
 import { generateDayPlan } from "@/lib/api";
 import { getStoredProfile, saveStoredProfile } from "@/lib/storage";
 import { PlanResponse, HouseholdProfile } from "@/types/api";
+import { useTranslation, translateCity } from "@/lib/i18n";
 
 export default function YourDayPage() {
+  const { t, lang } = useTranslation();
   const [profile, setProfile] = useState<HouseholdProfile | null>(null);
   const [plan, setPlan] = useState<PlanResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -54,13 +56,13 @@ export default function YourDayPage() {
           <div className="flex items-center space-x-2 text-xs font-mono uppercase text-ink-muted">
             <span>24-Hour Routine & Inhalation Plan</span>
             <span>•</span>
-            <span>{plan?.city || profile?.city_name}</span>
+            <span>{translateCity(plan?.city || profile?.city_name || "Delhi", lang)}</span>
           </div>
           <h1 className="font-sans text-3xl md:text-4xl font-extrabold text-ink mt-1 tracking-tight">
-            Your Day's Breath Budget & Routine
+            {t("your_day.title")}
           </h1>
           <p className="text-sm text-ink-muted mt-1 max-w-2xl">
-            Calculated by the pure-Python deterministic engine. Flexible routines are placed in lowest-exposure windows.
+            {t("your_day.subtitle")}
           </p>
         </div>
 
@@ -113,10 +115,10 @@ export default function YourDayPage() {
           <section className="bg-paper border-2 border-ink p-6 space-y-4">
             <div className="flex items-center justify-between border-b hairline border-rule pb-3">
               <span className="font-mono text-xs uppercase tracking-wider font-bold text-ink">
-                Priority Household Action Summary
+                {t("your_day.priority_title")}
               </span>
               <span className="font-mono text-xs px-2.5 py-1 bg-surface border border-rule text-ink font-medium">
-                {plan?.city || profile?.city_name} • Today
+                {translateCity(plan?.city || profile?.city_name || "Delhi", lang)} • Today
               </span>
             </div>
 
@@ -124,41 +126,41 @@ export default function YourDayPage() {
               {/* Item 1: Outdoor Timing */}
               <div className="space-y-1.5">
                 <span className="font-mono text-xs uppercase text-ink-muted block font-bold">
-                  1. Outdoor Activity & Walk
+                  {t("your_day.item1_label")}
                 </span>
                 <p className="font-sans text-lg font-bold text-ink">
-                  Shift all exercise to midday
+                  {t("your_day.item1_title")}
                 </p>
                 <p className="text-sm text-ink-muted leading-relaxed">
-                  Avoid morning thermal inversion (6 AM - 9 AM). The lowest exposure window is <strong>12:00 PM – 3:00 PM</strong>.
+                  {t("your_day.item1_desc")}
                 </p>
               </div>
 
               {/* Item 2: Mask Protection */}
               <div className="space-y-1.5">
                 <span className="font-mono text-xs uppercase text-ink-muted block font-bold">
-                  2. Respiratory Defense
+                  {t("your_day.item2_label")}
                 </span>
                 <p className="font-sans text-lg font-bold text-ink">
-                  ISI/BIS N95 for all road transits
+                  {t("your_day.item2_title")}
                 </p>
                 <p className="text-sm text-ink-muted leading-relaxed">
                   {currentMember?.is_sensitive
                     ? `⚠️ High Priority: ${currentMember.label} has sensitive airways. Mandatory N95 outdoors.`
-                    : "Cloth bandanas allow >80% PM2.5 penetration. Only fitted N95 filters fine soot."}
+                    : t("your_day.item2_desc")}
                 </p>
               </div>
 
               {/* Item 3: Home Infiltration */}
               <div className="space-y-1.5">
                 <span className="font-mono text-xs uppercase text-ink-muted block font-bold">
-                  3. Indoor Smog Sealing
+                  {t("your_day.item3_label")}
                 </span>
                 <p className="font-sans text-lg font-bold text-ink">
-                  Damp towel door draft stop
+                  {t("your_day.item3_title")}
                 </p>
                 <p className="text-sm text-ink-muted leading-relaxed">
-                  Keep windows latched during night inversion. Wet mop floors; stop dry broom sweeping to avoid resuspension.
+                  {t("your_day.item3_desc")}
                 </p>
               </div>
             </div>
@@ -169,9 +171,12 @@ export default function YourDayPage() {
             <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 border-b hairline border-rule pb-4">
               <div>
                 <span className="font-mono text-xs uppercase text-ink-muted font-bold block">
-                  Deterministic Exposure Metric
+                  {t("your_day.budget_ring_sub")}
                 </span>
                 <h2 className="font-sans text-2xl md:text-3xl font-bold text-ink tracking-tight">
+                  {t("your_day.budget_ring_title")}
+                </h2>
+              </div>
                   Household Member Breath Budget
                 </h2>
               </div>
@@ -268,10 +273,10 @@ export default function YourDayPage() {
                 Algorithmically Optimized Windows
               </span>
               <h2 className="font-sans text-2xl md:text-3xl font-bold text-ink tracking-tight">
-                Flexible Routine Placement (Avoiding Peak Inversion)
+                {t("your_day.scheduler_title")}
               </h2>
               <p className="text-sm text-ink-muted mt-1 leading-relaxed">
-                Winter morning air traps toxic smoke near ground level. Moving flexible tasks to midday cuts inhaled dose drastically.
+                {t("your_day.scheduler_sub")}
               </p>
             </div>
 
@@ -280,8 +285,12 @@ export default function YourDayPage() {
                 <div key={item.activity_id} className="p-5 bg-paper border border-rule space-y-3">
                   <div className="flex justify-between items-start">
                     <div>
-                      <h3 className="font-sans text-lg font-bold text-ink">{item.name_en}</h3>
-                      <span className="text-sm font-devanagari text-ink-muted">{item.name_hi}</span>
+                      <h3 className="font-sans text-lg font-bold text-ink">
+                        {lang === "hi" && item.name_hi ? item.name_hi : item.name_en}
+                      </h3>
+                      {lang !== "hi" && item.name_hi && (
+                        <span className="text-sm font-devanagari text-ink-muted">{item.name_hi}</span>
+                      )}
                     </div>
                     <span className="px-2.5 py-1 bg-green-100 text-green-900 border border-green-300 font-mono text-xs font-bold">
                       -{item.reduction_pct}% PM2.5
@@ -302,7 +311,7 @@ export default function YourDayPage() {
                   </div>
 
                   <p className="text-xs md:text-sm text-ink leading-relaxed">
-                    {item.rationale_en}
+                    {lang === "hi" && item.rationale_hi ? item.rationale_hi : item.rationale_en}
                   </p>
                 </div>
               ))}
@@ -348,18 +357,15 @@ export default function YourDayPage() {
               <div className="flex items-center justify-between border-b border-amber-200 pb-2">
                 <span className="font-mono text-xs font-bold uppercase tracking-wider text-amber-900 flex items-center space-x-1.5">
                   <span className="inline-block w-2 h-2 bg-amber-600 rounded-full" aria-hidden="true"></span>
-                  <span>Safety Protocol: If You Must Be Outside</span>
+                  <span>{t("your_day.outdoor_protocol_title")}</span>
                 </span>
                 <span className="font-mono text-2xs px-2 py-0.5 bg-amber-200 border border-amber-400">
                   CRITICAL HEALTH DEFENSE
                 </span>
               </div>
               <p className="text-xs md:text-sm leading-relaxed">
-                {plan?.outdoor_worker_advice_en}
+                {lang === "hi" && plan?.outdoor_worker_advice_hi ? plan.outdoor_worker_advice_hi : plan?.outdoor_worker_advice_en}
               </p>
-              <div className="text-2xs font-devanagari text-amber-900 pt-1 border-t border-amber-200/60">
-                {plan?.outdoor_worker_advice_hi}
-              </div>
             </section>
           )}
 
@@ -371,10 +377,10 @@ export default function YourDayPage() {
                   Actionable Interventions
                 </span>
                 <h2 className="font-sans text-2xl font-bold text-ink tracking-tight">
-                  Ranked Recommendations by Exposure Saved Per Rupee
+                  {t("your_day.interventions_title")}
                 </h2>
                 <p className="text-xs text-ink-muted mt-1">
-                  Tier 0 (₹0 Free Habits) are prioritized first, followed by high cost-efficiency measures.
+                  {t("your_day.interventions_sub")}
                 </p>
               </div>
 

@@ -1,35 +1,37 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
+import { useTranslation } from "@/lib/i18n";
 
 export default function HowSaansWorksPage() {
+  const { t, lang } = useTranslation();
+
   return (
     <div className="max-w-4xl mx-auto space-y-10 animate-fadeIn font-sans">
       {/* Header */}
       <div className="border-b hairline border-rule pb-4">
-        <span className="font-mono text-xs uppercase tracking-wider text-ink-muted font-bold">Scientific & Architectural Openness</span>
+        <span className="font-mono text-xs uppercase tracking-wider text-ink-muted font-bold">
+          {lang === "hi" ? "वैज्ञानिक एवं वास्तुकला खुलापन" : lang === "mr" ? "वैज्ञानिक व वास्तुशास्त्रीय पारदर्शकता" : "Scientific & Architectural Openness"}
+        </span>
         <h1 className="font-sans text-3xl md:text-5xl font-extrabold text-ink mt-1 tracking-tight">
-          How SanjhiHawa Works
+          {t("how_it_works.title")}
         </h1>
         <p className="text-base md:text-lg text-ink-muted mt-2 max-w-2xl leading-relaxed">
-          Complete disclosure of physical mass-balance formulas, epidemiological constants,
-          data sources, heuristic boundaries, and privacy guarantees.
+          {t("how_it_works.subtitle")}
         </p>
       </div>
 
       {/* Principle 0: The LLM Never Does The Math */}
       <section className="p-6 md:p-8 bg-surface border-2 border-ink space-y-3">
         <span className="font-mono text-xs uppercase font-bold tracking-wider text-ink block">
-          Cardinal Rule #1
+          {lang === "hi" ? "प्रमुख नियम #1" : lang === "mr" ? "प्रमुख नियम #1" : "Cardinal Rule #1"}
         </span>
         <h2 className="font-sans text-2xl md:text-3xl font-bold text-ink tracking-tight">
-          The LLM Never Does The Math
+          {t("how_it_works.rule1_title")}
         </h2>
         <p className="text-sm md:text-base text-ink/80 leading-relaxed">
-          Large Language Models are non-deterministic and prone to arithmetic hallucination.
-          In SanjhiHawa, every number—inhaled dose in micrograms, linear CPCB AQI sub-indices,
-          room steady-state mass balances, Berkeley Earth cigarette-equivalents, schedule shifts,
-          and rupee efficiency scores—is calculated exclusively inside a pure-Python, framework-independent engine.
-          The LLM is invoked strictly as a narrating interface to format and personalize verified tool outputs.
+          {t("how_it_works.rule1_desc")}
         </p>
       </section>
 
