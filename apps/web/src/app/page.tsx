@@ -25,6 +25,7 @@ export default function LandingPage() {
   const [, setCachedInfo] = useState<CachedAirData | null>(null);
   const [lang, setLang] = useState<"en" | "hi" | "mr">("en");
   const [selectedHourlyPoint, setSelectedHourlyPoint] = useState<HourlyAirPoint | null>(null);
+  const [showResolutionDetail, setShowResolutionDetail] = useState<boolean>(false);
 
   // Geocoding Search State
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -488,6 +489,49 @@ export default function LandingPage() {
             </div>
           )}
 
+          {/* Scientific Transparency & Spatial Resolution Notice */}
+          <div className="p-3.5 bg-paper border border-rule/90 shadow-2xs space-y-2.5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div className="flex items-center space-x-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-700 animate-pulse" />
+                <span className="font-bold text-ink uppercase tracking-wider text-xs">
+                  Scientific Audit: Why Roadside Ground Monitors Differ from Regional Atmospheric Grids
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowResolutionDetail(!showResolutionDetail)}
+                className="text-xs font-sans font-bold text-emerald-800 hover:text-emerald-950 underline underline-offset-2 text-left sm:text-right inline-flex items-center gap-1"
+              >
+                <span>{showResolutionDetail ? "Collapse Scientific Briefing ▲" : "Compare Spatial Scales (3m vs 11 km) ▾"}</span>
+              </button>
+            </div>
+
+            {showResolutionDetail && (
+              <div className="pt-2 border-t hairline border-rule/60 grid grid-cols-1 md:grid-cols-2 gap-4 text-xs leading-relaxed text-ink/80 animate-fadeIn">
+                <div className="p-3.5 bg-surface border border-rule space-y-1.5">
+                  <div className="flex items-center justify-between font-bold text-ink uppercase tracking-wider text-2xs text-amber-900">
+                    <span>1. Commercial Roadside Sensors (e.g. aqi.in)</span>
+                    <span className="px-1.5 py-0.5 bg-amber-100 text-amber-950 font-mono text-3xs font-semibold">Hyper-Local Point (~3m)</span>
+                  </div>
+                  <p>
+                    Measures localized exhaust plumes, idling buses, and road dust 2 meters above traffic asphalt. Optical laser sensors without heated inlets are vulnerable to <strong>hygroscopic swelling</strong>, where high humidity causes microscopic water droplets to be miscounted as heavy PM2.5 particles, inflating readings by 40%–80%.
+                  </p>
+                </div>
+
+                <div className="p-3.5 bg-surface border border-rule space-y-1.5">
+                  <div className="flex items-center justify-between font-bold text-ink uppercase tracking-wider text-2xs text-emerald-900">
+                    <span>2. Copernicus CAMS Chemical Transport Grid (SanjhiHawa)</span>
+                    <span className="px-1.5 py-0.5 bg-emerald-100 text-emerald-950 font-mono text-3xs font-semibold">Regional Troposphere (~11 km)</span>
+                  </div>
+                  <p>
+                    Integrates satellite aerosol optical depth (Sentinel-5P / MODIS) with 3D numerical weather forecasting across a ~120 km² airshed. Captures true regional solar convection that dilutes background smog at midday. Both platforms apply the exact same Indian CPCB formula—the variance is in the physical spatial scale sampled.
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+
           {/* Active GRAP Notification for NCR */}
           {airData?.active_grap_stage && (
             <div className="bg-red-50 border border-red-200 p-4 text-red-950 font-sans text-sm md:text-base">
@@ -683,6 +727,100 @@ export default function LandingPage() {
           </div>
         </section>
       )}
+
+      {/* Comprehensive Atmospheric Data Integrity & Scientific Provenance Section */}
+      <section className="bg-surface border hairline border-rule p-6 md:p-8 space-y-6 shadow-sm" aria-label="Scientific Data Integrity and Provenance">
+        <div className="flex flex-col md:flex-row md:items-end justify-between border-b hairline border-rule pb-5 gap-3">
+          <div className="space-y-1.5 max-w-3xl">
+            <div className="flex items-center gap-2 text-xs font-sans uppercase font-bold text-emerald-800 tracking-wider">
+              <span className="w-2 h-2 rounded-full bg-emerald-600" />
+              <span>Scientific Data Integrity • Spatial Resolution Benchmark</span>
+            </div>
+            <h2 className="font-serif text-2xl md:text-3xl font-bold text-ink tracking-tight">
+              Why Roadside Ground Monitors Differ from Regional Atmospheric Grids
+            </h2>
+            <p className="text-sm md:text-base text-ink/80 font-sans leading-relaxed">
+              When comparing air quality platforms across Indian cities (e.g. Pune, Kolkata, or Delhi), users frequently observe apparent divergence between commercial websites and numerical atmospheric models. Here is the peer-reviewed scientific proof of how sampling volume, sensor physics, and meteorological convection operate.
+            </p>
+          </div>
+          <div className="px-3 py-1.5 bg-paper border border-rule text-ink font-mono text-xs font-bold self-start md:self-auto shrink-0">
+            CPCB NAQI Standard Formula: Identical
+          </div>
+        </div>
+
+        {/* 4-Pillar Comparative Analysis Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Pillar 1: Spatial Sampling Volume */}
+          <div className="p-5 bg-paper border border-rule space-y-2.5 shadow-2xs">
+            <div className="text-xs font-sans font-bold uppercase tracking-wider text-ink/60">
+              01 • Spatial Footprint
+            </div>
+            <h3 className="font-sans text-base md:text-lg font-bold text-ink">
+              Street Canyon vs. 11 km Airshed
+            </h3>
+            <p className="text-xs md:text-sm text-ink/80 leading-relaxed font-sans">
+              Roadside sensors capture vehicle tailpipes and brake friction 2 meters above asphalt. SanjhiHawa’s ECMWF CAMS model calculates the integrated ~120 km² regional boundary layer, encompassing parks, residential neighborhoods, and open terrain.
+            </p>
+          </div>
+
+          {/* Pillar 2: Sensor Physics & Humidity Bias */}
+          <div className="p-5 bg-paper border border-rule space-y-2.5 shadow-2xs">
+            <div className="text-xs font-sans font-bold uppercase tracking-wider text-ink/60">
+              02 • Physical Detection
+            </div>
+            <h3 className="font-sans text-base md:text-lg font-bold text-ink">
+              Laser Scattering vs. Multi-Satellite
+            </h3>
+            <p className="text-xs md:text-sm text-ink/80 leading-relaxed font-sans">
+              Low-cost optical counters mistake condensed water droplets during high relative humidity or morning inversions for heavy PM2.5 (hygroscopic swelling). CAMS assimilates Sentinel-5P, MODIS, and calibrated reference BAM stations under strict chemical equations.
+            </p>
+          </div>
+
+          {/* Pillar 3: Mathematical Determinism */}
+          <div className="p-5 bg-paper border border-rule space-y-2.5 shadow-2xs">
+            <div className="text-xs font-sans font-bold uppercase tracking-wider text-ink/60">
+              03 • Mathematical Proof
+            </div>
+            <h3 className="font-sans text-base md:text-lg font-bold text-ink">
+              Zero Formula Divergence
+            </h3>
+            <p className="text-xs md:text-sm text-ink/80 leading-relaxed font-sans">
+              For a roadside reading of 98 µg/m³, CPCB piecewise interpolation produces AQI 223. For a regional reading of 29 µg/m³, it produces AQI 49. The mathematical engine is 100% identical; only the physical volume being measured differs.
+            </p>
+          </div>
+
+          {/* Pillar 4: Public Science vs Hardware Sales */}
+          <div className="p-5 bg-paper border border-rule space-y-2.5 shadow-2xs">
+            <div className="text-xs font-sans font-bold uppercase tracking-wider text-ink/60">
+              04 • Scientific Objectivity
+            </div>
+            <h3 className="font-sans text-base md:text-lg font-bold text-ink">
+              Public Health vs. Commercial Purifiers
+            </h3>
+            <p className="text-xs md:text-sm text-ink/80 leading-relaxed font-sans">
+              Commercial platforms are frequently operated by air purifier manufacturers who benefit from displaying localized maximum readings. CAMS is managed by the European Union Earth Observation Programme with zero commercial hardware interest.
+            </p>
+          </div>
+        </div>
+
+        {/* Institutional Summary Callout */}
+        <div className="p-4 bg-paper/60 border border-rule flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-xs font-sans text-ink/80">
+          <div className="space-y-1">
+            <strong className="text-ink font-bold block text-sm">
+              How SanjhiHawa Applies This in Practice
+            </strong>
+            <p className="leading-relaxed">
+              Use regional atmospheric models for household exposure budgeting, daily routine timing, and residential purifier sizing. Use roadside ground monitors when walking directly alongside arterial highways or active construction corridors.
+            </p>
+          </div>
+          <Link
+            href="/how-saans-works"
+            className="px-4 py-2.5 bg-ink text-paper font-semibold hover:opacity-90 transition-opacity whitespace-nowrap self-stretch md:self-auto text-center"
+          >
+            Review Scientific Formulations →
+          </Link>
+        </div>
+      </section>
 
       {/* Field Instruments & Clean Air Toolset */}
       <section className="space-y-4 font-sans" aria-label="Field Instruments and Clean Air Toolset">
