@@ -6,27 +6,27 @@ export default function HowSaansWorksPage() {
     <div className="max-w-4xl mx-auto space-y-10 animate-fadeIn font-sans">
       {/* Header */}
       <div className="border-b hairline border-rule pb-4">
-        <span className="font-mono text-2xs uppercase text-ink-muted">Scientific & Architectural Openness</span>
+        <span className="font-mono text-xs uppercase tracking-wider text-ink-muted font-bold">Scientific & Architectural Openness</span>
         <h1 className="font-serif text-3xl md:text-5xl font-bold text-ink mt-1">
-          How Saans Works
+          How SanjhiHawa Works
         </h1>
-        <p className="text-base text-ink-muted mt-2 max-w-2xl leading-relaxed">
+        <p className="text-base md:text-lg text-ink-muted mt-2 max-w-2xl leading-relaxed">
           Complete disclosure of physical mass-balance formulas, epidemiological constants,
           data sources, heuristic boundaries, and privacy guarantees.
         </p>
       </div>
 
       {/* Principle 0: The LLM Never Does The Math */}
-      <section className="p-6 bg-surface border-2 border-ink space-y-3">
+      <section className="p-6 md:p-8 bg-surface border-2 border-ink space-y-3">
         <span className="font-mono text-xs uppercase font-bold tracking-wider text-ink block">
           Cardinal Rule #1
         </span>
-        <h2 className="font-serif text-2xl font-bold text-ink">
+        <h2 className="font-serif text-2xl md:text-3xl font-bold text-ink">
           The LLM Never Does The Math
         </h2>
-        <p className="text-sm text-ink-muted leading-relaxed">
+        <p className="text-sm md:text-base text-ink/80 leading-relaxed">
           Large Language Models are non-deterministic and prone to arithmetic hallucination.
-          In Saans, every number—inhaled dose in micrograms, linear CPCB AQI sub-indices,
+          In SanjhiHawa, every number—inhaled dose in micrograms, linear CPCB AQI sub-indices,
           room steady-state mass balances, Berkeley Earth cigarette-equivalents, schedule shifts,
           and rupee efficiency scores—is calculated exclusively inside a pure-Python, framework-independent engine.
           The LLM is invoked strictly as a narrating interface to format and personalize verified tool outputs.
@@ -117,7 +117,7 @@ export default function HowSaansWorksPage() {
         </h2>
         <div className="p-5 bg-surface border border-rule space-y-3 text-sm text-ink-muted leading-relaxed">
           <p>
-            Saans does not require user accounts, passwords, email addresses, or phone numbers.
+            SanjhiHawa does not require user accounts, passwords, email addresses, or phone numbers.
           </p>
           <ul className="list-disc list-inside space-y-1.5 text-xs text-ink">
             <li>Your household members, family ages, and breathing vulnerability flags are stored exclusively in your browser's <code>localStorage</code>.</li>
@@ -128,50 +128,50 @@ export default function HowSaansWorksPage() {
         </div>
       </section>
 
-      {/* Section 3: Traceability Table */}
+      {/* Section 3: Data Sources & Standards */}
       <section className="space-y-4">
         <h2 className="font-serif text-2xl font-bold text-ink border-b hairline border-rule pb-2">
-          Problem Statement Traceability
+          Real Atmospheric Telemetry & Scientific Standards
         </h2>
         <div className="overflow-x-auto border border-rule">
           <table className="w-full text-left text-xs font-sans">
             <thead className="bg-surface font-mono border-b hairline border-rule">
               <tr>
-                <th className="p-3">Problem Statement Phrase</th>
-                <th className="p-3">Fulfilling Feature in Saans</th>
-                <th className="p-3">Location in App</th>
+                <th className="p-3">Standard / Domain</th>
+                <th className="p-3">Governing Body / Source</th>
+                <th className="p-3">Implementation in SanjhiHawa</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-rule bg-paper">
               <tr>
-                <td className="p-3 font-semibold">"low-emission daily routines"</td>
-                <td className="p-3">Dynamic scheduler shifting exercise, ventilation, and errands away from morning winter inversion peaks.</td>
-                <td className="p-3 font-mono text-2xs">/your-day</td>
+                <td className="p-3 font-semibold">CPCB National Air Quality Index (NAQI)</td>
+                <td className="p-3">Central Pollution Control Board, MoEFCC (Govt of India)</td>
+                <td className="p-3">Official 6-band linear piecewise sub-index interpolation for PM2.5 & PM10.</td>
               </tr>
               <tr>
-                <td className="p-3 font-semibold">"indoor air quality hacks"</td>
-                <td className="p-3">Damp door towels, wet mopping, weatherstripping foam tape, and CADR purifier sizing equations.</td>
-                <td className="p-3 font-mono text-2xs">/your-day, /simulate</td>
+                <td className="p-3 font-semibold">Atmospheric Model Telemetry</td>
+                <td className="p-3">Copernicus Atmosphere Monitoring Service (CAMS) / Open-Meteo</td>
+                <td className="p-3">Hourly aerosol optical depth & ground-level PM2.5/PM10 forecast grids across India.</td>
               </tr>
               <tr>
-                <td className="p-3 font-semibold">"sustainable alternatives"</td>
-                <td className="p-3">Budget-tiered interventions (₹0, &lt;₹1k, &gt;₹5k) with dual-lens emissions avoided (g PM2.5 & kg CO2e).</td>
-                <td className="p-3 font-mono text-2xs">/simulate</td>
+                <td className="p-3 font-semibold">Graded Response Action Plan (GRAP)</td>
+                <td className="p-3">Commission for Air Quality Management (CAQM) in NCR</td>
+                <td className="p-3">Statutory Stage I (201-300), Stage II (301-400), Stage III (401-450), Stage IV (&gt;450) mandates.</td>
               </tr>
               <tr>
-                <td className="p-3 font-semibold">"tailored to location and lifestyle"</td>
-                <td className="p-3">Local CPCB/Open-Meteo forecasts combined with family age bands, commute modes, and housing sealing.</td>
-                <td className="p-3 font-mono text-2xs">/onboarding</td>
+                <td className="p-3 font-semibold">Physiological Inhalation Dosimetry</td>
+                <td className="p-3">US EPA Exposure Factors Handbook (Chapter 6) & ICMR Norms</td>
+                <td className="p-3">Age-stratified minute volume calculations across sedentary, transit, and sleep activities.</td>
               </tr>
               <tr>
-                <td className="p-3 font-semibold">"clearly explaining direct impact"</td>
-                <td className="p-3">The Breath Budget (micrograms inhaled, WHO/NAAQS markers, and cigarette-equivalents heuristic).</td>
-                <td className="p-3 font-mono text-2xs">/your-day, /simulate</td>
+                <td className="p-3 font-semibold">Indoor Aerosol Mass Balance</td>
+                <td className="p-3">Chen & Zhao (2011), Nazaroff (2004), Indoor Air</td>
+                <td className="p-3">Physical infiltration, envelope penetration, and Clean Air Delivery Rate (CADR) decay.</td>
               </tr>
               <tr>
-                <td className="p-3 font-semibold">"families and communities"</td>
-                <td className="p-3">Multi-member household profiles, 200-household collective multipliers, and printable RWA/School advisory cards.</td>
-                <td className="p-3 font-mono text-2xs">/onboarding, /community</td>
+                <td className="p-3 font-semibold">Respiratory Particulate Filtration</td>
+                <td className="p-3">Bureau of Indian Standards (IS 9473) / NIOSH</td>
+                <td className="p-3">Fit-adjusted penetration modeling for certified ISI N95 vs unsealed cloth masks.</td>
               </tr>
             </tbody>
           </table>

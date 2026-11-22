@@ -53,18 +53,18 @@ NEGATION_SYMPTOM_PATTERNS = [
 
 STATIC_MEDICAL_MESSAGES = {
     "en": (
-        "EMERGENCY MEDICAL WARNING: Saans is an air quality decision assistant and CANNOT provide "
+        "EMERGENCY MEDICAL WARNING: SanjhiHawa is an air quality decision assistant and CANNOT provide "
         "medical diagnosis or clinical treatment. The symptoms you reported (such as chest pain, acute breathlessness, "
         "or child wheezing) require immediate professional medical intervention. "
         "Please dial 112 / 102 or proceed immediately to the nearest hospital emergency room."
     ),
     "hi": (
-        "आपातकालीन चिकित्सा चेतावनी: साँस (Saans) केवल एक वायु गुणवत्ता और दिनचर्या सहायता प्रणाली है। यह कोई चिकित्सीय "
+        "आपातकालीन चिकित्सा चेतावनी: सांझी हवा (SanjhiHawa) केवल एक वायु गुणवत्ता और दिनचर्या सहायता प्रणाली है। यह कोई चिकित्सीय "
         "निदान या इलाज प्रदान नहीं कर सकती। आपके द्वारा बताए गए लक्षण (जैसे सीने में दर्द, तेज सांस फूलना, या बच्चे की घरघराहट) "
         "गंभीर हो सकते हैं। कृपया तुरंत आपातकालीन नंबर (112 या 102) पर कॉल करें या नजदीकी अस्पताल के आपातकालीन कक्ष (Emergency) में जाएं।"
     ),
     "mr": (
-        "तातडीची वैद्यकीय सूचना: साँस (Saans) ही केवळ हवेच्या गुणवत्तेची माहिती देणारी प्रणाली आहे. ती वैद्यकीय निदान किंवा औषधोपचार "
+        "तातडीची वैद्यकीय सूचना: सांझी हवा (SanjhiHawa) ही केवळ हवेच्या गुणवत्तेची माहिती देणारी प्रणाली आहे. ती वैद्यकीय निदान किंवा औषधोपचार "
         "करू शकत नाही. आपण नमूद केलेली लक्षणे (जसे की छातीत तीव्र वेदना, धाप लागणे, किंवा मुलांमधील घरघर) तातडीच्या उपचारांची आवश्यकता दर्शवतात. "
         "कृपया त्वरित ११२ किंवा १०२ वर संपर्क साधा किंवा जवळच्या रुग्णालयात दाखल व्हा."
     ),

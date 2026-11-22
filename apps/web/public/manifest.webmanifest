@@ -1,6 +1,6 @@
 {
-  "name": "Saans - Clean Air Decision Assistant",
-  "short_name": "Saans",
+  "name": "SanjhiHawa - Clean Air Decision Assistant",
+  "short_name": "SanjhiHawa",
   "description": "Grounded winter smog and Breath Budget assistant for Indian households",
   "start_url": "/",
   "display": "standalone",

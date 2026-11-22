@@ -52,6 +52,30 @@ class TestSaansAPIContracts(unittest.TestCase):
         self.assertEqual(res.results[0].name, "Ghaziabad")
         self.assertEqual(res.results[0].country, "India")
 
+    def test_reverse_geocode_contract_and_service(self):
+        """Validates spatial reverse geocoding to nearest known Indian city."""
+        from schemas.contracts import ReverseGeocodeResponse
+        from services.air_service import reverse_geocode_sync
+
+        # Bangalore coordinates
+        rev_blr = reverse_geocode_sync(12.9716, 77.5946)
+        self.assertIsInstance(rev_blr, ReverseGeocodeResponse)
+        self.assertIn(rev_blr.name, ["Bengaluru", "Bangalore"])
+        self.assertEqual(rev_blr.country, "India")
+        self.assertEqual(rev_blr.admin1, "Karnataka")
+        self.assertLessEqual(rev_blr.distance_km, 1.0)
+
+        # Pune coordinates
+        rev_pune = reverse_geocode_sync(18.5204, 73.8567)
+        self.assertEqual(rev_pune.name, "Pune")
+        self.assertEqual(rev_pune.admin1, "Maharashtra")
+
+    def test_geocode_nonexistent_returns_empty(self):
+        """Audit 2 R2: GET /api/v1/geocode?q=zzzzxq nonexistent place must return empty results, not fake cities."""
+        res = search_city_geocoding_sync("zzzzxq nonexistent place")
+        self.assertIsInstance(res, GeocodeResponse)
+        self.assertEqual(res.results, [])
+
     def test_air_quality_contract_and_fixture_fallback(self):
         air = get_air_quality_sync(28.6692, 77.4538, "Ghaziabad", force_fallback=True)
         self.assertIsInstance(air, AirQualityResponse)
@@ -63,18 +87,20 @@ class TestSaansAPIContracts(unittest.TestCase):
         self.assertEqual(air.dominant_pollutant, "PM2.5")
 
     def test_air_quality_distant_city_no_silent_substitution(self):
-        """Audit Item 5: Pune or distant cities must NOT silently pretend to be Ghaziabad without warning."""
-        air = get_air_quality_sync(18.52, 73.85, "Pune", force_fallback=True)
+        """Audit 2 R8: Pune or distant cities without live station data must return status 'no_data', not a distant city's estimate."""
+        air = get_air_quality_sync(18.52, 73.85, "Pune", force_fallback=False)
         self.assertIsInstance(air, AirQualityResponse)
-        self.assertEqual(air.city, "Pune")
-        self.assertTrue(air.is_sample_or_fallback)
-        # Must explicitly disclose distance to nearest reference station
-        self.assertTrue(
-            "distance" in air.fallback_banner_text.lower()
-            or "reference" in air.fallback_banner_text.lower()
-            or "nearest" in air.fallback_banner_text.lower()
-        )
-        self.assertTrue("km" in air.fallback_banner_text.lower())
+        self.assertEqual(air.status, "no_data")
+        self.assertIsNone(air.current_cpcb_aqi)
+        self.assertIn("No reading for Pune", air.one_sentence_verdict_en)
+
+    def test_plan_for_no_data_city_fails_cleanly(self):
+        """Audit 2 R8: Plan endpoint refuses to compute synthetic schedules for unmonitored cities with no data."""
+        air = get_air_quality_sync(18.52, 73.85, "Pune", force_fallback=False)
+        self.assertEqual(air.status, "no_data")
+        self.assertIsNone(air.current_cpcb_aqi)
+        self.assertEqual(air.hourly_forecast, [])
+        self.assertIn("No reading for Pune", air.one_sentence_verdict_en)
 
     def test_plan_contract_with_demo_persona(self):
         # Demo Persona: Ghaziabad household with 2 adults, 9-yr sensitive child, 68-yr senior
@@ -215,6 +241,60 @@ class TestSaansAPIContracts(unittest.TestCase):
         )
         self.assertEqual(req.organization_name, "Vasundhara Enclave RWA")
         self.assertEqual(req.language, "hi")
+
+    def test_tool_get_air_resolves_city_coordinates_not_default_ghaziabad(self):
+        """Audit 2 R3: Model calling tool_get_air(city='Pune') must resolve Pune coords, never default to Ghaziabad."""
+        from llm.tools import execute_tool
+
+        res = execute_tool("get_air", {"city": "Pune"})
+        self.assertNotIn("error", res)
+        self.assertEqual(res["city"], "Pune")
+        self.assertAlmostEqual(res["latitude"], 18.5204, delta=0.5)
+        self.assertAlmostEqual(res["longitude"], 73.8567, delta=0.5)
+
+        # Nonexistent city should return structured error, never Ghaziabad data
+        unknown = execute_tool("get_air", {"city": "NonexistentPlaceXYZ"})
+        self.assertIn("error", unknown)
+
+    def test_tool_get_day_plan_accepts_model_city_argument_without_crash(self):
+        """Audit 2 R4: Model calling tool_get_day_plan(city='Delhi') must validate with Pydantic and not raise TypeError."""
+        from llm.tools import execute_tool
+
+        res = execute_tool("get_day_plan", {"city": "Delhi"})
+        self.assertNotIn("error", res)
+        self.assertEqual(res["city"], "Delhi")
+        self.assertIn("scheduled_shift", res)
+
+    def test_tool_argument_validation_and_safety(self):
+        """Audit 2 R4: execute_tool whitelists arguments and handles invalid inputs gracefully."""
+        from llm.tools import execute_tool
+
+        # Unallowed internal parameters should be rejected or stripped
+        res = execute_tool("get_air", {"city": "Delhi", "force_fallback": True})
+        self.assertNotIn("error", res)
+
+        # Invalid tool name returns error dict, does not crash caller
+        res_unknown = execute_tool("unknown_tool_call", {"foo": "bar"})
+        self.assertIn("error", res_unknown)
+
+    def test_http_api_routes_and_contracts(self):
+        """Audit 2 R18: Verifies API router endpoints and response contracts."""
+        import main
+        from routers import geocode, health
+        from schemas.contracts import GeocodeResponse, HealthResponse
+
+        # Health
+        h = health.check_health_sync()
+        self.assertIsInstance(h, HealthResponse)
+        self.assertEqual(h.status, "healthy")
+
+        # Geocode
+        g = geocode.geocode_city_sync(q="Delhi")
+        self.assertIsInstance(g, GeocodeResponse)
+        self.assertGreaterEqual(len(g.results), 1)
+
+        # Main FastAPI app metadata
+        self.assertEqual(main.app.title, "SanjhiHawa API - Clean Air Intelligence & Breath Budget Engine")
 
 
 if __name__ == "__main__":

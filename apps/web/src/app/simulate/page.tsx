@@ -66,6 +66,7 @@ export default function SimulatePage() {
   const [communityCount, setCommunityCount] = useState<number>(200);
   const [simResult, setSimResult] = useState<SimulateResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     const p = getStoredProfile();
@@ -74,6 +75,7 @@ export default function SimulatePage() {
 
   const runSim = async (currentProfile: HouseholdProfile, ids: string[], count: number) => {
     setLoading(true);
+    setErrorMessage(null);
     try {
       const res = await simulateInterventions({
         profile: currentProfile,
@@ -81,8 +83,9 @@ export default function SimulatePage() {
         community_household_count: count,
       });
       setSimResult(res);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Simulation failed", err);
+      setErrorMessage("Could not recalculate simulation. Please check connection.");
     } finally {
       setLoading(false);
     }
@@ -123,11 +126,11 @@ export default function SimulatePage() {
       {/* Header */}
       <div className="border-b hairline border-rule pb-4 flex flex-col md:flex-row justify-between items-start md:items-end gap-3">
         <div>
-          <span className="font-mono text-2xs uppercase text-ink-muted">Dual-Lens Impact Modeling</span>
+          <span className="font-mono text-xs uppercase tracking-wider text-ink-muted font-bold">Dual-Lens Impact Modeling</span>
           <h1 className="font-serif text-3xl md:text-4xl font-bold text-ink mt-1">
             What-If Simulator & Community Multiplier
           </h1>
-          <p className="text-sm text-ink-muted mt-1 max-w-2xl">
+          <p className="text-sm md:text-base text-ink-muted mt-1 max-w-2xl leading-relaxed">
             Evaluate side by side: <strong>What you breathe</strong> (personal dose reduction) and{" "}
             <strong>What you stop emitting</strong> (grams PM2.5 and kg CO2e avoided).
           </p>
@@ -239,6 +242,10 @@ export default function SimulatePage() {
 
             {loading ? (
               <div className="font-mono text-xs text-ink-muted py-6 text-center">Recalculating dose deltas...</div>
+            ) : errorMessage ? (
+              <div className="font-mono text-xs text-amber-800 py-6 text-center bg-paper border border-rule p-3">
+                {errorMessage}
+              </div>
             ) : (
               <div className="space-y-4">
                 {/* Dose Delta */}

@@ -8,8 +8,7 @@ from schemas.contracts import HealthResponse
 router = APIRouter(tags=["Health"])
 
 
-@router.get("/health", response_model=HealthResponse)
-async def check_health():
+def check_health_sync() -> HealthResponse:
     return HealthResponse(
         status="healthy",
         version="1.0.0",
@@ -17,3 +16,8 @@ async def check_health():
         offline_fallback_available=True,
         cache_backend="sqlite",
     )
+
+
+@router.get("/health", response_model=HealthResponse)
+def check_health():
+    return check_health_sync()

@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
 
 export default function HomeAirLabPage() {
   const [lang, setLang] = useState<"en" | "hi" | "mr">("en");
@@ -107,35 +105,32 @@ export default function HomeAirLabPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-paper flex flex-col font-sans text-ink">
-      <Header />
+    <div className="w-full space-y-12 font-sans text-ink">
+      {/* Page Title */}
+      <div className="border-b hairline border-rule pb-4">
+        <span className="font-mono text-xs uppercase tracking-wider text-ink-muted font-bold">
+          PRACTICAL INDOOR DEFENSE • NO-NONSENSE SCIENCE
+        </span>
+        <h1 className="font-serif text-3xl sm:text-4xl font-bold mt-1 text-ink">
+          {lang === "hi" ? "होम एयर लैब (Home Air Lab)" : "Home Air Lab"}
+        </h1>
+        <p className="text-sm md:text-base text-ink-muted mt-1 max-w-3xl leading-relaxed">
+          Clean air is achieved through mechanical filtration and physical envelope management, not folklore.
+          Calculate exact CADR purifier sizing, explore room-by-room interventions, inspect the DIY Corsi-Rosenthal Box, and debunk pervasive smog myths.
+        </p>
+      </div>
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 py-8 space-y-12">
-        {/* Page Title */}
-        <div className="border-b hairline border-rule pb-4">
-          <span className="font-mono text-xs uppercase tracking-wider text-ink-muted">
-            PRACTICAL INDOOR DEFENSE • NO-NONSENSE SCIENCE
-          </span>
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold mt-1">
-            {lang === "hi" ? "होम एयर लैब (Home Air Lab)" : "Home Air Lab"}
-          </h1>
-          <p className="text-sm text-ink-muted mt-1 max-w-3xl">
-            Clean air is achieved through mechanical filtration and physical envelope management, not folklore.
-            Calculate exact CADR purifier sizing, explore room-by-room interventions, inspect the DIY Corsi-Rosenthal Box, and debunk pervasive smog myths.
-          </p>
-        </div>
-
-        {/* SECTION 1: Purifier Sizing Calculator */}
-        <section className="bg-surface border hairline border-rule p-6">
-          <div className="flex flex-col md:flex-row md:items-center justify-between border-b hairline border-rule pb-4 mb-6">
-            <div>
-              <span className="font-mono text-xs uppercase tracking-wider text-ink-muted">
-                DETERMINISTIC PURIFIER FORMULA
-              </span>
-              <h2 className="font-serif text-2xl font-bold mt-0.5">
-                CADR Sizing Calculator
-              </h2>
-            </div>
+      {/* SECTION 1: Purifier Sizing Calculator */}
+      <section className="bg-surface border hairline border-rule p-6 md:p-8">
+        <div className="flex flex-col md:flex-row md:items-center justify-between border-b hairline border-rule pb-4 mb-6">
+          <div>
+            <span className="font-mono text-xs uppercase tracking-wider text-ink-muted font-bold">
+              DETERMINISTIC PURIFIER FORMULA
+            </span>
+            <h2 className="font-serif text-2xl md:text-3xl font-bold mt-0.5 text-ink">
+              CADR Sizing Calculator
+            </h2>
+          </div>
             <div className="flex items-center space-x-2 mt-2 md:mt-0">
               <span className="text-xs font-mono text-ink-muted">Units:</span>
               <button
@@ -545,9 +540,6 @@ export default function HomeAirLabPage() {
             })}
           </div>
         </section>
-      </main>
-
-      <Footer />
     </div>
   );
 }

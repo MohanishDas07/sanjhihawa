@@ -14,14 +14,15 @@
 
 ## 2. Security Headers, Rate Limiting & Content Security Policy (CSP)
 
-Implemented in `apps/api/main.py`:
-- `Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https: http:; frame-ancestors 'none';`
+Implemented in `apps/api/main.py` and `apps/web/next.config.mjs`:
+- **API CSP:** `default-src 'self'; frame-ancestors 'none';` (strict JSON endpoint protection)
+- **Web App CSP:** `default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://air-quality-api.open-meteo.com https://geocoding-api.open-meteo.com http://localhost:8000 http://127.0.0.1:8000; frame-ancestors 'none';`
 - `X-Content-Type-Options: nosniff`
 - `X-Frame-Options: DENY`
 - `X-XSS-Protection: 1; mode=block`
 - `Referrer-Policy: strict-origin-when-cross-origin`
-- `Permissions-Policy: geolocation=(self), microphone=(self)`
-- **Rate Limiting:** In-memory sliding-window limiter enforcing a maximum of 60 requests per minute per IP address on AI chat and air endpoints.
+- `Permissions-Policy: camera=(), microphone=(), geolocation=(self)`
+- **Rate Limiting:** In-memory sliding-window limiter enforcing 60 req/min for AI chat and 120 req/min for air endpoints, with proxy header support (`X-Forwarded-For` / `X-Real-IP`) and periodic idle IP eviction.
 
 ---
 

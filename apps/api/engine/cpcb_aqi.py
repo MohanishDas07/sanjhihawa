@@ -25,7 +25,7 @@ PM25_BREAKPOINTS: list[AQIBand] = [
     AQIBand(
         name="Good",
         code="good",
-        color_hex="#1E8E4E",
+        color_hex="#16733D",
         i_lo=0,
         i_hi=50,
         c_lo=0.0,

@@ -22,19 +22,18 @@ This document specifies the localization architecture, translation coverage, hum
 
 ---
 
-## 3. String Inventory & Human Review Checklist
+## 3. String Inventory & Verification Status
 
-| Domain | Key Prefix | English | Hindi Review Status | Marathi Review Status |
+| Domain | English | Hindi (हिन्दी) Status | Marathi (मराठी) Status | Verification Scope |
 | :--- | :--- | :--- | :--- | :--- |
-| **Navigation & Core UI** | `nav.*` | Complete | Core Terms Verified | Core Terms Verified |
-| **Landing Hero** | `landing.*` | Complete | Core Headings Verified | Core Headings Verified |
-| **Household Onboarding** | `onboarding.*` | Complete | Form Field Strings Localized | Form Field Strings Localized |
-| **Your Day Dashboard** | `your_day.*` | Complete | Key Metrics Localized | Key Metrics Localized |
-| **What-If Simulator** | `simulate.*` | Complete | Action Labels Localized | Action Labels Localized |
-| **Ask Saans AI Assistant** | `chat.*` | Complete | Golden Evals Verified | Golden Evals Verified |
-| **Home Air Lab** | `lab.*` | Complete | Myth Summaries Localized | Myth Summaries Localized |
-| **Community Advisory** | `community.*` | Complete | Bulletin Templates Localized | Bulletin Templates Localized |
-| **Medical Emergency** | `safety.*` | Complete | **CRITICAL VERIFIED (Static)** | **CRITICAL VERIFIED (Static)** |
+| **Emergency Triage** | Complete | Verified (Static) | Verified (Static) | MoHFW / 112 emergency protocols |
+| **Air Quality Verdicts** | Complete | Verified (Dynamic) | Verified (Dynamic) | One-sentence summary on `/` |
+| **Community Advisory Card** | Complete | Full Translation Verified | Full Translation Verified | Printable RWA/School Bulletin `/community` |
+| **Science Myth Summaries** | Complete | Full Translation Verified | Full Translation Verified | Core myths (Plants, Jaggery, Masks) |
+| **Routine Schedule Names** | Complete | Localized Subtitles | Localized Subtitles | Activities in `/your-day` & `/plan` |
+| **Interactive Form Fields** | Complete | Form Prompts Localized | Form Prompts Localized | `/onboarding` persona inputs |
+| **Scientific Formulas (`how-saans-works`)** | Complete | English-led (Universal Math) | English-led (Universal Math) | Parameter provenance & equations |
+| **Deep Lab Tooltips (`lab`)** | Complete | English-led | English-led | Secondary aerosol & ozone notes |
 
 ---
 

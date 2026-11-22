@@ -2,9 +2,9 @@
 
 > **A GenAI-powered web assistant helping Indian families and communities navigate severe winter smog and urban air pollution.**
 
-[![Engine & Eval Tests](https://img.shields.io/badge/All%20Tests-23%20passed%20(31%20evals%20%2B%206%20probes)-brightgreen)](#)
+[![Engine & Eval Tests](https://img.shields.io/badge/All%20Tests-29%20passed%20(31%20evals%20%2B%206%20probes)-brightgreen)](#)
 [![Ruff](https://img.shields.io/badge/Ruff-0%20errors%20%7C%200%20warnings-brightgreen)](#)
-[![Audit](https://img.shields.io/badge/Audit-P0%20Remediated-brightgreen)](docs/AUDIT.md)
+[![Audit](https://img.shields.io/badge/Audit-P0%20%26%20P1%20Remediated-brightgreen)](docs/AUDIT_2.md)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Strict-blue)](#)
 [![Python](https://img.shields.io/badge/Python-3.12%2F3.13%20Typed-blue)](#)
 [![WCAG](https://img.shields.io/badge/Accessibility-WCAG%202.2%20AA-success)](#)
@@ -106,10 +106,10 @@ All features meet the Section 8 quality bar or remain cleanly gated behind flags
 | **Community Advisory Card** | 🟢 Live | Core | Printable / shareable RWA & school bulletin in EN, HI, MR |
 | **How Saans Works** | 🟢 Live | Core | Scientific formulas, parameter provenance, privacy disclosure |
 | **Elder Mode** | 🟢 Live | Core | A+ toggle, large high-contrast typography and enhanced touch targets |
-| **Station IDW Ward Map** | 🟡 Milestone 4 | `NEXT_PUBLIC_FF_WARD_MAP` | Scheduled for Saturday 21 Nov |
-| **Route Comparison** | 🟡 Milestone 4 | `NEXT_PUBLIC_FF_ROUTE_COMP` | Scheduled for Saturday 21 Nov |
-| **Client-Side Weekly Report**| 🟡 Milestone 4 | `NEXT_PUBLIC_FF_WEEKLY_REPORT`| Scheduled for Saturday 21 Nov |
-| **Voice Speech API** | 🟡 Milestone 4 | `NEXT_PUBLIC_FF_VOICE` | Scheduled for Saturday 21 Nov |
+| **Station IDW Ward Map** | ⚙️ Flagged Off | `NEXT_PUBLIC_FF_WARD_MAP` | Managed via `apps/web/src/lib/flags.ts` (Roadmap) |
+| **Route Comparison** | ⚙️ Flagged Off | `NEXT_PUBLIC_FF_ROUTE_COMP` | Managed via `apps/web/src/lib/flags.ts` (Roadmap) |
+| **Client-Side Weekly Report**| ⚙️ Flagged Off | `NEXT_PUBLIC_FF_WEEKLY_REPORT`| Managed via `apps/web/src/lib/flags.ts` (Roadmap) |
+| **Voice Speech API** | ⚙️ Flagged Off | `NEXT_PUBLIC_FF_VOICE` | Managed via `apps/web/src/lib/flags.ts` (Roadmap) |
 
 ---
 
@@ -121,8 +121,8 @@ All features meet the Section 8 quality bar or remain cleanly gated behind flags
 
 ### One-Command Setup & Verification
 ```bash
-# 1. Run all unit, API, and golden evaluation tests (20 suites, 31 evals, ~0.02s)
-python tests/test_all.py
+# 1. Run all unit, API, and golden evaluation tests with coverage (29 tests, 31 evals, 73% coverage)
+coverage run --source=apps/api tests/test_all.py && coverage report
 
 # 2. Run Ruff lint check (0 errors, 0 warnings)
 python -m ruff check apps/api tests
@@ -130,7 +130,10 @@ python -m ruff check apps/api tests
 # 3. Export OpenAPI schema
 python scripts/export_openapi.py
 
-# 4. Build Next.js Web App (11 static routes prerendered)
+# 4. Run frontend tests and TypeScript verification
+cd apps/web && npm test && npx tsc -p tsconfig.json --noEmit
+
+# 5. Build Next.js Web App (11 static routes prerendered)
 cd apps/web && npm run build
 ```
 
@@ -159,8 +162,8 @@ Visit [http://localhost:3000](http://localhost:3000) in your browser.
 ## 6. Demo Persona Rehearsal Script (90 Seconds)
 
 1. **Morning Severe Smog (0:00 - 0:20):**
-   - Open Landing Page (`/`). Observe Ghaziabad AQI (492 Severe) and the skyline with heavy smog blanketing.
-   - Note the clear "Offline Sample Reference Fixture" banner demonstrating offline resilience.
+   - Open Landing Page (`/`). Search any Indian city or click *"Recorded Demo Day"* to load Ghaziabad winter severe smog (AQI 492 Severe) and view the physical Koschmieder skyline haze extinction.
+   - Note the transparent attribution ("Modelled estimate, not a ground station") and honest source indicator.
 2. **Personalized Onboarding (0:20 - 0:35):**
    - Click *"⚡ Load Ghaziabad Demo Persona"* in `/onboarding`.
    - Loads 2 Adults, 9yo Aarav (breathing-sensitive), 68yo Dadi, petrol two-wheeler commute, and LPG cooking.

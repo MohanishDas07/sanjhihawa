@@ -6,7 +6,7 @@ Generates shareable, printable advisory cards for RWAs, schools, and apartment c
 from datetime import datetime, timezone
 
 from engine import get_grap_stage
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from schemas.contracts import CommunityAdvisoryRequest, CommunityAdvisoryResponse
 from services.air_service import get_air_quality
 
@@ -20,6 +20,12 @@ async def generate_community_advisory(req: CommunityAdvisoryRequest):
         longitude=req.longitude,
         city_name=req.city,
     )
+
+    if air_data.status == "no_data" or air_data.current_cpcb_aqi is None or not air_data.current_aqi_band:
+        raise HTTPException(
+            status_code=404,
+            detail=f"No active monitoring station readings or model forecast points available for {req.city}. Cannot generate advisory bulletin.",
+        )
 
     aqi = air_data.current_cpcb_aqi
     band = air_data.current_aqi_band

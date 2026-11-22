@@ -41,6 +41,15 @@ async def generate_day_plan(req: PlanRequest):
         city_name=profile.city_name,
     )
 
+    # Audit 2 R8: If no data exists for this location and no custom forecast was supplied, fail cleanly with 404
+    if air_data.status == "no_data" and not req.custom_forecast:
+        from fastapi import HTTPException
+
+        raise HTTPException(
+            status_code=404,
+            detail=f"No air quality readings available for {profile.city_name} right now. Please select a recorded demo day.",
+        )
+
     # Extract 24-hour PM2.5 profile
     if req.custom_forecast and len(req.custom_forecast) >= 24:
         hourly_pm25 = req.custom_forecast[:24]

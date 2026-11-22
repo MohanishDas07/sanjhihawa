@@ -3,120 +3,170 @@
 import React from "react";
 
 interface SkylineSVGProps {
-  aqi: number;
-  band: "good" | "satisfactory" | "moderate" | "poor" | "very_poor" | "severe";
+  pm25?: number | null;
+  sourceLabel?: string;
+  cityName?: string;
+}
+
+const CITY_SMOG_ASSETS: Record<string, { image: string; landmark: string; basin: string }> = {
+  delhi: {
+    image: "/images/smog_delhi.jpg",
+    landmark: "Delhi NCR • Rajpath & Kartavya Path Inversion",
+    basin: "Indo-Gangetic Plain",
+  },
+  ghaziabad: {
+    image: "/images/smog_delhi.jpg",
+    landmark: "Ghaziabad Corridor • Industrial & Biomass Inversion",
+    basin: "NCR Western UP Belt",
+  },
+  kolkata: {
+    image: "/images/smog_kolkata.jpg",
+    landmark: "Kolkata Riverfront • Hooghly River & Howrah Basin",
+    basin: "Lower Gangetic Basin",
+  },
+  mumbai: {
+    image: "/images/smog_mumbai.jpg",
+    landmark: "Mumbai Coastal • Bandra-Worli Marine Inversion Layer",
+    basin: "Western Coastal Corridor",
+  },
+  lucknow: {
+    image: "/images/smog_lucknow.jpg",
+    landmark: "Lucknow Corridor • Gomti Basin Nocturnal Radiative Inversion",
+    basin: "Central Gangetic Plain",
+  },
+  bengaluru: {
+    image: "/images/smog_bengaluru.jpg",
+    landmark: "Bengaluru Tech Corridor • Deccan Plateau Morning Haze",
+    basin: "Southern Deccan Plateau",
+  },
+  bangalore: {
+    image: "/images/smog_bengaluru.jpg",
+    landmark: "Bengaluru Tech Corridor • Deccan Plateau Morning Haze",
+    basin: "Southern Deccan Plateau",
+  },
+  hyderabad: {
+    image: "/images/smog_hyderabad.jpg",
+    landmark: "Hyderabad Corridor • Hussain Sagar & HITEC City Inversion",
+    basin: "Telangana Plateau",
+  },
+};
+
+function resolveCityAsset(cityName?: string) {
+  if (!cityName) return { image: "/images/realistic_smog_skyline.jpg", landmark: "Metropolitan Corridor • Winter Smog Record", basin: "Urban Basin" };
+  const lower = cityName.toLowerCase().trim();
+  for (const [key, val] of Object.entries(CITY_SMOG_ASSETS)) {
+    if (lower.includes(key)) return val;
+  }
+  return {
+    image: "/images/realistic_smog_skyline.jpg",
+    landmark: `${cityName} • Winter Atmospheric Inversion`,
+    basin: "Atmospheric Boundary Layer",
+  };
 }
 
 /**
- * Signature SAANS City Skyline Element.
- * Building depth planes fade in discrete steps corresponding to CPCB AQI bands,
- * mimicking real atmospheric visibility reduction in winter smog.
- * Strictly decorative (aria-hidden="true") and respects prefers-reduced-motion.
+ * Signature SAANS City Skyline Element (Realistic Atmospheric Smog View).
+ * 
+ * Features:
+ * - High-resolution realistic photograph of Indian city skyline dynamically matched to selected city.
+ * - Distant and midground buildings are obscured silhouettes dissolving into thick particulate haze.
+ * - Dynamic physical atmospheric smog density overlay adjusts opacity and diffusion with actual PM2.5 readings.
+ * - Accessible visual range and PM2.5 measurement badge in bottom-right corner.
  */
-export const SkylineSVG: React.FC<SkylineSVGProps> = ({ aqi, band }) => {
-  // Determine opacity of background, midground, and smog blanket
-  const getOpacities = () => {
-    switch (band) {
-      case "good":
-        return { bg: 1.0, mid: 1.0, fg: 1.0, smog: 0.0 };
-      case "satisfactory":
-        return { bg: 0.85, mid: 0.95, fg: 1.0, smog: 0.08 };
-      case "moderate":
-        return { bg: 0.6, mid: 0.85, fg: 1.0, smog: 0.2 };
-      case "poor":
-        return { bg: 0.35, mid: 0.7, fg: 0.95, smog: 0.4 };
-      case "very_poor":
-        return { bg: 0.12, mid: 0.45, fg: 0.85, smog: 0.65 };
-      case "severe":
-      default:
-        return { bg: 0.03, mid: 0.22, fg: 0.7, smog: 0.85 };
-    }
-  };
+export const SkylineSVG: React.FC<SkylineSVGProps> = ({ pm25, sourceLabel, cityName }) => {
+  const hasReading = typeof pm25 === "number" && !isNaN(pm25) && pm25 >= 0;
+  const cityAsset = resolveCityAsset(cityName);
 
-  const { bg, mid, fg, smog } = getOpacities();
+  // Extinction coefficient and visual range (Koschmieder relationship)
+  const alpha = 0.004; // 4 m2/g mass extinction assumption (TODO-VERIFY)
+  const bClean = 0.015;
+  const bExt = hasReading ? alpha * pm25 + bClean : 0.02;
+
+  const visualRangeKm = 3.912 / bExt;
+  const formattedVisibility =
+    visualRangeKm < 1.0
+      ? `~${Math.max(150, Math.round(visualRangeKm * 1000))} m`
+      : `~${visualRangeKm.toFixed(1)} km`;
+
+  // Dynamic realistic smog overlay parameters
+  // High PM2.5 (e.g. 400+ µg/m³) thickens the particulate veil and blurs distant outlines
+  const smogOverlayOpacity = hasReading
+    ? Math.min(0.72, Math.max(0.12, (pm25 / 500) * 0.72))
+    : 0.28;
+  const smogBlurPx = hasReading ? Math.min(2.5, Math.max(0, (pm25 - 60) / 160)) : 0.6;
 
   return (
     <div
-      aria-hidden="true"
-      className="relative w-full h-36 md:h-48 overflow-hidden bg-surface border-b hairline border-rule select-none"
+      role="region"
+      aria-label="Atmospheric Skyline & Visibility Simulation"
+      className="relative w-full h-72 sm:h-80 md:h-[380px] lg:h-[440px] overflow-hidden bg-[var(--skyline-bg)] border-b hairline border-rule select-none"
     >
-      <svg
-        className="w-full h-full"
-        viewBox="0 0 1000 200"
-        preserveAspectRatio="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        {/* Background Layer: Distant Monuments, Highrises & Towers */}
-        <g style={{ opacity: bg, transition: "opacity 0.6s ease" }} fill="#A6A29A">
-          {/* Distant Transmission Tower */}
-          <polygon points="120,50 123,170 117,170" />
-          <line x1="110" y1="90" x2="130" y2="90" stroke="#A6A29A" strokeWidth="2" />
-          <line x1="112" y1="120" x2="128" y2="120" stroke="#A6A29A" strokeWidth="2" />
+      {/* Live Region for Screen Readers */}
+      <div aria-live="polite" className="sr-only">
+        {hasReading
+          ? `Estimated atmospheric visibility: ${formattedVisibility} under ${pm25} micrograms per cubic meter PM2.5 in ${cityName || "city"}. Buildings heavily obscured by smog.`
+          : "Atmospheric skyline: No air reading currently loaded."}
+      </div>
 
-          {/* Distant High-rises */}
-          <rect x="180" y="70" width="45" height="130" />
-          <rect x="235" y="55" width="55" height="145" />
-          <polygon points="262,35 260,55 264,55" />
-          <rect x="300" y="80" width="40" height="120" />
-
-          {/* Central Dome Monument Silhouette (e.g. Indic heritage / Delhi monument) */}
-          <path d="M 460 110 Q 500 65 540 110 L 545 200 L 455 200 Z" />
-          <rect x="495" y="50" width="10" height="20" />
-
-          {/* Eastern NCR Highrise Cluster */}
-          <rect x="680" y="60" width="50" height="140" />
-          <rect x="740" y="75" width="60" height="125" />
-          <rect x="810" y="45" width="45" height="155" />
-          <rect x="865" y="80" width="70" height="120" />
-        </g>
-
-        {/* Midground Layer: Mid-rise Apartments, Rooftop Water Tanks */}
-        <g style={{ opacity: mid, transition: "opacity 0.6s ease" }} fill="#696C73">
-          <rect x="50" y="110" width="60" height="90" />
-          {/* Water tank */}
-          <rect x="70" y="98" width="18" height="12" rx="2" />
-
-          <rect x="130" y="125" width="75" height="75" />
-          <rect x="330" y="105" width="85" height="95" />
-          <rect x="360" y="95" width="22" height="10" />
-
-          <rect x="560" y="115" width="90" height="85" />
-          <rect x="610" y="102" width="20" height="13" />
-
-          <rect x="890" y="110" width="80" height="90" />
-        </g>
-
-        {/* Foreground Layer: Low Residences, Brick Parapets, Street Structures */}
-        <g style={{ opacity: fg, transition: "opacity 0.6s ease" }} fill="#17181A">
-          <rect x="0" y="145" width="70" height="55" />
-          <rect x="85" y="150" width="90" height="50" />
-          {/* Balcony Railings */}
-          <line x1="90" y1="160" x2="170" y2="160" stroke="#F3EFE6" strokeWidth="1.5" />
-
-          <rect x="200" y="135" width="110" height="65" />
-          <rect x="430" y="140" width="115" height="60" />
-          <rect x="670" y="145" width="100" height="55" />
-          <rect x="790" y="138" width="85" height="62" />
-          <rect x="940" y="148" width="60" height="52" />
-
-          {/* Base Ground Baseline */}
-          <rect x="0" y="196" width="1000" height="4" fill="#17181A" />
-        </g>
-
-        {/* Atmospheric Winter Smog Overlay Blanket */}
-        <rect
-          x="0"
-          y="0"
-          width="1000"
-          height="200"
-          fill="#F3EFE6"
-          style={{ opacity: smog, transition: "opacity 0.6s ease" }}
+      {/* Realistic Documentary Photograph */}
+      <div className="relative w-full h-full overflow-hidden">
+        {/* Authentic High-Res Smog Skyline Photograph */}
+        <img
+          src={cityAsset.image}
+          alt={
+            hasReading
+              ? `Real photograph of ${cityAsset.landmark} heavily enveloped in winter smog at ${pm25} µg/m³ PM2.5, buildings obscured by haze.`
+              : `Real photograph of ${cityAsset.landmark} shrouded in winter smog.`
+          }
+          className="w-full h-full object-cover object-bottom transition-all duration-700"
+          style={{
+            filter: `contrast(${1 - smogOverlayOpacity * 0.3}) brightness(${
+              1 - smogOverlayOpacity * 0.15
+            }) blur(${smogBlurPx * 0.4}px)`,
+          }}
         />
-      </svg>
 
-      {/* Visibility Indicator Tag */}
-      <div className="absolute bottom-2 right-3 font-mono text-xs px-2 py-0.5 bg-paper/90 border border-rule text-ink">
-        Visibility: {Math.max(10, Math.round(100 - smog * 100))}% (AQI {aqi})
+        {/* Dynamic Physical Atmospheric Smog Attenuation Overlay */}
+        <div
+          className="absolute inset-0 pointer-events-none transition-opacity duration-700"
+          style={{
+            backgroundColor: "rgba(202, 192, 175, 0.95)",
+            opacity: smogOverlayOpacity,
+            mixBlendMode: "screen",
+          }}
+        />
+
+        {/* Gritty Particulate Vignette & Horizon Smog Gradient */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              "linear-gradient(to bottom, rgba(184, 172, 152, 0.35) 0%, rgba(200, 190, 172, 0.2) 50%, rgba(30, 28, 26, 0.65) 100%)",
+          }}
+        />
+      </div>
+
+      {/* Top Left Documentary Record Tag */}
+      <div className="absolute top-3 left-3 z-10 font-mono text-2xs md:text-xs px-3 py-1.5 bg-ink/85 text-paper backdrop-blur-xs border border-paper/20 shadow-sm flex items-center space-x-2">
+        <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+        <span className="font-semibold uppercase tracking-wider">{cityAsset.landmark}</span>
+        <span className="text-paper/70 hidden sm:inline">• {cityAsset.basin}</span>
+      </div>
+
+      {/* Visibility / Air Measurement Banner (Bottom Right) */}
+      <div className="absolute bottom-3 right-3 z-10 font-mono text-xs md:text-sm px-3.5 py-2 bg-paper/95 backdrop-blur-sm border border-rule text-ink shadow-sm max-w-md">
+        {hasReading ? (
+          <div className="flex items-center space-x-2">
+            <span className="w-2 h-2 rounded-full bg-amber-600 animate-pulse" />
+            <span className="font-semibold">Visibility {formattedVisibility}</span>
+            <span className="text-ink-muted">({pm25} µg/m³ PM2.5)</span>
+            <span className="text-ink-muted hidden sm:inline">• Modelled Estimate</span>
+          </div>
+        ) : (
+          <span className="text-ink-muted font-sans italic text-xs">
+            No air reading loaded • Search any Indian city or select a regional corridor
+          </span>
+        )}
       </div>
     </div>
   );

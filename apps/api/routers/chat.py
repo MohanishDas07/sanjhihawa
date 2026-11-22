@@ -11,6 +11,7 @@ from fastapi.responses import StreamingResponse
 from llm import get_llm_service
 from pydantic import BaseModel, Field
 from schemas.contracts import HouseholdProfile
+from services.rate_limiter import chat_rate_limiter
 
 router = APIRouter(tags=["Chat"])
 
@@ -41,6 +42,7 @@ async def chat_stream_endpoint(req: ChatRequest, request: Request):
     Server-Sent Events (SSE) streaming endpoint for Ask Saans.
     Emits token chunks, executed tool summaries, and citations in real time.
     """
+    chat_rate_limiter.enforce(request)
     llm_service = get_llm_service()
     profile_dict = req.profile.model_dump() if req.profile else None
     client_ip = request.client.host if request.client else "127.0.0.1"
@@ -64,6 +66,7 @@ async def chat_sync_endpoint(req: ChatRequest, request: Request):
     """
     Synchronous fallback endpoint returning the complete grounded reply and citations.
     """
+    chat_rate_limiter.enforce(request)
     llm_service = get_llm_service()
     profile_dict = req.profile.model_dump() if req.profile else None
     client_ip = request.client.host if request.client else "127.0.0.1"

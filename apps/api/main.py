@@ -9,6 +9,7 @@ import sys
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from retrieval.index import get_retrieval_index
 from routers import air, chat, community, geocode, health, plan, simulate
 
 # Structured Logging - Strict Rule: NO personal health data in logs
@@ -20,7 +21,7 @@ logging.basicConfig(
 logger = logging.getLogger("saans.api")
 
 app = FastAPI(
-    title="Saans API - Clean Air Intelligence & Breath Budget Engine",
+    title="SanjhiHawa API - Clean Air Intelligence & Breath Budget Engine",
     description="Deterministic exposure engine, CPCB AQI calculator, and AI tool interface.",
     version="1.0.0",
     docs_url="/docs",
@@ -47,12 +48,12 @@ class SecurityHeadersMiddleware:
                 headers.append((b"x-xss-protection", b"1; mode=block"))
                 headers.append((b"referrer-policy", b"strict-origin-when-cross-origin"))
                 headers.append(
-                    (b"permissions-policy", b"geolocation=(self), microphone=(self)")
+                    (b"permissions-policy", b"camera=(), microphone=(), geolocation=(self)")
                 )
                 headers.append(
                     (
                         b"content-security-policy",
-                        b"default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https: http:; frame-ancestors 'none';",
+                        b"default-src 'self'; frame-ancestors 'none';",
                     )
                 )
                 message["headers"] = headers
@@ -88,10 +89,20 @@ app.include_router(community.router, prefix="/api/v1")
 app.include_router(chat.router, prefix="/api/v1")
 
 
+@app.on_event("startup")
+async def startup_event():
+    # Warm up retrieval index in memory to avoid per-request cold-start disk I/O
+    try:
+        get_retrieval_index()
+        logger.info("Authoritative guidance corpus pre-warmed in memory.")
+    except (OSError, ValueError) as e:
+        logger.warning(f"Could not pre-warm retrieval index: {e}")
+
+
 @app.get("/")
 async def root():
     return {
-        "app": "Saans API",
+        "app": "SanjhiHawa API",
         "version": "1.0.0",
         "status": "operational",
         "endpoints": "/docs",

@@ -4,7 +4,7 @@
     "household": "Household",
     "your_day": "Your Day",
     "simulate": "What-If Simulator",
-    "chat": "Ask Saans",
+    "chat": "Ask SanjhiHawa",
     "lab": "Home Air Lab",
     "community": "Community Card",
     "how_it_works": "How It Works",
@@ -21,7 +21,7 @@
   "onboarding": {
     "title": "Household Profile Setup",
     "subtitle": "No accounts. No server tracking. Your profile stays in browser localStorage and is transmitted transiently per calculation.",
-    "btn_load_demo": "Load Ghaziabad Demo Household (2 Adults, 1 Child, 1 Elder)",
+    "btn_load_demo": "Load Standard Household Template (2 Adults, 1 Child, 1 Elder)",
     "btn_clear_data": "Delete My Household Data",
     "location_label": "Your City / District:",
     "members_label": "Household Members & Vulnerabilities:",
@@ -49,10 +49,10 @@
     "cigs_disclaimer": "Berkeley Earth communication heuristic (22 µg/m³ PM2.5 ≈ 1 cigarette/day). Illustrative only, not clinical fact."
   },
   "chat": {
-    "title": "Ask Saans (AI Assistant)",
+    "title": "Ask SanjhiHawa (AI Assistant)",
     "subtitle": "Grounded in our deterministic exposure engine and peer-reviewed air science. Zero hallucinated math.",
     "child_mode": "Explain to 10-year-old",
-    "safety_notice": "SAFETY PROTOCOL: Saans does not provide medical diagnosis. Acute distress triggers immediate emergency triage instructions (dial 112 / 102).",
+    "safety_notice": "SAFETY PROTOCOL: SanjhiHawa does not provide medical diagnosis. Acute distress triggers immediate emergency triage instructions (dial 112 / 102).",
     "input_placeholder": "Ask about winter smog, N95 masks, purifier sizing, or routine optimization..."
   },
   "lab": {

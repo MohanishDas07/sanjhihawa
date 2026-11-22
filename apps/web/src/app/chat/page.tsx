@@ -1,9 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
 import { sendChatSync, ChatCitation } from "@/lib/api";
+import { getStoredProfile } from "@/lib/storage";
 
 interface Message {
   id: string;
@@ -19,7 +18,7 @@ export default function ChatPage() {
     {
       id: "intro",
       sender: "assistant",
-      text: "Namaste. I am Saans, your winter smog and clean air assistant. I use deterministic exposure equations and peer-reviewed air research to advise on routines, indoor air quality hacks, and mask usage. Ask me anything, or pick a prompt below.",
+      text: "Namaste. I am SanjhiHawa, your winter smog and clean air assistant. I use deterministic exposure equations and peer-reviewed air research to advise on routines, indoor air quality hacks, and mask usage. Ask me anything, or pick a prompt below.",
       citations: [
         {
           id: "cpcb-naqi-bands",
@@ -104,12 +103,8 @@ export default function ChatPage() {
     setLoading(true);
 
     try {
-      // Get household profile from localStorage if present
-      let profile = null;
-      try {
-        const raw = localStorage.getItem("saans_household_profile");
-        if (raw) profile = JSON.parse(raw);
-      } catch {}
+      // Get household profile from client storage
+      const profile = getStoredProfile();
 
       const res = await sendChatSync(textToSend, profile, lang, simplifyForChild);
 
@@ -146,91 +141,88 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="min-h-screen bg-paper flex flex-col font-sans text-ink">
-      <Header />
-
-      <main className="flex-1 max-w-4xl w-full mx-auto px-4 py-8 flex flex-col">
-        {/* Page Header */}
-        <div className="border-b hairline border-rule pb-4 mb-6">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <span className="font-mono text-xs uppercase tracking-wider text-ink-muted">
-                {lang === "hi" ? "आर्टिफिशियल इंटेलिजेंस सहायक" : lang === "mr" ? "कृत्रिम बुद्धिमत्ता सहाय्यक" : "GENAI AIR ASSISTANT"}
-              </span>
-              <h1 className="font-serif text-3xl font-bold mt-1">
-                {lang === "hi" ? "साँस से पूछें (Ask Saans)" : lang === "mr" ? "साँसला विचारा" : "Ask Saans"}
-              </h1>
-              <p className="text-sm text-ink-muted mt-1 max-w-2xl">
-                {lang === "hi"
-                  ? "हवा विज्ञान, N95 मास्क, ट्रू HEPA प्यूरीफायर और दिनचर्या पर सवाल पूछें। संख्याएं केवल गणितीय इंजन से आती हैं।"
-                  : "Grounded in our deterministic exposure engine and peer-reviewed air science. The LLM never hallucinates numbers."}
-              </p>
-            </div>
-
-            {/* Child Mode Switch */}
-            <div className="flex items-center space-x-2 bg-surface border hairline border-rule p-2 rounded">
-              <input
-                type="checkbox"
-                id="child-toggle"
-                checked={simplifyForChild}
-                onChange={(e) => setSimplifyForChild(e.target.checked)}
-                className="cursor-pointer accent-ink"
-              />
-              <label htmlFor="child-toggle" className="text-xs font-mono text-ink cursor-pointer select-none">
-                {lang === "hi"
-                  ? "१० वर्षीय बच्चे के लिए सरल समझाएं"
-                  : lang === "mr"
-                  ? "१० वर्षांच्या मुलासाठी सोपे करा"
-                  : "Explain to 10-year-old"}
-              </label>
-            </div>
+    <div className="max-w-4xl w-full mx-auto flex flex-col font-sans text-ink space-y-4">
+      {/* Page Header */}
+      <div className="border-b hairline border-rule pb-4 mb-2">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <span className="font-mono text-xs md:text-sm uppercase tracking-wider text-ink-muted font-bold">
+              {lang === "hi" ? "आर्टिफिशियल इंटेलिजेंस सहायक" : lang === "mr" ? "कृत्रिम बुद्धिमत्ता सहाय्यक" : "GENAI AIR ASSISTANT"}
+            </span>
+            <h1 className="font-serif text-3xl md:text-4xl font-bold mt-1 text-ink">
+              {lang === "hi" ? "सांझी हवा से पूछें (Ask SanjhiHawa)" : lang === "mr" ? "सांझी हवा विचारा" : "Ask SanjhiHawa"}
+            </h1>
+            <p className="text-sm md:text-base text-ink-muted mt-1 max-w-2xl leading-relaxed">
+              {lang === "hi"
+                ? "हवा विज्ञान, N95 मास्क, ट्रू HEPA प्यूरीफायर और दिनचर्या पर सवाल पूछें। संख्याएं केवल गणितीय इंजन से आती हैं।"
+                : "Grounded in our deterministic exposure engine and peer-reviewed air science. The LLM never hallucinates numbers."}
+            </p>
           </div>
 
-          {/* Non-negotiable Medical Triage Notice */}
-          <div className="mt-3 bg-surface border-l-4 border-ink p-2.5 text-xs text-ink-muted font-mono">
-            <strong>SAFETY PROTOCOL:</strong> Saans does not provide medical advice. Symptoms of acute distress (chest pain, wheezing in a child, acute breathlessness) trigger immediate static emergency triage instructions (dial 112 / 102).
+          {/* Child Mode Switch */}
+          <div className="flex items-center space-x-2 bg-surface border hairline border-rule p-2.5 rounded-sm">
+            <input
+              type="checkbox"
+              id="child-toggle"
+              checked={simplifyForChild}
+              onChange={(e) => setSimplifyForChild(e.target.checked)}
+              className="cursor-pointer accent-ink w-4 h-4"
+            />
+            <label htmlFor="child-toggle" className="text-xs md:text-sm font-mono text-ink cursor-pointer select-none font-medium">
+              {lang === "hi"
+                ? "१० वर्षीय बच्चे के लिए सरल समझाएं"
+                : lang === "mr"
+                ? "१० वर्षांच्या मुलासाठी सोपे करा"
+                : "Explain to 10-year-old"}
+            </label>
           </div>
         </div>
 
-        {/* Quick Prompts Bar */}
-        <div className="mb-4">
-          <div className="font-mono text-xs text-ink-muted mb-2">QUICK SCIENCE QUERIES:</div>
-          <div className="flex flex-wrap gap-2">
-            {quickPrompts.map((p, idx) => (
-              <button
-                key={idx}
-                onClick={() => handleSend(p.query)}
-                disabled={loading}
-                className="px-3 py-1 bg-surface border hairline border-rule hover:bg-paper hover:border-ink text-xs font-medium text-ink transition-colors disabled:opacity-50"
-              >
-                {p.label}
-              </button>
-            ))}
-          </div>
+        {/* Non-negotiable Medical Triage Notice */}
+        <div className="mt-3.5 bg-surface border-l-4 border-ink p-3 text-xs md:text-sm text-ink-muted font-mono leading-relaxed">
+          <strong className="text-ink">SAFETY PROTOCOL:</strong> SanjhiHawa does not provide medical advice. Symptoms of acute distress (chest pain, wheezing in a child, acute breathlessness) trigger immediate static emergency triage instructions (dial 112 / 102).
         </div>
+      </div>
 
-        {/* Chat Message Window */}
-        <div
-          role="log"
-          aria-live="polite"
-          aria-atomic="false"
-          aria-label="Conversation with Saans assistant"
-          className="flex-1 bg-surface border hairline border-rule p-4 overflow-y-auto min-h-[380px] max-h-[520px] flex flex-col space-y-4 mb-4 rounded-none"
-        >
-          {messages.map((m) => (
-            <div
-              key={m.id}
-              className={`flex flex-col ${m.sender === "user" ? "items-end" : "items-start"}`}
+      {/* Quick Prompts Bar */}
+      <div className="mb-4">
+        <div className="font-mono text-xs text-ink-muted font-bold mb-2">QUICK SCIENCE QUERIES:</div>
+        <div className="flex flex-wrap gap-2">
+          {quickPrompts.map((p, idx) => (
+            <button
+              key={idx}
+              onClick={() => handleSend(p.query)}
+              disabled={loading}
+              className="px-3.5 py-1.5 bg-surface border hairline border-rule hover:bg-paper hover:border-ink text-xs md:text-sm font-medium text-ink transition-colors disabled:opacity-50"
             >
-              <div
-                className={`max-w-[85%] p-3.5 border text-sm ${
-                  m.sender === "user"
-                    ? "bg-ink text-paper border-ink"
-                    : m.isEmergency
-                    ? "bg-[#FDF0F2] text-[#7A0F2E] border-[#7A0F2E] font-medium"
-                    : "bg-paper text-ink border-rule"
-                }`}
-              >
+              {p.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Chat Message Window */}
+      <div
+        role="log"
+        aria-live="polite"
+        aria-atomic="false"
+        aria-label="Conversation with SanjhiHawa assistant"
+        className="flex-1 bg-surface border hairline border-rule p-5 overflow-y-auto min-h-[400px] max-h-[540px] flex flex-col space-y-4 mb-4 rounded-none"
+      >
+        {messages.map((m) => (
+          <div
+            key={m.id}
+            className={`flex flex-col ${m.sender === "user" ? "items-end" : "items-start"}`}
+          >
+            <div
+              className={`max-w-[85%] p-4 border text-sm md:text-base ${
+                m.sender === "user"
+                  ? "bg-ink text-paper border-ink shadow-xs"
+                  : m.isEmergency
+                  ? "bg-[#FDF0F2] text-[#7A0F2E] border-[#7A0F2E] font-medium"
+                  : "bg-paper text-ink border-rule shadow-xs"
+              }`}
+            >
                 {/* Emergency Badge */}
                 {m.isEmergency && (
                   <div className="flex items-center space-x-1.5 text-xs uppercase font-mono font-bold tracking-wider text-[#7A0F2E] mb-2 pb-1 border-b border-[#7A0F2E]">
@@ -264,7 +256,7 @@ export default function ChatPage() {
               </div>
 
               <span className="text-[10px] font-mono text-ink-muted mt-1 px-1">
-                {m.sender === "user" ? "You" : "Saans"} • {m.timestamp}
+                {m.sender === "user" ? "You" : "SanjhiHawa"} • {m.timestamp}
               </span>
             </div>
           ))}
@@ -307,9 +299,6 @@ export default function ChatPage() {
             {loading ? "..." : lang === "hi" ? "भेजें" : lang === "mr" ? "पाठवा" : "Send"}
           </button>
         </div>
-      </main>
-
-      <Footer />
     </div>
   );
 }

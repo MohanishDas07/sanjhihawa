@@ -34,6 +34,16 @@ class GeocodeResponse(BaseModel):
     results: list[GeocodeItem] = Field(default_factory=list)
 
 
+class ReverseGeocodeResponse(BaseModel):
+    name: str = Field(..., max_length=100)
+    latitude: float = Field(..., ge=-90.0, le=90.0)
+    longitude: float = Field(..., ge=-180.0, le=180.0)
+    country: str = Field("India", max_length=100)
+    admin1: str | None = Field(None, max_length=100)
+    distance_km: float = Field(0.0, ge=0.0)
+    display_name: str = Field(..., max_length=200)
+
+
 # ---------------------------------------------------------------------------
 # Air Quality Models
 # ---------------------------------------------------------------------------
@@ -54,6 +64,7 @@ class HourlyAirPoint(BaseModel):
     health_statement_hi: str
     health_statement_mr: str
     grap_stage: int | None = Field(None, ge=1, le=4)
+    is_filled: bool = False  # Audit 2 R9: explicitly mark any forward-filled hour
 
 
 class GRAPStageInfo(BaseModel):
@@ -65,17 +76,18 @@ class GRAPStageInfo(BaseModel):
 
 
 class AirQualityResponse(BaseModel):
+    status: Literal["ok", "no_data"] = "ok"
     city: str
     state: str | None = None
     country: str = "India"
     latitude: float
     longitude: float
-    current_pm2_5: float
+    current_pm2_5: float | None = None
     current_pm10: float | None = None
-    current_cpcb_aqi: int
-    current_aqi_band: str
-    current_aqi_color: str
-    dominant_pollutant: str
+    current_cpcb_aqi: int | None = None
+    current_aqi_band: str | None = None
+    current_aqi_color: str | None = None
+    dominant_pollutant: str = "PM2.5"
     one_sentence_verdict_en: str
     one_sentence_verdict_hi: str
     one_sentence_verdict_mr: str
@@ -84,7 +96,8 @@ class AirQualityResponse(BaseModel):
     is_sample_or_fallback: bool
     fallback_banner_text: str | None = None
     active_grap_stage: GRAPStageInfo | None = None
-    hourly_forecast: list[HourlyAirPoint]
+    hourly_forecast: list[HourlyAirPoint] = Field(default_factory=list)
+    is_modelled: bool = True  # Audit 2 R10: explicitly label modelled data as modelled
 
 
 # ---------------------------------------------------------------------------

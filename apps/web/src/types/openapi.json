@@ -468,6 +468,15 @@
       },
       "AirQualityResponse": {
         "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "no_data"
+            ],
+            "title": "Status",
+            "default": "ok"
+          },
           "city": {
             "type": "string",
             "title": "City"
@@ -497,7 +506,14 @@
             "title": "Longitude"
           },
           "current_pm2_5": {
-            "type": "number",
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Current Pm2 5"
           },
           "current_pm10": {
@@ -512,20 +528,42 @@
             "title": "Current Pm10"
           },
           "current_cpcb_aqi": {
-            "type": "integer",
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Current Cpcb Aqi"
           },
           "current_aqi_band": {
-            "type": "string",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Current Aqi Band"
           },
           "current_aqi_color": {
-            "type": "string",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Current Aqi Color"
           },
           "dominant_pollutant": {
             "type": "string",
-            "title": "Dominant Pollutant"
+            "title": "Dominant Pollutant",
+            "default": "PM2.5"
           },
           "one_sentence_verdict_en": {
             "type": "string",
@@ -578,6 +616,11 @@
             },
             "type": "array",
             "title": "Hourly Forecast"
+          },
+          "is_modelled": {
+            "type": "boolean",
+            "title": "Is Modelled",
+            "default": true
           }
         },
         "type": "object",
@@ -585,18 +628,12 @@
           "city",
           "latitude",
           "longitude",
-          "current_pm2_5",
-          "current_cpcb_aqi",
-          "current_aqi_band",
-          "current_aqi_color",
-          "dominant_pollutant",
           "one_sentence_verdict_en",
           "one_sentence_verdict_hi",
           "one_sentence_verdict_mr",
           "data_as_of",
           "data_source",
-          "is_sample_or_fallback",
-          "hourly_forecast"
+          "is_sample_or_fallback"
         ],
         "title": "AirQualityResponse"
       },
@@ -1090,6 +1127,11 @@
               }
             ],
             "title": "Grap Stage"
+          },
+          "is_filled": {
+            "type": "boolean",
+            "title": "Is Filled",
+            "default": false
           }
         },
         "type": "object",

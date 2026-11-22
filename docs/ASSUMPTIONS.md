@@ -109,3 +109,19 @@ Every numeric constant in the SAANS exposure engine is consolidated here and in 
   | Induction Cooktop (Electric) | 0.01 (cooking fumes only) | 0.31 (grid electricity) |
 
 - **Verification Status:** [TODO-VERIFY] Exact regional grid emission factor variation for UP/NCR from latest CEA bulletin (using national baseline 0.72 kg CO2/kWh for now).
+
+---
+
+## 7. Atmospheric Extinction and Physical Skyline Transmittance
+
+- **Model Equation (Koschmieder & Beer-Lambert Law):**
+  $$b_{ext} = \alpha \times PM_{2.5} + b_{Rayleigh}$$
+  $$T_i = \exp(-d_i \times b_{ext})$$
+  $$V = \frac{3.912}{b_{ext}}$$
+  where:
+  - $\alpha$: Mass-extinction efficiency, assumed at $4.0\,\text{m}^2/\text{g} = 0.004\,\text{km}^{-1}/(\mu\text{g}/\text{m}^3)$.
+  - $b_{Rayleigh}$: Clean air Rayleigh scattering baseline ($0.015\,\text{km}^{-1}$).
+  - $d_i$: Scene depth of layer $i$ (foreground $0.35\,\text{km}$, metro viaduct $1.0\,\text{km}$, midground $2.0\,\text{km}$, monuments $5.0\,\text{km}$, sun $8.5\,\text{km}$).
+  - $T_i$: Physical transmittance determining contrast and color-mix against atmospheric smog.
+  - $V$: Estimated meteorological visual range ($\text{km}$).
+- **Verification Status:** [TODO-VERIFY] Empirical mass extinction coefficient $\alpha$ for wintertime Indo-Gangetic Plains hygroscopic aerosols typically ranges from $3.5$ to $5.5\,\text{m}^2/\text{g}$ depending on relative humidity (Gautam et al., 2007). Labeled in UI as *"Approximate, not a measurement"*.

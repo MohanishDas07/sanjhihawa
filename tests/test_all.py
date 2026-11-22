@@ -4,6 +4,10 @@ Unified Test Runner for SAANS Engine and API Test Suites.
 
 import os
 import sys
+
+# Ensure tests run deterministically offline without waiting for network timeouts
+os.environ.setdefault("SAANS_OFFLINE", "1")
+
 import unittest
 
 

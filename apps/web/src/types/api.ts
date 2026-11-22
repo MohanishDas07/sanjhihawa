@@ -25,6 +25,16 @@ export interface GeocodeResponse {
   results: GeocodeItem[];
 }
 
+export interface ReverseGeocodeResponse {
+  name: string;
+  latitude: number;
+  longitude: number;
+  country: string;
+  admin1?: string | null;
+  distance_km: number;
+  display_name: string;
+}
+
 export interface HourlyAirPoint {
   hour: number;
   time_iso: string;
@@ -38,6 +48,7 @@ export interface HourlyAirPoint {
   health_statement_hi: string;
   health_statement_mr: string;
   grap_stage?: number | null;
+  is_filled?: boolean;
 }
 
 export interface GRAPStageInfo {
@@ -49,22 +60,24 @@ export interface GRAPStageInfo {
 }
 
 export interface AirQualityResponse {
+  status?: "ok" | "no_data";
   city: string;
   state?: string | null;
   country: string;
   latitude: number;
   longitude: number;
-  current_pm2_5: number;
+  current_pm2_5?: number | null;
   current_pm10?: number | null;
-  current_cpcb_aqi: number;
-  current_aqi_band: "good" | "satisfactory" | "moderate" | "poor" | "very_poor" | "severe";
-  current_aqi_color: string;
-  dominant_pollutant: string;
+  current_cpcb_aqi?: number | null;
+  current_aqi_band?: "good" | "satisfactory" | "moderate" | "poor" | "very_poor" | "severe" | null;
+  current_aqi_color?: string | null;
+  dominant_pollutant?: string | null;
   one_sentence_verdict_en: string;
   one_sentence_verdict_hi: string;
   one_sentence_verdict_mr: string;
   data_as_of: string;
   data_source: string;
+  is_modelled?: boolean;
   is_sample_or_fallback: boolean;
   fallback_banner_text?: string | null;
   active_grap_stage?: GRAPStageInfo | null;

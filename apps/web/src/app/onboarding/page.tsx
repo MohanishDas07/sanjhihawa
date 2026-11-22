@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import {
   HouseholdProfile,
   FamilyMember,
+  GeocodeItem,
 } from "@/types/api";
 import {
   getStoredProfile,
@@ -12,6 +13,8 @@ import {
   deleteStoredProfile,
   DEMO_GHAZIABAD_PROFILE,
 } from "@/lib/storage";
+import { searchCities } from "@/lib/api";
+import { POPULAR_INDIAN_CITIES, CityOption } from "@/lib/cities";
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -19,9 +22,71 @@ export default function OnboardingPage() {
   const [step, setStep] = useState<number>(1);
   const [savedSuccess, setSavedSuccess] = useState<boolean>(false);
 
+  // Search state for ANY Indian city
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [searchResults, setSearchResults] = useState<GeocodeItem[]>([]);
+  const [isSearching, setIsSearching] = useState<boolean>(false);
+  const [showDropdown, setShowDropdown] = useState<boolean>(false);
+  const searchContainerRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     setProfile(getStoredProfile());
   }, []);
+
+  // Close search dropdown on click outside
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(e.target as Node)) {
+        setShowDropdown(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Debounced search for any Indian city
+  useEffect(() => {
+    if (!searchQuery.trim() || searchQuery.trim().length < 2) {
+      setSearchResults([]);
+      setIsSearching(false);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      setIsSearching(true);
+      try {
+        const res = await searchCities(searchQuery);
+        setSearchResults(res.results || []);
+        setShowDropdown(true);
+      } catch {
+        setSearchResults([]);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  const handleSelectCity = (item: GeocodeItem) => {
+    setProfile({
+      ...profile,
+      city_name: item.name,
+      latitude: item.latitude,
+      longitude: item.longitude,
+    });
+    setSearchQuery("");
+    setShowDropdown(false);
+  };
+
+  const handleQuickSelectCity = (c: CityOption) => {
+    setProfile({
+      ...profile,
+      city_name: c.name,
+      latitude: c.lat,
+      longitude: c.lon,
+    });
+  };
 
   const handleMemberChange = (index: number, field: keyof FamilyMember, val: any) => {
     const updated = [...profile.members];
@@ -61,10 +126,9 @@ export default function OnboardingPage() {
     }
   };
 
-  const handleLoadDemoPersona = () => {
+  const handleLoadStandardTemplate = () => {
     setProfile(DEMO_GHAZIABAD_PROFILE);
     saveStoredProfile(DEMO_GHAZIABAD_PROFILE);
-    alert("Loaded Ghaziabad Demo Household (2 Adults, 9yo breathing-sensitive, 68yo elder, 2-wheeler commute, LPG).");
   };
 
   return (
@@ -72,20 +136,21 @@ export default function OnboardingPage() {
       {/* Page Header */}
       <div className="border-b hairline border-rule pb-4 flex flex-col sm:flex-row justify-between sm:items-end gap-3">
         <div>
-          <span className="font-mono text-2xs uppercase text-ink-muted">Household Setup</span>
-          <h1 className="font-serif text-3xl font-bold text-ink mt-1">
+          <span className="font-mono text-xs uppercase tracking-wider text-ink-muted font-bold">Household Setup</span>
+          <h1 className="font-serif text-3xl md:text-4xl font-bold text-ink mt-1">
             Build Your Household's Profile
           </h1>
-          <p className="text-sm text-ink-muted mt-1">
+          <p className="text-sm md:text-base text-ink-muted mt-1 leading-relaxed">
             Stored strictly in your browser. Used to calculate personalized Breath Budgets and exposure deltas.
           </p>
         </div>
 
         <button
-          onClick={handleLoadDemoPersona}
-          className="self-start sm:self-auto font-mono text-xs px-3 py-1.5 bg-paper border border-ink hover:bg-surface text-ink transition-colors"
+          onClick={handleLoadStandardTemplate}
+          className="self-start sm:self-auto font-mono text-xs px-3 py-1.5 bg-paper border border-rule hover:bg-surface text-ink transition-colors"
+          title="Fill with standard 4-member household template"
         >
-          ⚡ Load Ghaziabad Demo Persona
+          Standard Family Template
         </button>
       </div>
 
@@ -123,35 +188,95 @@ export default function OnboardingPage() {
       {/* Step 1: Location & Home Type */}
       {step === 1 && (
         <section className="bg-surface border hairline border-rule p-6 space-y-6">
-          <div className="space-y-2">
-            <label className="block text-sm font-semibold text-ink">
-              City / Location
-            </label>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              {["Ghaziabad", "Delhi", "Lucknow"].map((cityName) => (
-                <button
-                  key={cityName}
-                  type="button"
-                  onClick={() =>
-                    setProfile({
-                      ...profile,
-                      city_name: cityName,
-                      latitude: cityName === "Delhi" ? 28.6139 : (cityName === "Lucknow" ? 26.8467 : 28.6692),
-                      longitude: cityName === "Delhi" ? 77.2090 : (cityName === "Lucknow" ? 80.9462 : 77.4538),
-                    })
-                  }
-                  className={`p-3 border text-left font-sans text-sm transition-colors ${
-                    profile.city_name === cityName
-                      ? "border-ink bg-paper font-bold text-ink"
-                      : "border-rule bg-surface text-ink-muted hover:border-ink"
-                  }`}
-                >
-                  <span className="block font-serif text-base">{cityName}</span>
-                  <span className="block text-2xs font-mono text-ink-muted">
-                    {cityName === "Ghaziabad" ? "Demo NCR Site" : (cityName === "Delhi" ? "NCR Capital" : "UP Central")}
+          <div className="space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+              <label className="block text-sm font-semibold text-ink">
+                City / Location
+              </label>
+              <span className="font-mono text-xs text-ink-muted">
+                Selected: <strong className="text-ink">{profile.city_name}</strong> ({profile.latitude.toFixed(2)}° N, {profile.longitude.toFixed(2)}° E)
+              </span>
+            </div>
+
+            {/* Live Search for ANY Indian city */}
+            <div ref={searchContainerRef} className="relative">
+              <div className="relative">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => {
+                    if (searchResults.length > 0) setShowDropdown(true);
+                  }}
+                  placeholder="🔍 Search any Indian city, district or town (e.g. Pune, Mumbai, Bengaluru, Jaipur, Patna)..."
+                  className="w-full font-sans text-sm p-2.5 pl-3 pr-20 border border-rule bg-paper text-ink focus:outline-none focus:border-ink placeholder:text-ink-muted/60"
+                  aria-label="Search any Indian city"
+                />
+                {isSearching && (
+                  <span className="absolute right-3 top-2.5 text-xs text-ink-muted animate-pulse font-mono">
+                    Searching...
                   </span>
-                </button>
-              ))}
+                )}
+              </div>
+
+              {/* Autocomplete Dropdown */}
+              {showDropdown && searchResults.length > 0 && (
+                <div className="absolute z-20 top-full left-0 right-0 mt-1 bg-paper border border-ink shadow-lg max-h-60 overflow-y-auto">
+                  {searchResults.map((item, idx) => (
+                    <button
+                      key={`${item.name}-${item.latitude}-${idx}`}
+                      type="button"
+                      onClick={() => handleSelectCity(item)}
+                      className="w-full text-left px-3 py-2 text-sm hover:bg-surface border-b border-rule last:border-b-0 flex items-center justify-between"
+                    >
+                      <div>
+                        <span className="font-semibold text-ink">{item.name}</span>
+                        {item.admin1 && (
+                          <span className="text-xs text-ink-muted ml-2">
+                            {item.admin1}
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-2xs font-mono text-ink-muted">
+                        {item.latitude.toFixed(2)}°N, {item.longitude.toFixed(2)}°E
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {showDropdown && !isSearching && searchQuery.trim().length >= 2 && searchResults.length === 0 && (
+                <div className="absolute z-20 top-full left-0 right-0 mt-1 bg-paper border border-rule p-3 text-xs text-ink-muted">
+                  No Indian place found matching "{searchQuery}". Try searching a major district or city name.
+                </div>
+              )}
+            </div>
+
+            {/* Popular Urban Hubs Grid */}
+            <div className="space-y-1.5">
+              <span className="text-2xs font-mono uppercase tracking-wider text-ink-muted">
+                Quick Select: Major Urban Hubs & Capitals
+              </span>
+              <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2">
+                {POPULAR_INDIAN_CITIES.map((c) => {
+                  const isSelected = profile.city_name.toLowerCase() === c.name.toLowerCase();
+                  return (
+                    <button
+                      key={c.name}
+                      type="button"
+                      onClick={() => handleQuickSelectCity(c)}
+                      className={`p-2 border text-left transition-colors ${
+                        isSelected
+                          ? "border-ink bg-paper font-bold text-ink ring-1 ring-ink"
+                          : "border-rule bg-surface text-ink-muted hover:border-ink hover:text-ink"
+                      }`}
+                    >
+                      <span className="block font-sans text-xs truncate">{c.name}</span>
+                      <span className="block text-3xs font-mono text-ink-muted truncate">{c.region}</span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
 

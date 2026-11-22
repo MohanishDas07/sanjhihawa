@@ -2,76 +2,38 @@
 
 import React, { useState, useEffect } from "react";
 import { CommunityAdvisoryResponse } from "@/types/api";
-
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+import { POPULAR_INDIAN_CITIES } from "@/lib/cities";
+import { fetchCommunityAdvisory } from "@/lib/api";
 
 export default function CommunityPage() {
   const [orgName, setOrgName] = useState<string>("Vasundhara Enclave RWA");
   const [orgType, setOrgType] = useState<"rwa" | "school" | "community">("rwa");
   const [city, setCity] = useState<string>("Ghaziabad");
+  const [lat, setLat] = useState<number>(28.6692);
+  const [lon, setLon] = useState<number>(77.4538);
   const [lang, setLang] = useState<"en" | "hi" | "mr">("en");
   const [advisory, setAdvisory] = useState<CommunityAdvisoryResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const fetchAdvisory = async () => {
     setLoading(true);
+    setErrorMessage(null);
     try {
-      const res = await fetch(`${API_BASE}/community/advisory`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          organization_name: orgName,
-          organization_type: orgType,
-          city: city,
-          latitude: city === "Delhi" ? 28.6139 : (city === "Lucknow" ? 26.8467 : 28.6692),
-          longitude: city === "Delhi" ? 77.2090 : (city === "Lucknow" ? 80.9462 : 77.4538),
-          language: lang,
-        }),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setAdvisory(data);
-      } else {
-        throw new Error("Failed to generate advisory from server");
-      }
-    } catch {
-      // Local fallback generation
-      setAdvisory({
+      const data = await fetchCommunityAdvisory({
         organization_name: orgName,
-        date_formatted: new Date().toLocaleDateString("en-IN", {
-          day: "numeric",
-          month: "short",
-          year: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
+        organization_type: orgType,
         city: city,
-        aqi: 485,
-        aqi_band: "severe",
-        aqi_color_hex: "#7A0F2E",
-        headline: lang === "hi"
-          ? `वायु गुणवत्ता चेतावनी: ${city} में AQI 485 (गंभीर)`
-          : (lang === "mr"
-             ? `हवा गुणवत्ता सूचना: ${city} मध्ये AQI 485 (गंभीर)`
-             : `AIR QUALITY EMERGENCY ADVISORY: AQI 485 (Severe) in ${city}`),
-        bulletin_points: [
-          "Current Air Quality Index: 485 (CPCB NAQI Standard).",
-          "Active CAQM GRAP Stage: Stage IV (Severe+) Mandatory Protocols Active.",
-          "Postpone all morning outdoor sports, assemblies, and fitness runs between 6:00 AM and 10:00 AM.",
-          "Zero tolerance on open burning of garden waste, leaves, or plastic trash.",
-          "Mandatory distribution of certified ISI/BIS N95 masks to building guards and sanitation staff.",
-        ],
-        school_advisory: orgType === "school"
-          ? "Primary wing outdoor physical activities suspended. Conduct breathing-safe indoor activities."
-          : null,
-        rwa_actions: [
-          "Initiate twice-daily water sprinkling on estate internal roads to suppress ground dust.",
-          "Strictly prohibit unnecessary diesel generator (DG Set) operations.",
-          "Organize shared carpools for morning school and commuter trips.",
-        ],
-        verification_source: "Open-Meteo & CPCB NAQI Reference Station",
-        generated_at_iso: new Date().toISOString(),
+        latitude: lat,
+        longitude: lon,
+        language: lang,
       });
+      setAdvisory(data);
+    } catch (err: any) {
+      setAdvisory(null);
+      setErrorMessage(
+        err?.message || `No live air quality readings available for ${city}. An advisory bulletin cannot be generated without verified data.`
+      );
     } finally {
       setLoading(false);
     }
@@ -86,11 +48,11 @@ export default function CommunityPage() {
       {/* Header */}
       <div className="border-b hairline border-rule pb-4 no-print flex flex-col sm:flex-row justify-between sm:items-end gap-3">
         <div>
-          <span className="font-mono text-2xs uppercase text-ink-muted">Citizen & Institutional Defense</span>
+          <span className="font-mono text-xs uppercase tracking-wider text-ink-muted font-bold">Citizen & Institutional Defense</span>
           <h1 className="font-serif text-3xl md:text-4xl font-bold text-ink mt-1">
             Community & School Advisory Card
           </h1>
-          <p className="text-sm text-ink-muted mt-1 max-w-xl">
+          <p className="text-sm md:text-base text-ink-muted mt-1 max-w-xl leading-relaxed">
             Generate clean, printable bulletins for Resident Welfare Associations (RWAs), apartment notices, and school noticeboards.
           </p>
         </div>
@@ -132,15 +94,26 @@ export default function CommunityPage() {
         </div>
 
         <div>
-          <label className="block text-ink-muted mb-1 font-bold">City:</label>
+          <label className="block text-ink-muted mb-1 font-bold">City / Location:</label>
           <select
             value={city}
-            onChange={(e) => setCity(e.target.value)}
+            onChange={(e) => {
+              const selected = POPULAR_INDIAN_CITIES.find((c) => c.name === e.target.value);
+              if (selected) {
+                setCity(selected.name);
+                setLat(selected.lat);
+                setLon(selected.lon);
+              } else {
+                setCity(e.target.value);
+              }
+            }}
             className="w-full p-2 border border-rule bg-paper text-ink"
           >
-            <option value="Ghaziabad">Ghaziabad</option>
-            <option value="Delhi">Delhi</option>
-            <option value="Lucknow">Lucknow</option>
+            {POPULAR_INDIAN_CITIES.map((c) => (
+              <option key={c.name} value={c.name}>
+                {c.name} ({c.region})
+              </option>
+            ))}
           </select>
         </div>
 
@@ -157,6 +130,19 @@ export default function CommunityPage() {
           </select>
         </div>
       </div>
+
+      {/* Error or No Station Data Notice */}
+      {errorMessage && (
+        <div className="p-6 bg-red-50 border-l-4 border-red-700 text-red-950 font-sans space-y-2">
+          <p className="font-mono text-xs uppercase font-bold text-red-900 tracking-wider">
+            Advisory Notice: No Live Station Data Available
+          </p>
+          <p className="text-sm text-red-800">{errorMessage}</p>
+          <p className="text-xs text-red-700">
+            SanjhiHawa enforces a strict zero-fake-data policy. Public health bulletins are never synthesized from dummy templates; they require verified atmospheric monitoring data.
+          </p>
+        </div>
+      )}
 
       {/* The Printable Advisory Card */}
       {advisory && (
@@ -249,7 +235,7 @@ export default function CommunityPage() {
           {/* Card Footer Authentication */}
           <div className="border-t-2 border-ink pt-3 flex flex-col sm:flex-row justify-between text-2xs font-mono text-ink-muted">
             <div>Verified against CPCB Breakpoint Engine & CAQM Notification</div>
-            <div>Generated by SAANS • Field Instrument System</div>
+            <div>Generated by SanjhiHawa • Clean Air Decision System</div>
           </div>
         </article>
       )}
