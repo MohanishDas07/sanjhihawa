@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { SkylineSVG } from "@/components/skyline/SkylineSVG";
 import { fetchAirQuality, searchCities, getLastCachedAir, formatReadingAge, CachedAirData } from "@/lib/api";
 import { AirQualityResponse, GeocodeItem, HourlyAirPoint } from "@/types/api";
@@ -220,7 +221,7 @@ export default function LandingPage() {
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b hairline border-rule pb-6">
             <div className="space-y-3 flex-1">
               {/* Provenance & Standard Badges */}
-              <div className="flex flex-wrap items-center gap-2 text-xs font-sans uppercase text-ink/70 font-semibold tracking-wider">
+              <div className="flex flex-wrap items-center gap-2 text-xs font-sans uppercase text-ink-muted font-semibold tracking-wider">
                 <span className="px-2 py-0.5 bg-paper border border-rule font-bold text-ink">
                   {t("landing.standard_tag")}
                 </span>
@@ -243,7 +244,11 @@ export default function LandingPage() {
                   {/* Real Geocoding City Search */}
                   <div ref={searchContainerRef} className="relative">
                     <div className="flex items-center">
+                      <label htmlFor="city-search-input" className="sr-only">
+                        {t("landing.search_placeholder")}
+                      </label>
                       <input
+                        id="city-search-input"
                         type="text"
                         placeholder={t("landing.search_placeholder")}
                         value={searchQuery}
@@ -290,7 +295,7 @@ export default function LandingPage() {
 
               {/* Quick Select Regional Metros */}
               <div className="flex flex-wrap items-center gap-2 pt-1">
-                <span className="text-xs font-sans uppercase text-ink/70 mr-1 font-bold tracking-wider">
+                <span className="text-xs font-sans uppercase text-ink-muted mr-1 font-bold tracking-wider">
                   {t("landing.national_corridors")}
                 </span>
                 {REGIONAL_METROS.map((m) => (
@@ -410,9 +415,9 @@ export default function LandingPage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5 pt-2">
               {/* Metric 1: Fine Particulates PM2.5 */}
               <div className="p-4 bg-paper border border-rule space-y-1.5 shadow-2xs">
-                <div className="flex items-center justify-between text-xs font-sans font-bold uppercase tracking-wider text-ink/70">
+                <div className="flex items-center justify-between text-xs font-sans font-bold uppercase tracking-wider text-ink-muted">
                   <span>{t("landing.pm25_title")}</span>
-                  <span className="font-semibold text-2xs text-ink/60">{t("landing.pm25_limit")}</span>
+                  <span className="font-semibold text-2xs text-ink-muted">{t("landing.pm25_limit")}</span>
                 </div>
                 <div className="font-mono text-2xl md:text-3xl font-extrabold text-ink">
                   {pm25 != null ? `${pm25} µg/m³` : "--"}
@@ -426,9 +431,9 @@ export default function LandingPage() {
 
               {/* Metric 2: Coarse Particulates PM10 */}
               <div className="p-4 bg-paper border border-rule space-y-1.5 shadow-2xs">
-                <div className="flex items-center justify-between text-xs font-sans font-bold uppercase tracking-wider text-ink/70">
+                <div className="flex items-center justify-between text-xs font-sans font-bold uppercase tracking-wider text-ink-muted">
                   <span>{t("landing.pm10_title")}</span>
-                  <span className="font-semibold text-2xs text-ink/60">{t("landing.pm10_limit")}</span>
+                  <span className="font-semibold text-2xs text-ink-muted">{t("landing.pm10_limit")}</span>
                 </div>
                 <div className="font-mono text-2xl md:text-3xl font-extrabold text-ink">
                   {pm10 != null ? `${pm10} µg/m³` : "--"}
@@ -442,9 +447,9 @@ export default function LandingPage() {
 
               {/* Metric 3: Aerosol Soot vs Dust Ratio */}
               <div className="p-4 bg-paper border border-rule space-y-1.5 shadow-2xs">
-                <div className="flex items-center justify-between text-xs font-sans font-bold uppercase tracking-wider text-ink/70">
+                <div className="flex items-center justify-between text-xs font-sans font-bold uppercase tracking-wider text-ink-muted">
                   <span>{t("landing.ratio_title")}</span>
-                  <span className="font-semibold text-2xs text-ink/60">PM2.5/PM10</span>
+                  <span className="font-semibold text-2xs text-ink-muted">PM2.5/PM10</span>
                 </div>
                 <div className="font-mono text-2xl md:text-3xl font-extrabold text-ink">
                   {aerosolRatio != null ? `${aerosolRatio}%` : "--"}
@@ -462,9 +467,9 @@ export default function LandingPage() {
 
               {/* Metric 4: Optical Visual Range */}
               <div className="p-4 bg-paper border border-rule space-y-1.5 shadow-2xs">
-                <div className="flex items-center justify-between text-xs font-sans font-bold uppercase tracking-wider text-ink/70">
+                <div className="flex items-center justify-between text-xs font-sans font-bold uppercase tracking-wider text-ink-muted">
                   <span>{t("landing.visual_title")}</span>
-                  <span className="font-semibold text-2xs text-ink/60">Koschmieder</span>
+                  <span className="font-semibold text-2xs text-ink-muted">Koschmieder</span>
                 </div>
                 <div className="font-mono text-2xl md:text-3xl font-extrabold text-ink">
                   {koschmiederKm != null
@@ -581,7 +586,7 @@ export default function LandingPage() {
         >
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-3 border-b hairline border-rule pb-4">
             <div>
-              <div className="flex items-center space-x-2 text-xs font-sans font-bold uppercase tracking-widest text-ink/60">
+              <div className="flex items-center space-x-2 text-xs font-sans font-bold uppercase tracking-widest text-ink-muted">
                 <span>{t("landing.inversion_eyebrow")}</span>
               </div>
               <h2 className="font-serif text-2xl md:text-3xl font-bold text-ink mt-1 tracking-tight">
@@ -757,7 +762,7 @@ export default function LandingPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Pillar 1: Spatial Sampling Volume */}
           <div className="p-5 bg-paper border border-rule space-y-2.5 shadow-2xs">
-            <div className="text-xs font-sans font-bold uppercase tracking-wider text-ink/60">
+            <div className="text-xs font-sans font-bold uppercase tracking-wider text-ink-muted">
               {t("landing.p1_idx")}
             </div>
             <h3 className="font-sans text-base md:text-lg font-bold text-ink">
@@ -770,7 +775,7 @@ export default function LandingPage() {
 
           {/* Pillar 2: Sensor Physics & Humidity Bias */}
           <div className="p-5 bg-paper border border-rule space-y-2.5 shadow-2xs">
-            <div className="text-xs font-sans font-bold uppercase tracking-wider text-ink/60">
+            <div className="text-xs font-sans font-bold uppercase tracking-wider text-ink-muted">
               {t("landing.p2_idx")}
             </div>
             <h3 className="font-sans text-base md:text-lg font-bold text-ink">
@@ -783,7 +788,7 @@ export default function LandingPage() {
 
           {/* Pillar 3: Mathematical Determinism */}
           <div className="p-5 bg-paper border border-rule space-y-2.5 shadow-2xs">
-            <div className="text-xs font-sans font-bold uppercase tracking-wider text-ink/60">
+            <div className="text-xs font-sans font-bold uppercase tracking-wider text-ink-muted">
               {t("landing.p3_idx")}
             </div>
             <h3 className="font-sans text-base md:text-lg font-bold text-ink">
@@ -796,7 +801,7 @@ export default function LandingPage() {
 
           {/* Pillar 4: Public Science vs Hardware Sales */}
           <div className="p-5 bg-paper border border-rule space-y-2.5 shadow-2xs">
-            <div className="text-xs font-sans font-bold uppercase tracking-wider text-ink/60">
+            <div className="text-xs font-sans font-bold uppercase tracking-wider text-ink-muted">
               {t("landing.p4_idx")}
             </div>
             <h3 className="font-sans text-base md:text-lg font-bold text-ink">
@@ -831,7 +836,7 @@ export default function LandingPage() {
       <section className="space-y-4 font-sans" aria-label="Field Instruments and Clean Air Toolset">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b hairline border-rule pb-3 gap-2">
           <div>
-            <span className="font-sans text-xs uppercase tracking-widest text-ink/60 font-bold block mb-1">
+            <span className="font-sans text-xs uppercase tracking-widest text-ink-muted font-bold block mb-1">
               {t("landing.tools_eyebrow")}
             </span>
             <p className="text-sm md:text-base text-ink/80 font-normal">
@@ -853,9 +858,9 @@ export default function LandingPage() {
             className="group p-5 bg-surface border border-rule hover:border-ink hover:bg-paper transition-all duration-200 hover:-translate-y-1 hover:shadow-md flex flex-col justify-between"
           >
             <div className="space-y-3">
-              <div className="flex items-center justify-between text-xs font-sans font-bold uppercase tracking-wider text-ink/60">
+              <div className="flex items-center justify-between text-xs font-sans font-bold uppercase tracking-wider text-ink-muted">
                 <span>{t("landing.tool1_eyebrow")}</span>
-                <span className="group-hover:translate-x-1.5 transition-transform text-ink/70">→</span>
+                <span className="group-hover:translate-x-1.5 transition-transform text-ink-muted">→</span>
               </div>
               <h3 className="font-sans text-xl md:text-2xl font-bold text-ink tracking-tight group-hover:text-ink">
                 {t("landing.tool1_title")}
@@ -878,9 +883,9 @@ export default function LandingPage() {
             className="group p-5 bg-surface border border-rule hover:border-ink hover:bg-paper transition-all duration-200 hover:-translate-y-1 hover:shadow-md flex flex-col justify-between"
           >
             <div className="space-y-3">
-              <div className="flex items-center justify-between text-xs font-sans font-bold uppercase tracking-wider text-ink/60">
+              <div className="flex items-center justify-between text-xs font-sans font-bold uppercase tracking-wider text-ink-muted">
                 <span>{t("landing.tool2_eyebrow")}</span>
-                <span className="group-hover:translate-x-1.5 transition-transform text-ink/70">→</span>
+                <span className="group-hover:translate-x-1.5 transition-transform text-ink-muted">→</span>
               </div>
               <h3 className="font-sans text-xl md:text-2xl font-bold text-ink tracking-tight group-hover:text-ink">
                 {t("landing.tool2_title")}
@@ -903,9 +908,9 @@ export default function LandingPage() {
             className="group p-5 bg-surface border border-rule hover:border-ink hover:bg-paper transition-all duration-200 hover:-translate-y-1 hover:shadow-md flex flex-col justify-between"
           >
             <div className="space-y-3">
-              <div className="flex items-center justify-between text-xs font-sans font-bold uppercase tracking-wider text-ink/60">
+              <div className="flex items-center justify-between text-xs font-sans font-bold uppercase tracking-wider text-ink-muted">
                 <span>{t("landing.tool3_eyebrow")}</span>
-                <span className="group-hover:translate-x-1.5 transition-transform text-ink/70">→</span>
+                <span className="group-hover:translate-x-1.5 transition-transform text-ink-muted">→</span>
               </div>
               <h3 className="font-sans text-xl md:text-2xl font-bold text-ink tracking-tight group-hover:text-ink">
                 {t("landing.tool3_title")}
@@ -928,9 +933,9 @@ export default function LandingPage() {
             className="group p-5 bg-surface border border-rule hover:border-ink hover:bg-paper transition-all duration-200 hover:-translate-y-1 hover:shadow-md flex flex-col justify-between"
           >
             <div className="space-y-3">
-              <div className="flex items-center justify-between text-xs font-sans font-bold uppercase tracking-wider text-ink/60">
+              <div className="flex items-center justify-between text-xs font-sans font-bold uppercase tracking-wider text-ink-muted">
                 <span>{t("landing.tool4_eyebrow")}</span>
-                <span className="group-hover:translate-x-1.5 transition-transform text-ink/70">→</span>
+                <span className="group-hover:translate-x-1.5 transition-transform text-ink-muted">→</span>
               </div>
               <h3 className="font-sans text-xl md:text-2xl font-bold text-ink tracking-tight group-hover:text-ink">
                 {t("landing.tool4_title")}
@@ -953,7 +958,7 @@ export default function LandingPage() {
       <section className="space-y-5 font-sans" aria-label="Field Documentary Records">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b hairline border-rule pb-3 gap-2">
           <div>
-            <span className="font-sans text-xs uppercase tracking-widest text-ink/60 font-bold block mb-1">
+            <span className="font-sans text-xs uppercase tracking-widest text-ink-muted font-bold block mb-1">
               {t("landing.photos_eyebrow")}
             </span>
             <h2 className="font-serif text-2xl md:text-3xl font-bold text-ink tracking-tight">
@@ -980,11 +985,12 @@ export default function LandingPage() {
           >
             <div className="space-y-3.5">
               <div className="relative w-full h-56 md:h-64 overflow-hidden bg-neutral-900 border border-rule">
-                <img
+                <Image
                   src="/images/smog_delhi.jpg"
                   alt="Delhi NCR winter smog with India Gate fading into dense particulate haze"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 brightness-95 contrast-105"
-                  loading="lazy"
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  className="object-cover group-hover:scale-105 transition-transform duration-500 brightness-95 contrast-105"
                 />
                 <span className="absolute bottom-2.5 left-2.5 bg-ink/85 text-paper font-sans text-xs px-3 py-1 uppercase tracking-wider backdrop-blur-xs font-bold">
                   Delhi NCR • Field Record
@@ -1025,11 +1031,12 @@ export default function LandingPage() {
           >
             <div className="space-y-3.5">
               <div className="relative w-full h-56 md:h-64 overflow-hidden bg-neutral-900 border border-rule">
-                <img
+                <Image
                   src="/images/smog_kolkata.jpg"
                   alt="Kolkata winter smog over Hooghly River and Howrah bridge"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 brightness-95 contrast-105"
-                  loading="lazy"
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  className="object-cover group-hover:scale-105 transition-transform duration-500 brightness-95 contrast-105"
                 />
                 <span className="absolute bottom-2.5 left-2.5 bg-ink/85 text-paper font-sans text-xs px-3 py-1 uppercase tracking-wider backdrop-blur-xs font-bold">
                   Kolkata • Riverfront Inversion
@@ -1070,11 +1077,12 @@ export default function LandingPage() {
           >
             <div className="space-y-3.5">
               <div className="relative w-full h-56 md:h-64 overflow-hidden bg-neutral-900 border border-rule">
-                <img
+                <Image
                   src="/images/smog_mumbai.jpg"
                   alt="Mumbai winter marine temperature inversion haze over Sea Link skyline"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 brightness-95 contrast-105"
-                  loading="lazy"
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  className="object-cover group-hover:scale-105 transition-transform duration-500 brightness-95 contrast-105"
                 />
                 <span className="absolute bottom-2.5 left-2.5 bg-ink/85 text-paper font-sans text-xs px-3 py-1 uppercase tracking-wider backdrop-blur-xs font-bold">
                   Mumbai • Coastal Marine Layer
@@ -1115,11 +1123,12 @@ export default function LandingPage() {
           >
             <div className="space-y-3.5">
               <div className="relative w-full h-56 md:h-64 overflow-hidden bg-neutral-900 border border-rule">
-                <img
+                <Image
                   src="/images/smog_bengaluru.jpg"
                   alt="Bengaluru Vidhana Soudha veiled in winter morning particulate smog and atmospheric haze"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 brightness-95 contrast-105"
-                  loading="lazy"
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  className="object-cover group-hover:scale-105 transition-transform duration-500 brightness-95 contrast-105"
                 />
                 <span className="absolute bottom-2.5 left-2.5 bg-ink/85 text-paper font-sans text-xs px-3 py-1 uppercase tracking-wider backdrop-blur-xs font-bold">
                   Bengaluru • Plateau Inversion
@@ -1160,11 +1169,12 @@ export default function LandingPage() {
           >
             <div className="space-y-3.5">
               <div className="relative w-full h-56 md:h-64 overflow-hidden bg-neutral-900 border border-rule">
-                <img
+                <Image
                   src="/images/smog_lucknow.jpg"
                   alt="Lucknow highway corridor shrouded in dense winter thermal inversion smog"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 brightness-95 contrast-105"
-                  loading="lazy"
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  className="object-cover group-hover:scale-105 transition-transform duration-500 brightness-95 contrast-105"
                 />
                 <span className="absolute bottom-2.5 left-2.5 bg-ink/85 text-paper font-sans text-xs px-3 py-1 uppercase tracking-wider backdrop-blur-xs font-bold">
                   Lucknow • Indo-Gangetic Basin
@@ -1205,11 +1215,12 @@ export default function LandingPage() {
           >
             <div className="space-y-3.5">
               <div className="relative w-full h-56 md:h-64 overflow-hidden bg-neutral-900 border border-rule">
-                <img
+                <Image
                   src="/images/smog_hyderabad.jpg"
                   alt="Hyderabad Charminar rising into dense winter atmospheric inversion smog"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 brightness-95 contrast-105"
-                  loading="lazy"
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  className="object-cover group-hover:scale-105 transition-transform duration-500 brightness-95 contrast-105"
                 />
                 <span className="absolute bottom-2.5 left-2.5 bg-ink/85 text-paper font-sans text-xs px-3 py-1 uppercase tracking-wider backdrop-blur-xs font-bold">
                   Hyderabad • Deccan Basin
@@ -1242,7 +1253,7 @@ export default function LandingPage() {
       <section className="bg-surface border hairline border-rule p-6 md:p-8 space-y-6 font-sans">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b hairline border-rule pb-4 gap-2">
           <div>
-            <span className="font-sans text-xs uppercase tracking-widest text-ink/60 font-bold block mb-1">
+            <span className="font-sans text-xs uppercase tracking-widest text-ink-muted font-bold block mb-1">
               {t("landing.rigor_eyebrow")}
             </span>
             <h2 className="font-serif text-2xl md:text-3xl font-bold text-ink tracking-tight">
@@ -1260,7 +1271,7 @@ export default function LandingPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Card 1: CPCB NAQI Interpolation */}
           <div className="p-5 bg-paper border border-rule space-y-3">
-            <span className="font-sans text-xs uppercase text-ink/60 font-bold tracking-wider block">
+            <span className="font-sans text-xs uppercase text-ink-muted font-bold tracking-wider block">
               Equation 01 • CPCB NAQI Sub-Index
             </span>
             <h3 className="font-sans text-lg md:text-xl font-bold text-ink tracking-tight">
@@ -1276,7 +1287,7 @@ export default function LandingPage() {
 
           {/* Card 2: Koschmieder Relationship */}
           <div className="p-5 bg-paper border border-rule space-y-3">
-            <span className="font-sans text-xs uppercase text-ink/60 font-bold tracking-wider block">
+            <span className="font-sans text-xs uppercase text-ink-muted font-bold tracking-wider block">
               Equation 02 • Atmospheric Optics
             </span>
             <h3 className="font-sans text-lg md:text-xl font-bold text-ink tracking-tight">
@@ -1292,7 +1303,7 @@ export default function LandingPage() {
 
           {/* Card 3: Privacy & Zero Accounts */}
           <div className="p-5 bg-paper border border-rule space-y-3">
-            <span className="font-sans text-xs uppercase text-ink/60 font-bold tracking-wider block">
+            <span className="font-sans text-xs uppercase text-ink-muted font-bold tracking-wider block">
               Equation 03 • Privacy by Design
             </span>
             <h3 className="font-sans text-lg md:text-xl font-bold text-ink tracking-tight">

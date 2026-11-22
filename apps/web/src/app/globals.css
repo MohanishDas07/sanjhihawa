@@ -15,7 +15,7 @@
     --bg-surface: #FBF8F1;
     --bg-card: #FFFFFF;
     --color-ink: #17181A;
-    --color-muted: #4A4D52;
+    --color-muted: #383B40;
     --color-rule: #CFC8B8;
     --skyline-bg: #EAE4D5;
     --skyline-sun: #E5A83B;
@@ -31,7 +31,7 @@
     --bg-surface: #1D1E22;
     --bg-card: #24262B;
     --color-ink: #F3EFE6;
-    --color-muted: #9EA2A8;
+    --color-muted: #B8BCC2;
     --color-rule: #33363D;
     --skyline-bg: #16181C;
     --skyline-sun: #E2C98A;
@@ -45,6 +45,17 @@
   html {
     font-size: 16px;
     letter-spacing: -0.01em;
+  }
+
+  /* Universal WCAG AAA compliant keyboard focus visibility */
+  :focus-visible {
+    outline: 2px solid #17181A !important;
+    outline-offset: 2px !important;
+  }
+
+  .dark :focus-visible {
+    outline: 2px solid #F3EFE6 !important;
+    outline-offset: 2px !important;
   }
 
   body {

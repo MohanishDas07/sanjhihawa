@@ -145,10 +145,11 @@ export default function HomeAirLabPage() {
             <div className="lg:col-span-5 space-y-4">
               <div className="grid grid-cols-3 gap-3">
                 <div>
-                  <label className="block text-sm font-sans font-bold text-ink mb-1.5">
+                  <label htmlFor="cadr-length" className="block text-sm font-sans font-bold text-ink mb-1.5">
                     Length ({unit})
                   </label>
                   <input
+                    id="cadr-length"
                     type="number"
                     value={length}
                     min={4}
@@ -158,10 +159,11 @@ export default function HomeAirLabPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-sans font-bold text-ink mb-1.5">
+                  <label htmlFor="cadr-width" className="block text-sm font-sans font-bold text-ink mb-1.5">
                     Width ({unit})
                   </label>
                   <input
+                    id="cadr-width"
                     type="number"
                     value={width}
                     min={4}
@@ -171,10 +173,11 @@ export default function HomeAirLabPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-sans font-bold text-ink mb-1.5">
+                  <label htmlFor="cadr-height" className="block text-sm font-sans font-bold text-ink mb-1.5">
                     Height ({unit})
                   </label>
                   <input
+                    id="cadr-height"
                     type="number"
                     value={height}
                     min={4}

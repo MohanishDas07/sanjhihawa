@@ -239,7 +239,11 @@ export default function ChatPage() {
 
         {/* Chat Input Bar */}
         <div className="border border-rule bg-surface p-2 flex items-center gap-2">
+          <label htmlFor="chat-input" className="sr-only">
+            {t("chat.input_placeholder")}
+          </label>
           <input
+            id="chat-input"
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}

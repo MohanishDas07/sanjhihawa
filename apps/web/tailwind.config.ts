@@ -23,9 +23,9 @@ const config: Config = {
         },
         ink: {
           DEFAULT: "#17181A",
-          muted: "#4A4D52",
+          muted: "#383B40",
           light: "#F3EFE6",
-          lightMuted: "#9EA2A8",
+          lightMuted: "#B8BCC2",
         },
         rule: {
           DEFAULT: "#CFC8B8",

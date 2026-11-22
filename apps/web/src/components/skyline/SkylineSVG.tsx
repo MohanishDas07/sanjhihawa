@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 
 interface SkylineSVGProps {
   pm25?: number | null;
@@ -111,15 +112,18 @@ export const SkylineSVG: React.FC<SkylineSVGProps> = ({ pm25, sourceLabel, cityN
 
       {/* Realistic Documentary Photograph */}
       <div className="relative w-full h-full overflow-hidden">
-        {/* Authentic High-Res Smog Skyline Photograph */}
-        <img
+        {/* Authentic High-Res Smog Skyline Photograph (Next.js Optimized) */}
+        <Image
           src={cityAsset.image}
           alt={
             hasReading
               ? `Real photograph of ${cityAsset.landmark} heavily enveloped in winter smog at ${pm25} µg/m³ PM2.5, buildings obscured by haze.`
               : `Real photograph of ${cityAsset.landmark} shrouded in winter smog.`
           }
-          className="w-full h-full object-cover object-bottom transition-all duration-700"
+          fill
+          priority
+          sizes="(max-width: 768px) 100vw, 1280px"
+          className="object-cover object-bottom transition-all duration-700"
           style={{
             filter: `contrast(${1 - smogOverlayOpacity * 0.3}) brightness(${
               1 - smogOverlayOpacity * 0.15
