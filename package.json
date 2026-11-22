@@ -13,6 +13,9 @@
     "dev": "npm --prefix apps/web run dev",
     "lint": "python -m ruff check apps/api tests && npx --prefix apps/web tsc -p apps/web/tsconfig.json --noEmit"
   },
+  "workspaces": [
+    "apps/web"
+  ],
   "keywords": [
     "air-quality",
     "aqi",

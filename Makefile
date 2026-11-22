@@ -39,3 +39,5 @@ export-openapi:
 clean:
 	rm -rf apps/api/data/*.sqlite3*
 	rm -rf apps/web/.next
+	rm -rf .pytest_cache .ruff_cache .coverage
+	rm -rf apps/web/test-results apps/web/playwright-report

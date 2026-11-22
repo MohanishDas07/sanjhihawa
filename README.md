@@ -119,22 +119,33 @@ All features meet the Section 8 quality bar or remain cleanly gated behind flags
 - Python 3.12 or 3.13
 - Node.js 18+ and npm
 
+### Repository Organization
+```text
+├── apps/
+│   ├── api/            # FastAPI Python backend, exposure engines & CPCB NAQI calculator
+│   └── web/            # Next.js 14 frontend, App Router, Tailwind, i18n dictionaries
+├── corpus/             # Curated, authoritative air guidance & myth-busting corpus (JSON)
+├── docs/               # Technical ADRs, accessibility audits, and 90-sec demo scripts
+├── scripts/            # Build automation & OpenAPI schema export utilities
+├── tests/              # Backend test suite (engine, API contracts, golden eval harness)
+├── .github/workflows/  # GitHub Actions CI pipeline (lint, coverage, build, E2E)
+├── SECURITY.md         # Privacy by design, threat model & rate-limiting policies
+└── package.json        # Root monorepo workspace scripts
+```
+
 ### One-Command Setup & Verification
 ```bash
-# 1. Run all unit, API, and golden evaluation tests with coverage (29 tests, 31 evals, 73% coverage)
-coverage run --source=apps/api tests/test_all.py && coverage report
+# 1. Run all tests (Frontend unit tests + Python engine + 31 golden evals)
+npm run test:all
 
-# 2. Run Ruff lint check (0 errors, 0 warnings)
-python -m ruff check apps/api tests
+# 2. Run static code analysis & type safety checks
+npm run lint
 
-# 3. Export OpenAPI schema
-python scripts/export_openapi.py
+# 3. Run Playwright End-to-End browser suite
+npm run test:e2e
 
-# 4. Run frontend tests and TypeScript verification
-cd apps/web && npm test && npx tsc -p tsconfig.json --noEmit
-
-# 5. Build Next.js Web App (11 static routes prerendered)
-cd apps/web && npm run build
+# 4. Build production artifacts
+npm run build
 ```
 
 ### Key Documentation Links
