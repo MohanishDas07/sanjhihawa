@@ -125,16 +125,19 @@ All core features are active in production. Experimental extensions remain clean
 ### Repository Structure
 ```text
 sanjhihawa/
+├── .github/            # GitHub Actions CI pipeline & repository security policy
 ├── apps/
-│   ├── api/            # FastAPI Python backend, deterministic exposure engines, CPCB AQI
-│   └── web/            # Next.js 14 frontend, App Router, Tailwind CSS, i18n
-├── corpus/             # Curated, authoritative air guidance & myth-busting corpus (JSON)
-├── docs/               # System architecture, ADRs, accessibility audit, and demo scripts
-├── scripts/            # Build utilities (OpenAPI schema exporter)
-├── tests/              # Python test suite (engine, API contracts, golden eval harness)
-├── .github/workflows/  # Continuous Integration (CI) pipeline
-├── SECURITY.md         # Enterprise privacy, rate limiting & threat model specification
-└── package.json        # Root monorepo workspace configuration
+│   ├── api/            # FastAPI backend, exposure engines, guidance data & scripts
+│   └── web/            # Next.js 14 frontend, App Router, Tailwind CSS & i18n
+├── docs/               # System architecture, ADRs, accessibility audit & demo scripts
+├── tests/              # Backend test suite (engine, API contracts, golden eval harness)
+├── .env.example        # Environment variable template
+├── .gitignore          # Production ignore rules (caches, build outputs, coverage)
+├── docker-compose.yml  # Multi-service container orchestration
+├── Makefile            # Developer command shortcuts
+├── package.json        # Root monorepo workspace configuration
+├── pyproject.toml      # Python linter (Ruff), Pytest & Coverage configuration
+└── README.md           # Platform documentation & master guide
 ```
 
 ### Monorepo Commands

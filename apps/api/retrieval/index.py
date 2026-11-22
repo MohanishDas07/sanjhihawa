@@ -14,7 +14,8 @@ from pathlib import Path
 CORPUS_PATH = Path(
     os.environ.get(
         "CORPUS_PATH",
-        Path(__file__).resolve().parent.parent.parent.parent
+        Path(__file__).resolve().parent.parent
+        / "data"
         / "corpus"
         / "air_guidance_chunks.json",
     )
@@ -73,10 +74,15 @@ class BM25Index:
 
     def load_corpus(self):
         if not self.corpus_path.exists():
-            # Try alternate path relative to workspace root
-            alt_path = Path("corpus/air_guidance_chunks.json")
-            if alt_path.exists():
-                self.corpus_path = alt_path
+            candidates = [
+                Path(__file__).resolve().parent.parent / "data" / "corpus" / "air_guidance_chunks.json",
+                Path("apps/api/data/corpus/air_guidance_chunks.json"),
+                Path("corpus/air_guidance_chunks.json"),
+            ]
+            for cand in candidates:
+                if cand.exists():
+                    self.corpus_path = cand
+                    break
             else:
                 raise FileNotFoundError(f"Corpus file not found at {self.corpus_path}")
 

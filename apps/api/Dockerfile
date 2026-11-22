@@ -11,7 +11,6 @@ COPY apps/api/requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY apps/api /app/apps/api
-COPY corpus /app/corpus
 
 ENV PYTHONPATH=/app/apps/api
 ENV CACHE_DIR=/app/data

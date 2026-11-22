@@ -1,7 +1,7 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Saans API - Clean Air Intelligence & Breath Budget Engine",
+    "title": "SanjhiHawa API - Clean Air Intelligence & Breath Budget Engine",
     "description": "Deterministic exposure engine, CPCB AQI calculator, and AI tool interface.",
     "version": "1.0.0"
   },
@@ -55,6 +55,65 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GeocodeResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/reverse-geocode": {
+      "get": {
+        "tags": [
+          "Geocoding"
+        ],
+        "summary": "Reverse Geocode Coords",
+        "operationId": "reverse_geocode_coords_api_v1_reverse_geocode_get",
+        "parameters": [
+          {
+            "name": "lat",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "maximum": 90.0,
+              "minimum": -90.0,
+              "description": "Latitude",
+              "title": "Lat"
+            },
+            "description": "Latitude"
+          },
+          {
+            "name": "lon",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "maximum": 180.0,
+              "minimum": -180.0,
+              "description": "Longitude",
+              "title": "Lon"
+            },
+            "description": "Longitude"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReverseGeocodeResponse"
                 }
               }
             }
@@ -1515,6 +1574,64 @@
           "cost_efficiency_score"
         ],
         "title": "RankedIntervention"
+      },
+      "ReverseGeocodeResponse": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 100,
+            "title": "Name"
+          },
+          "latitude": {
+            "type": "number",
+            "maximum": 90.0,
+            "minimum": -90.0,
+            "title": "Latitude"
+          },
+          "longitude": {
+            "type": "number",
+            "maximum": 180.0,
+            "minimum": -180.0,
+            "title": "Longitude"
+          },
+          "country": {
+            "type": "string",
+            "maxLength": 100,
+            "title": "Country",
+            "default": "India"
+          },
+          "admin1": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 100
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Admin1"
+          },
+          "distance_km": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Distance Km",
+            "default": 0.0
+          },
+          "display_name": {
+            "type": "string",
+            "maxLength": 200,
+            "title": "Display Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "latitude",
+          "longitude",
+          "display_name"
+        ],
+        "title": "ReverseGeocodeResponse"
       },
       "SimulateRequest": {
         "properties": {

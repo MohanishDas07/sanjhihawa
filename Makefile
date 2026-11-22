@@ -34,7 +34,7 @@ run-web:
 	cd apps/web && npm run dev
 
 export-openapi:
-	$(PYTHON) scripts/export_openapi.py
+	$(PYTHON) apps/api/scripts/export_openapi.py
 
 clean:
 	rm -rf apps/api/data/*.sqlite3*

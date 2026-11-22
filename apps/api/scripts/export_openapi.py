@@ -6,10 +6,10 @@ import json
 import os
 import sys
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../apps/api")))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from main import app
 
-output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../apps/web/src/types"))
+output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../web/src/types"))
 os.makedirs(output_dir, exist_ok=True)
 schema_path = os.path.join(output_dir, "openapi.json")
 
