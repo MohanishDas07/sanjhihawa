@@ -156,12 +156,12 @@ class LLMService:
             or "mock-dev-key"
         )
         # Automatic provider & model routing based on API key prefix
-        if self.api_key.startswith("AIzaSy"):
+        if self.api_key.startswith("AIza") or self.api_key.startswith("AQ."):
             # Google Gemini (OpenAI compatible endpoint)
             self.base_url = os.environ.get(
                 "LLM_BASE_URL", "https://generativelanguage.googleapis.com/v1beta/openai"
             ).rstrip("/")
-            self.model = os.environ.get("LLM_MODEL", "gemini-1.5-flash")
+            self.model = os.environ.get("LLM_MODEL", "gemini-2.5-flash")
         elif self.api_key.startswith("gsk_"):
             # Groq high-speed endpoint
             self.base_url = os.environ.get(
