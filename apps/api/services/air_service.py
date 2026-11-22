@@ -633,6 +633,25 @@ def get_air_quality_sync(
     Synchronous air quality retrieval for offline/fixture evaluations and test execution.
     Returns status 'no_data' for locations > 150 km away unless force_fallback is explicitly True.
     """
+    is_offline = os.environ.get("SAANS_OFFLINE") == "1"
+    is_testing = os.environ.get("SAANS_TESTING") == "1"
+    r_lat, r_lon = round_coords(latitude, longitude)
+    now_ts = int(time.time())
+
+    # Check cache unless forced fallback or offline/testing mode
+    if not force_fallback and not is_offline and not is_testing:
+        cursor = _conn.cursor()
+        cursor.execute(
+            "SELECT cached_at, payload FROM air_cache WHERE lat_rounded = ? AND lon_rounded = ?",
+            (r_lat, r_lon),
+        )
+        row = cursor.fetchone()
+        if row:
+            data = json.loads(row[1])
+            if city_name:
+                data["city"] = city_name
+            return AirQualityResponse(**data)
+
     fixture, nearest_city, distance_km = find_closest_fixture(latitude, longitude)
     if distance_km > 150.0 and not force_fallback:
         display_city = city_name or f"Loc ({latitude}, {longitude})"

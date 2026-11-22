@@ -148,11 +148,32 @@ def check_ip_rate_limit(client_ip: str) -> bool:
 
 class LLMService:
     def __init__(self):
-        self.api_key = os.environ.get("LLM_API_KEY", "mock-dev-key")
-        self.base_url = os.environ.get(
-            "LLM_BASE_URL", "https://api.openai.com/v1"
-        ).rstrip("/")
-        self.model = os.environ.get("LLM_MODEL", "gpt-4o-mini")
+        self.api_key = (
+            os.environ.get("LLM_API_KEY")
+            or os.environ.get("GEMINI_API_KEY")
+            or os.environ.get("OPENAI_API_KEY")
+            or os.environ.get("GROQ_API_KEY")
+            or "mock-dev-key"
+        )
+        # Automatic provider & model routing based on API key prefix
+        if self.api_key.startswith("AIzaSy"):
+            # Google Gemini (OpenAI compatible endpoint)
+            self.base_url = os.environ.get(
+                "LLM_BASE_URL", "https://generativelanguage.googleapis.com/v1beta/openai"
+            ).rstrip("/")
+            self.model = os.environ.get("LLM_MODEL", "gemini-1.5-flash")
+        elif self.api_key.startswith("gsk_"):
+            # Groq high-speed endpoint
+            self.base_url = os.environ.get(
+                "LLM_BASE_URL", "https://api.groq.com/openai/v1"
+            ).rstrip("/")
+            self.model = os.environ.get("LLM_MODEL", "llama-3.3-70b-versatile")
+        else:
+            self.base_url = os.environ.get(
+                "LLM_BASE_URL", "https://api.openai.com/v1"
+            ).rstrip("/")
+            self.model = os.environ.get("LLM_MODEL", "gpt-4o-mini")
+            
         self.mock_llm = MockLLM()
 
     def stream_chat_sync(

@@ -432,6 +432,159 @@ class MockLLM:
                 f"Across 200 community households, this avoids {res['community_pm25_avoided_g']} grams of direct PM2.5 daily."
             )
 
+        # Windows & Natural Ventilation
+        elif bool(
+            re.search(
+                r"\b(window|windows|ventilat|fresh\s+air|balcony|night\s+air|airing)\b",
+                q_lower,
+            )
+        ) or any(w in q_lower for w in ["खिड़की", "खिड़कियां", "खिडक्या", "वेंटिलेशन"]):
+            res = execute_tool(
+                "lookup_guidance",
+                {"query": "windows ventilation morning inversion", "top_k": 2},
+            )
+            tool_results.append(res)
+            chunk = res["results"][0]
+            citations.append(
+                {
+                    "id": chunk["source_id"],
+                    "title": chunk["title"],
+                    "publisher": chunk["publisher"],
+                }
+            )
+
+            if language == "hi":
+                narrative = (
+                    f"सर्दियों में रात और सुबह के समय सतह का तापमान गिरने से भारी प्रदूषण जमीन के पास जमा रहता है [{chunk['source_id']}]। "
+                    f"खिड़कियां रात 8 बजे से सुबह 11 बजे तक पूरी तरह बंद रखें। कमरे में ताजी हवा के लिए केवल दोपहर 12 बजे से 3 बजे के बीच 20-30 मिनट खिड़की खोलें, जब धूप से प्रदूषण ऊपर उठता है।"
+                )
+            else:
+                narrative = (
+                    f"Keep windows strictly shut between 8 PM and 11 AM during winter smog [{chunk['source_id']}]. "
+                    f"Nighttime radiative cooling traps toxic vehicular exhaust and smoke within 150 meters of the ground. "
+                    f"Aero-ventilate rooms for 20 to 30 minutes only between 12:00 PM and 3:00 PM, when solar convection dilutes surface particulates."
+                )
+
+        # Children & Pediatric Vulnerability
+        elif bool(
+            re.search(
+                r"\b(child|children|kid|kids|baby|infant|pediatric|school|playground)\b",
+                q_lower,
+            )
+        ) or any(w in q_lower for w in ["बच्चा", "बच्चे", "शिशु", "मुल"]):
+            res = execute_tool(
+                "lookup_guidance",
+                {"query": "children pediatric vulnerability", "top_k": 2},
+            )
+            tool_results.append(res)
+            chunk = res["results"][0]
+            citations.append(
+                {
+                    "id": chunk["source_id"],
+                    "title": chunk["title"],
+                    "publisher": chunk["publisher"],
+                }
+            )
+
+            if language == "hi":
+                narrative = (
+                    f"बच्चों के फेफड़े अभी विकसित हो रहे होते हैं और वे प्रति किलोग्राम वजन वयस्कों से अधिक हवा सांस में लेते हैं [{chunk['source_id']}]। "
+                    f"AQI खराब होने पर बच्चों की सुबह की बाहरी प्रार्थना और खेलकूद रद्द रखें। बाहर निकलते समय प्रमाणित बाल-अनुकूल N95 मास्क पहनाएं और घर में प्यूरीफायर चालू रखें।"
+                )
+            else:
+                narrative = (
+                    f"Children breathe significantly more air per kilogram of body weight than adults and have narrower airways [{chunk['source_id']}]. "
+                    f"When AQI is Poor or Severe, cancel early morning outdoor sports and school assemblies. "
+                    f"Ensure children wear snug, well-fitted pediatric N95 respirators during transit and keep bedroom indoor air filtered below 15 µg/m³."
+                )
+
+        # Elderly & Senior Citizens
+        elif bool(
+            re.search(
+                r"\b(elder|elderly|senior|seniors|grandparent|grandparents|dada|dadi|nana|nani|aged)\b",
+                q_lower,
+            )
+        ) or any(w in q_lower for w in ["बुजुर्ग", "वरिष्ठ", "दादा", "दादी"]):
+            res = execute_tool(
+                "lookup_guidance",
+                {"query": "seniors elderly cardiovascular risk", "top_k": 2},
+            )
+            tool_results.append(res)
+            chunk = res["results"][0]
+            citations.append(
+                {
+                    "id": chunk["source_id"],
+                    "title": chunk["title"],
+                    "publisher": chunk["publisher"],
+                }
+            )
+
+            if language == "hi":
+                narrative = (
+                    f"वरिष्ठ नागरिकों में सूक्ष्म प्रदूषण (PM2.5) रक्त वाहिकाओं में सूजन और रक्तचाप बढ़ा सकता है [{chunk['source_id']}]। "
+                    f"बुजुर्गों को सुबह की ठंड और धुंध में बाहर टहलने से बचना चाहिए। योग या हल्का व्यायाम दोपहर 12 से 4 बजे के बीच या घर के अंदर फिल्टर किए गए कमरे में करें।"
+                )
+            else:
+                narrative = (
+                    f"Fine particulates (PM2.5) trigger acute vascular constriction, elevated arterial blood pressure, and cardiac stress in seniors [{chunk['source_id']}]. "
+                    f"Elderly individuals should strictly avoid early morning walks before 9:00 AM during winter inversions. "
+                    f"Maintain continuous True HEPA indoor filtration and consult your cardiologist if mild chest tightness or fatigue develops."
+                )
+
+        # Exercise, Running, Cycling, Sports
+        elif bool(
+            re.search(
+                r"\b(exercise|workout|running|run|jog|jogging|cycling|cycle|gym|sports)\b",
+                q_lower,
+            )
+        ) or any(w in q_lower for w in ["व्यायाम", "कसरत", "दौड़"]):
+            res = execute_tool(
+                "lookup_guidance",
+                {"query": "outdoor running exercise cardio smog", "top_k": 2},
+            )
+            tool_results.append(res)
+            chunk = res["results"][0]
+            citations.append(
+                {
+                    "id": chunk["source_id"],
+                    "title": chunk["title"],
+                    "publisher": chunk["publisher"],
+                }
+            )
+
+            narrative = (
+                f"During aerobic exercise, your minute ventilation volume increases from 6-8 L/min up to 40-60 L/min, driving soot deep into terminal alveoli [{chunk['source_id']}]. "
+                f"Never perform vigorous cardio outdoors when AQI exceeds 150. "
+                f"Shift outdoor runs or cycling to the 12:00 PM to 4:00 PM convective window, or exercise indoors in a HEPA-filtered room."
+            )
+
+        # General Greetings / Identity
+        elif bool(
+            re.search(
+                r"^(hi|hello|hey|namaste|who\s+are\s+you|help)\b",
+                q_lower,
+            )
+        ):
+            res = execute_tool(
+                "lookup_guidance",
+                {"query": "cpcb air quality standards", "top_k": 1},
+            )
+            tool_results.append(res)
+            chunk = res["results"][0]
+            citations.append(
+                {
+                    "id": chunk["source_id"],
+                    "title": chunk["title"],
+                    "publisher": chunk["publisher"],
+                }
+            )
+
+            narrative = (
+                f"Namaste! I am SanjhiHawa Assistant, an open atmospheric intelligence platform for Indian households [{chunk['source_id']}]. "
+                f"I compute personalized exposure reductions, True HEPA CADR purifier sizing, mask recommendations, and schedule optimizations. "
+                f"You can ask me about air quality in any city (e.g. Pune, Mumbai, Delhi), room purifier capacity, or myth-busters on plants and jaggery."
+            )
+
         else:
             # Default: Current air status & routine optimization
             # Respect city mentioned in query if any, else profile, else Ghaziabad

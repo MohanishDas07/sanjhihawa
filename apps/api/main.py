@@ -6,6 +6,10 @@ Provides deterministic air quality, exposure calculation, and simulation endpoin
 import logging
 import os
 import sys
+from dotenv import load_dotenv
+
+# Load environment variables from .env file if present
+load_dotenv()
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
