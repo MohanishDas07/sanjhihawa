@@ -49,9 +49,7 @@ def optimize_activity_schedule(
     Uses an exhaustive window sweep (sliding window / DP) with guaranteed optimal selection.
     """
     if len(hourly_pm25_forecast) < 24:
-        raise ValueError(
-            "hourly_pm25_forecast must contain at least 24 hourly readings"
-        )
+        raise ValueError("hourly_pm25_forecast must contain at least 24 hourly readings")
 
     duration = max(1, min(12, activity.duration_hours))
     earliest = max(0, min(23, activity.feasible_start_hour))
@@ -81,10 +79,10 @@ def optimize_activity_schedule(
     time_str_opt = f"{best_start:02d}:00"
 
     if best_start == base_start or reduction < 1.0:
-        rationale_en = f"Current timing ({time_str_base}) is already within the cleanest available window."
-        rationale_hi = (
-            f"वर्तमान समय ({time_str_base}) पहले से ही सबसे स्वच्छ उपलब्ध समय सीमा में है।"
+        rationale_en = (
+            f"Current timing ({time_str_base}) is already within the cleanest available window."
         )
+        rationale_hi = f"वर्तमान समय ({time_str_base}) पहले से ही सबसे स्वच्छ उपलब्ध समय सीमा में है।"
         rationale_mr = f"सध्याची वेळ ({time_str_base}) आधीच उपलब्ध असलेल्या स्वच्छ वेळेत आहे."
     else:
         rationale_en = (

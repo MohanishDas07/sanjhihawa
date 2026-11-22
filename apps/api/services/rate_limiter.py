@@ -54,8 +54,7 @@ class SlidingWindowRateLimiter:
     def _prune_idle_keys(self, now: float) -> None:
         """Evicts IPs with no timestamps inside the sliding window."""
         idle_keys = [
-            ip for ip, ts in self._store.items()
-            if not ts or (now - ts[-1] >= self.window_seconds)
+            ip for ip, ts in self._store.items() if not ts or (now - ts[-1] >= self.window_seconds)
         ]
         for ip in idle_keys:
             del self._store[ip]

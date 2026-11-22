@@ -98,15 +98,19 @@ class RequestBodyLimitMiddleware:
             if content_length:
                 try:
                     if int(content_length) > self.max_bytes:
-                        await send({
-                            "type": "http.response.start",
-                            "status": 413,
-                            "headers": [(b"content-type", b"application/json")],
-                        })
-                        await send({
-                            "type": "http.response.body",
-                            "body": b'{"detail": "Request entity too large (max 64 KB)."}',
-                        })
+                        await send(
+                            {
+                                "type": "http.response.start",
+                                "status": 413,
+                                "headers": [(b"content-type", b"application/json")],
+                            }
+                        )
+                        await send(
+                            {
+                                "type": "http.response.body",
+                                "body": b'{"detail": "Request entity too large (max 64 KB)."}',
+                            }
+                        )
                         return
                 except ValueError:
                     pass

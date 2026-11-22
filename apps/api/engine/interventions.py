@@ -21,9 +21,7 @@ class InterventionOption:
     name_en: str
     name_hi: str
     name_mr: str
-    category: (
-        str  # "mask", "purifier", "ventilation", "transport", "cooking", "sealing"
-    )
+    category: str  # "mask", "purifier", "ventilation", "transport", "cooking", "sealing"
     engine_effect: dict[str, Any]
     applicability: list[str]  # e.g., ["all", "outdoor_commute", "gas_cooking"]
     source_id: str
@@ -214,9 +212,7 @@ def run_simulation(
     for item in selected_interventions:
         effect = item.engine_effect
         if "reduction_pct" in effect:
-            fraction_reduction += (effect["reduction_pct"] / 100.0) * (
-                1.0 - fraction_reduction
-            )
+            fraction_reduction += (effect["reduction_pct"] / 100.0) * (1.0 - fraction_reduction)
         elif "cadr_m3_h" in effect:
             # Typical bedroom purifier contribution reduces daily indoor component by ~45%
             fraction_reduction += 0.45 * (1.0 - fraction_reduction)
@@ -237,16 +233,12 @@ def run_simulation(
 
     sim_dose = round(baseline_dose * (1.0 - fraction_reduction), 1)
     dose_diff = round(baseline_dose - sim_dose, 1)
-    pct_diff = (
-        round((dose_diff / baseline_dose * 100.0), 1) if baseline_dose > 0 else 0.0
-    )
+    pct_diff = round((dose_diff / baseline_dose * 100.0), 1) if baseline_dose > 0 else 0.0
 
     sim_cigs = round(baseline_cigs * (1.0 - fraction_reduction), 1)
     cigs_saved = round(baseline_cigs - sim_cigs, 1)
 
-    cost_per_ug = (
-        round(total_cost / dose_diff, 2) if dose_diff > 0 and total_cost > 0 else 0.0
-    )
+    cost_per_ug = round(total_cost / dose_diff, 2) if dose_diff > 0 and total_cost > 0 else 0.0
 
     return SimulationComparison(
         baseline_dose_ug=baseline_dose,

@@ -100,13 +100,9 @@ class TransportEmissionFactor:
 
 
 TRANSPORT_EMISSION_FACTORS: dict[str, TransportEmissionFactor] = {
-    "two_wheeler_petrol": TransportEmissionFactor(
-        pm25_g_per_km=0.045, co2e_kg_per_km=0.042
-    ),
+    "two_wheeler_petrol": TransportEmissionFactor(pm25_g_per_km=0.045, co2e_kg_per_km=0.042),
     "car_petrol": TransportEmissionFactor(pm25_g_per_km=0.035, co2e_kg_per_km=0.145),
-    "two_wheeler_ev": TransportEmissionFactor(
-        pm25_g_per_km=0.003, co2e_kg_per_km=0.016
-    ),
+    "two_wheeler_ev": TransportEmissionFactor(pm25_g_per_km=0.003, co2e_kg_per_km=0.016),
     "bus_cng": TransportEmissionFactor(pm25_g_per_km=0.005, co2e_kg_per_km=0.038),
     "metro": TransportEmissionFactor(pm25_g_per_km=0.001, co2e_kg_per_km=0.019),
     "walking": TransportEmissionFactor(pm25_g_per_km=0.0, co2e_kg_per_km=0.0),

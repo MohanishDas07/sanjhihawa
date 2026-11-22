@@ -14,10 +14,7 @@ from pathlib import Path
 CORPUS_PATH = Path(
     os.environ.get(
         "CORPUS_PATH",
-        Path(__file__).resolve().parent.parent
-        / "data"
-        / "corpus"
-        / "air_guidance_chunks.json",
+        Path(__file__).resolve().parent.parent / "data" / "corpus" / "air_guidance_chunks.json",
     )
 )
 
@@ -75,7 +72,10 @@ class BM25Index:
     def load_corpus(self):
         if not self.corpus_path.exists():
             candidates = [
-                Path(__file__).resolve().parent.parent / "data" / "corpus" / "air_guidance_chunks.json",
+                Path(__file__).resolve().parent.parent
+                / "data"
+                / "corpus"
+                / "air_guidance_chunks.json",
                 Path("apps/api/data/corpus/air_guidance_chunks.json"),
                 Path("corpus/air_guidance_chunks.json"),
             ]
@@ -150,9 +150,7 @@ class BM25Index:
                 tf = term_counts[q_term]
                 idf = self.idf.get(q_term, 0.5)
                 numerator = tf * (self.k1 + 1.0)
-                denominator = tf + self.k1 * (
-                    1.0 - self.b + self.b * (doc_len / self.avg_doc_len)
-                )
+                denominator = tf + self.k1 * (1.0 - self.b + self.b * (doc_len / self.avg_doc_len))
                 score += idf * (numerator / denominator)
 
             # Boost if query tokens match chunk id directly
@@ -163,9 +161,7 @@ class BM25Index:
             scores[i] = score
 
         # Rank documents
-        ranked_indices = sorted(
-            range(len(scores)), key=lambda k: scores[k], reverse=True
-        )
+        ranked_indices = sorted(range(len(scores)), key=lambda k: scores[k], reverse=True)
         results = []
         for idx in ranked_indices[:top_k]:
             if scores[idx] > 0.0 or len(results) == 0:

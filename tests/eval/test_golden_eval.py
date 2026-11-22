@@ -15,10 +15,10 @@ import os
 import sys
 import unittest
 
+os.environ.setdefault("SAANS_OFFLINE", "1")
+
 # Ensure apps/api is in Python path
-sys.path.insert(
-    0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../apps/api"))
-)
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../apps/api")))
 
 from llm import get_llm_service
 
@@ -365,9 +365,7 @@ class TestGoldenEvaluationHarness(unittest.TestCase):
 
                 # 3. Assert Expected Content Keywords
                 reply_lower = full_reply.lower()
-                matched_keywords = [
-                    kw for kw in case["keywords"] if kw.lower() in reply_lower
-                ]
+                matched_keywords = [kw for kw in case["keywords"] if kw.lower() in reply_lower]
                 self.assertTrue(
                     len(matched_keywords) > 0,
                     f"Case {case['id']} missing expected domain keywords from {case['keywords']}. Got: {full_reply}",
@@ -393,9 +391,7 @@ class TestGoldenEvaluationHarness(unittest.TestCase):
         # Probe 1: Gurugram air quality (Must not return jaggery myth)
         tokens = []
         is_emerg = False
-        for evt in self.llm_service.stream_chat_sync(
-            "What is the air like in Gurugram today?"
-        ):
+        for evt in self.llm_service.stream_chat_sync("What is the air like in Gurugram today?"):
             if evt["event"] == "token":
                 tokens.append(evt["data"]["token"])
             elif evt["event"] == "medical_intercept":
@@ -408,9 +404,7 @@ class TestGoldenEvaluationHarness(unittest.TestCase):
 
         # Probe 2: "Can you figure out the best time to walk?" (Must not match 'gur' in figure)
         tokens = []
-        for evt in self.llm_service.stream_chat_sync(
-            "Can you figure out the best time to walk?"
-        ):
+        for evt in self.llm_service.stream_chat_sync("Can you figure out the best time to walk?"):
             if evt["event"] == "token":
                 tokens.append(evt["data"]["token"])
         reply = "".join(tokens).lower()
@@ -455,16 +449,12 @@ class TestGoldenEvaluationHarness(unittest.TestCase):
         # Probe 6: Not wheezing, just coughing (Negation must NOT trigger emergency intercept)
         tokens = []
         is_emerg = False
-        for evt in self.llm_service.stream_chat_sync(
-            "My child is not wheezing, just coughing"
-        ):
+        for evt in self.llm_service.stream_chat_sync("My child is not wheezing, just coughing"):
             if evt["event"] == "token":
                 tokens.append(evt["data"]["token"])
             elif evt["event"] == "medical_intercept":
                 is_emerg = True
-        self.assertFalse(
-            is_emerg, "'not wheezing' should not trigger emergency intercept"
-        )
+        self.assertFalse(is_emerg, "'not wheezing' should not trigger emergency intercept")
         reply = "".join(tokens).lower()
         self.assertTrue("cough" in reply)
         # Verify it does NOT cheerful schedule

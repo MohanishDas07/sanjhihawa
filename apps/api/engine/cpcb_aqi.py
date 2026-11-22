@@ -99,9 +99,7 @@ PM25_BREAKPOINTS: list[AQIBand] = [
 # PM10 Breakpoints (ug/m^3 24h average)
 PM10_BREAKPOINTS: list[AQIBand] = [
     AQIBand("Good", "good", "#1E8E4E", 0, 50, 0.0, 50.0, "", "", ""),
-    AQIBand(
-        "Satisfactory", "satisfactory", "#7FB539", 51, 100, 50.1, 100.0, "", "", ""
-    ),
+    AQIBand("Satisfactory", "satisfactory", "#7FB539", 51, 100, 50.1, 100.0, "", "", ""),
     AQIBand("Moderate", "moderate", "#F2C200", 101, 200, 100.1, 250.0, "", "", ""),
     AQIBand("Poor", "poor", "#F28C28", 201, 300, 250.1, 350.0, "", "", ""),
     AQIBand("Very Poor", "very_poor", "#D7263D", 301, 400, 350.1, 430.0, "", "", ""),
@@ -109,9 +107,7 @@ PM10_BREAKPOINTS: list[AQIBand] = [
 ]
 
 
-def calculate_sub_index(
-    concentration: float, breakpoints: list[AQIBand]
-) -> tuple[int, AQIBand]:
+def calculate_sub_index(concentration: float, breakpoints: list[AQIBand]) -> tuple[int, AQIBand]:
     """
     Computes CPCB linear sub-index for a single pollutant concentration.
     Formula:
@@ -134,9 +130,7 @@ def calculate_sub_index(
     return 500, last
 
 
-def get_overall_cpcb_aqi(
-    pm25: float | None, pm10: float | None = None
-) -> tuple[int, AQIBand, str]:
+def get_overall_cpcb_aqi(pm25: float | None, pm10: float | None = None) -> tuple[int, AQIBand, str]:
     """
     Returns the composite AQI and responsible primary pollutant according to CPCB rules.
     Sub-index is max of available pollutant sub-indices.

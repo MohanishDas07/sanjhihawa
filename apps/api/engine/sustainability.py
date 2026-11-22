@@ -36,16 +36,10 @@ def calculate_transport_emissions_avoided(
     base = TRANSPORT_EMISSION_FACTORS.get(
         baseline_mode, TRANSPORT_EMISSION_FACTORS["two_wheeler_petrol"]
     )
-    sust = TRANSPORT_EMISSION_FACTORS.get(
-        sustainable_mode, TRANSPORT_EMISSION_FACTORS["metro"]
-    )
+    sust = TRANSPORT_EMISSION_FACTORS.get(sustainable_mode, TRANSPORT_EMISSION_FACTORS["metro"])
 
-    pm25_avoided_per_trip = max(
-        0.0, (base.pm25_g_per_km - sust.pm25_g_per_km) * trip_distance_km
-    )
-    co2e_avoided_per_trip = max(
-        0.0, (base.co2e_kg_per_km - sust.co2e_kg_per_km) * trip_distance_km
-    )
+    pm25_avoided_per_trip = max(0.0, (base.pm25_g_per_km - sust.pm25_g_per_km) * trip_distance_km)
+    co2e_avoided_per_trip = max(0.0, (base.co2e_kg_per_km - sust.co2e_kg_per_km) * trip_distance_km)
 
     total_pm25 = round(pm25_avoided_per_trip * community_multiplier, 3)
     total_co2e = round(co2e_avoided_per_trip * community_multiplier, 3)
@@ -71,16 +65,10 @@ def calculate_cooking_emissions_avoided(
     Computes indoor and ambient PM2.5 and CO2e avoided from cleaner cooking fuels.
     """
     base = COOKING_EMISSION_FACTORS.get(baseline_fuel, COOKING_EMISSION_FACTORS["lpg"])
-    sust = COOKING_EMISSION_FACTORS.get(
-        sustainable_fuel, COOKING_EMISSION_FACTORS["induction"]
-    )
+    sust = COOKING_EMISSION_FACTORS.get(sustainable_fuel, COOKING_EMISSION_FACTORS["induction"])
 
-    pm25_avoided = max(
-        0.0, (base.pm25_g_per_meal - sust.pm25_g_per_meal) * meals_per_day
-    )
-    co2e_avoided = max(
-        0.0, (base.co2e_kg_per_meal - sust.co2e_kg_per_meal) * meals_per_day
-    )
+    pm25_avoided = max(0.0, (base.pm25_g_per_meal - sust.pm25_g_per_meal) * meals_per_day)
+    co2e_avoided = max(0.0, (base.co2e_kg_per_meal - sust.co2e_kg_per_meal) * meals_per_day)
 
     total_pm25 = round(pm25_avoided * community_multiplier, 2)
     total_co2e = round(co2e_avoided * community_multiplier, 2)

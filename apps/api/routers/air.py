@@ -4,10 +4,21 @@ Air Quality Forecast Router.
 
 from fastapi import APIRouter, Query, Request
 from schemas.contracts import AirQualityResponse
-from services.air_service import get_air_quality
+from services.air_service import get_air_quality, get_air_quality_sync
 from services.rate_limiter import air_rate_limiter
 
 router = APIRouter(tags=["Air Quality"])
+
+
+def get_air_sync(
+    lat: float = 28.6692,
+    lon: float = 77.4538,
+    city: str | None = "Ghaziabad",
+    fallback: bool = False,
+) -> AirQualityResponse:
+    return get_air_quality_sync(
+        latitude=lat, longitude=lon, city_name=city, force_fallback=fallback
+    )
 
 
 @router.get("/air", response_model=AirQualityResponse)

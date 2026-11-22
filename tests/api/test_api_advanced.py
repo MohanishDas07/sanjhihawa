@@ -8,9 +8,7 @@ import os
 import sys
 import unittest
 
-sys.path.insert(
-    0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../apps/api"))
-)
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../apps/api")))
 
 from llm.safety import (
     check_medical_emergency,
@@ -97,7 +95,9 @@ class TestAPISecurityAndSafety(unittest.TestCase):
         self.assertEqual(limiter._extract_ip(req1), "203.0.113.195")
 
         # Test x-forwarded-for chain (first client IP extracted)
-        req2 = Request({"type": "http", "headers": [(b"x-forwarded-for", b"198.51.100.1, 10.0.0.1")]})
+        req2 = Request(
+            {"type": "http", "headers": [(b"x-forwarded-for", b"198.51.100.1, 10.0.0.1")]}
+        )
         self.assertEqual(limiter._extract_ip(req2), "198.51.100.1")
 
     def test_community_advisory_contract_validation(self):

@@ -9,9 +9,7 @@ import sys
 import unittest
 
 # Ensure apps/api is importable
-sys.path.insert(
-    0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../apps/api"))
-)
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../apps/api")))
 
 from engine import (
     PM25_BREAKPOINTS,
@@ -138,9 +136,7 @@ class TestMassBalance(unittest.TestCase):
     def test_indoor_concentration_closed_vs_open(self):
         c_out = 300.0
         # Closed standard apartment
-        c_closed = calculate_indoor_concentration(
-            c_out, envelope_type="standard_closed"
-        )
+        c_closed = calculate_indoor_concentration(c_out, envelope_type="standard_closed")
         # Open windows
         c_open = calculate_indoor_concentration(c_out, envelope_type="windows_open")
 
@@ -187,15 +183,11 @@ class TestDoseAndBreathBudget(unittest.TestCase):
         self.assertLess(dose_sleep, dose_active)
 
         # Mask filtration monotonicity: none > surgical > n95
-        dose_no_mask = calculate_hourly_inhaled_dose(
-            c_ambient, "adult", "light", mask_type="none"
-        )
+        dose_no_mask = calculate_hourly_inhaled_dose(c_ambient, "adult", "light", mask_type="none")
         dose_surgical = calculate_hourly_inhaled_dose(
             c_ambient, "adult", "light", mask_type="surgical"
         )
-        dose_n95 = calculate_hourly_inhaled_dose(
-            c_ambient, "adult", "light", mask_type="n95"
-        )
+        dose_n95 = calculate_hourly_inhaled_dose(c_ambient, "adult", "light", mask_type="n95")
         self.assertLess(dose_surgical, dose_no_mask)
         self.assertLess(dose_n95, dose_surgical)
 

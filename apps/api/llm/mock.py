@@ -286,9 +286,7 @@ class MockLLM:
         elif bool(re.search(r"\b(steam|inhalation)\b", q_lower)) or any(
             w in q_lower for w in ["भाप", "वाफ"]
         ):
-            res = execute_tool(
-                "lookup_guidance", {"query": "myth steam inhalation", "top_k": 1}
-            )
+            res = execute_tool("lookup_guidance", {"query": "myth steam inhalation", "top_k": 1})
             tool_results.append(res)
             chunk = res["results"][0]
             citations.append(
@@ -305,11 +303,7 @@ class MockLLM:
             )
 
         # Myth intent: Diffusers
-        elif bool(
-            re.search(
-                r"\b(diffuser|diffusers|aroma|essential\s+oil|humidifier)\b", q_lower
-            )
-        ):
+        elif bool(re.search(r"\b(diffuser|diffusers|aroma|essential\s+oil|humidifier)\b", q_lower)):
             res = execute_tool(
                 "lookup_guidance",
                 {"query": "myth diffusers essential oils air cleaning", "top_k": 1},
@@ -331,9 +325,7 @@ class MockLLM:
 
         # DIY Corsi-Rosenthal Box
         elif bool(
-            re.search(
-                r"\b(corsi|rosenthal|box\s+fan|diy\s+purifier|diy\s+filter)\b", q_lower
-            )
+            re.search(r"\b(corsi|rosenthal|box\s+fan|diy\s+purifier|diy\s+filter)\b", q_lower)
         ):
             res = execute_tool(
                 "lookup_guidance",
@@ -591,9 +583,7 @@ class MockLLM:
             target_city = extract_city_from_query(query)
             if not target_city:
                 target_city = (
-                    profile_data.get("city_name", "Ghaziabad")
-                    if profile_data
-                    else "Ghaziabad"
+                    profile_data.get("city_name", "Ghaziabad") if profile_data else "Ghaziabad"
                 )
 
             air_res = execute_tool("get_air", {"city": target_city})
@@ -658,8 +648,7 @@ class MockLLM:
             "event": "tool_executed",
             "data": {
                 "tools_used": [
-                    res.get("city") or res.get("query") or "engine"
-                    for res in tool_results
+                    res.get("city") or res.get("query") or "engine" for res in tool_results
                 ],
             },
         }

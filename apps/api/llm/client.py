@@ -137,9 +137,7 @@ def check_ip_rate_limit(client_ip: str) -> bool:
     now = time.time()
     timestamps = _RATE_LIMIT_STORE[client_ip]
     # Prune old timestamps
-    _RATE_LIMIT_STORE[client_ip] = [
-        t for t in timestamps if now - t < RATE_LIMIT_WINDOW_SECONDS
-    ]
+    _RATE_LIMIT_STORE[client_ip] = [t for t in timestamps if now - t < RATE_LIMIT_WINDOW_SECONDS]
     if len(_RATE_LIMIT_STORE[client_ip]) >= RATE_LIMIT_MAX_REQUESTS:
         return False
     _RATE_LIMIT_STORE[client_ip].append(now)
@@ -164,14 +162,12 @@ class LLMService:
             self.model = os.environ.get("LLM_MODEL", "gemini-2.5-flash")
         elif self.api_key.startswith("gsk_"):
             # Groq high-speed endpoint
-            self.base_url = os.environ.get(
-                "LLM_BASE_URL", "https://api.groq.com/openai/v1"
-            ).rstrip("/")
+            self.base_url = os.environ.get("LLM_BASE_URL", "https://api.groq.com/openai/v1").rstrip(
+                "/"
+            )
             self.model = os.environ.get("LLM_MODEL", "llama-3.3-70b-versatile")
         else:
-            self.base_url = os.environ.get(
-                "LLM_BASE_URL", "https://api.openai.com/v1"
-            ).rstrip("/")
+            self.base_url = os.environ.get("LLM_BASE_URL", "https://api.openai.com/v1").rstrip("/")
             self.model = os.environ.get("LLM_MODEL", "gpt-4o-mini")
 
         self.mock_llm = MockLLM()
@@ -342,11 +338,7 @@ class LLMService:
 
                 yield {
                     "event": "tool_executed",
-                    "data": {
-                        "tools_used": [
-                            tc["function"]["name"] for tc in choice["tool_calls"]
-                        ]
-                    },
+                    "data": {"tools_used": [tc["function"]["name"] for tc in choice["tool_calls"]]},
                 }
 
                 narration_resp = client.post(
@@ -359,9 +351,7 @@ class LLMService:
                     },
                 )
                 narration_resp.raise_for_status()
-                narrative_text = narration_resp.json()["choices"][0]["message"][
-                    "content"
-                ]
+                narrative_text = narration_resp.json()["choices"][0]["message"]["content"]
             else:
                 narrative_text = choice.get("content", "")
 
@@ -470,11 +460,7 @@ class LLMService:
 
                 yield {
                     "event": "tool_executed",
-                    "data": {
-                        "tools_used": [
-                            tc["function"]["name"] for tc in choice["tool_calls"]
-                        ]
-                    },
+                    "data": {"tools_used": [tc["function"]["name"] for tc in choice["tool_calls"]]},
                 }
 
                 narration_resp = await client.post(
@@ -487,9 +473,7 @@ class LLMService:
                     },
                 )
                 narration_resp.raise_for_status()
-                narrative_text = narration_resp.json()["choices"][0]["message"][
-                    "content"
-                ]
+                narrative_text = narration_resp.json()["choices"][0]["message"]["content"]
             else:
                 narrative_text = choice.get("content", "")
 

@@ -8,20 +8,23 @@ from datetime import datetime, timezone
 from engine import get_grap_stage
 from fastapi import APIRouter, HTTPException
 from schemas.contracts import CommunityAdvisoryRequest, CommunityAdvisoryResponse
-from services.air_service import get_air_quality
+from services.air_service import get_air_quality_sync
 
 router = APIRouter(tags=["Community"])
 
 
-@router.post("/community/advisory", response_model=CommunityAdvisoryResponse)
-async def generate_community_advisory(req: CommunityAdvisoryRequest):
-    air_data = await get_air_quality(
+def generate_community_advisory_sync(req: CommunityAdvisoryRequest) -> CommunityAdvisoryResponse:
+    air_data = get_air_quality_sync(
         latitude=req.latitude,
         longitude=req.longitude,
         city_name=req.city,
     )
 
-    if air_data.status == "no_data" or air_data.current_cpcb_aqi is None or not air_data.current_aqi_band:
+    if (
+        air_data.status == "no_data"
+        or air_data.current_cpcb_aqi is None
+        or not air_data.current_aqi_band
+    ):
         raise HTTPException(
             status_code=404,
             detail=f"No active monitoring station readings or model forecast points available for {req.city}. Cannot generate advisory bulletin.",
@@ -44,9 +47,7 @@ async def generate_community_advisory(req: CommunityAdvisoryRequest):
             "परिसर में सूखे पत्तों या कचरे को जलाने पर शून्य सहनशीलता रखें।",
             "गार्ड्स, सफाई कर्मियों और आउटडोर स्टाफ को अनिवार्य रूप से N95 मास्क प्रदान करें।",
         ]
-        school_note = (
-            "प्राथमिक कक्षाओं (कक्षा 5 तक) के लिए खेलकूद और प्रार्थना सभा घर के अंदर या स्थगित रखें।"
-        )
+        school_note = "प्राथमिक कक्षाओं (कक्षा 5 तक) के लिए खेलकूद और प्रार्थना सभा घर के अंदर या स्थगित रखें।"
         rwa_actions = [
             "सड़कों और पार्कों में धूल दबाने हेतु पानी का छिड़काव कराएं।",
             "निजी डीजल जनरेटर (DG Sets) का अनावश्यक संचालन बंद रखें।",
@@ -61,16 +62,16 @@ async def generate_community_advisory(req: CommunityAdvisoryRequest):
             "परिसरात कचरा किंवा सुका पालापाचोळा जाळण्यास सक्त मनाई आहे.",
             "सुरक्षा रक्षक आणि कामगारांना एन-९५ मास्क उपलब्ध करून द्या.",
         ]
-        school_note = (
-            "लहान मुलांसाठी मैदानी खेळ आणि सकाळची प्रार्थना सभागृहात किंवा ऑनलाइन आयोजित करावी."
-        )
+        school_note = "लहान मुलांसाठी मैदानी खेळ आणि सकाळची प्रार्थना सभागृहात किंवा ऑनलाइन आयोजित करावी."
         rwa_actions = [
             "धूळ नियंत्रणासाठी रस्त्यांवर पाण्याचा शिडकावा करा.",
             "डिझेल जनरेटरचा वापर टाळून अखंड वीजपुरवठा वापरा.",
             "सार्वजनिक वाहनांचा वापर करण्यास प्रोत्साहन द्या.",
         ]
     else:
-        headline = f"AIR QUALITY ADVISORY: AQI {aqi} ({band.replace('_', ' ').title()}) in {req.city}"
+        headline = (
+            f"AIR QUALITY ADVISORY: AQI {aqi} ({band.replace('_', ' ').title()}) in {req.city}"
+        )
         bullets = [
             f"Current Air Quality: {aqi} (CPCB NAQI Index, {band.replace('_', ' ').title()}).",
             f"Active CAQM GRAP Stage: {grap.name if grap else 'Standard Monitoring'}.",
@@ -99,3 +100,8 @@ async def generate_community_advisory(req: CommunityAdvisoryRequest):
         verification_source=f"{air_data.data_source} (As of {air_data.data_as_of})",
         generated_at_iso=datetime.now(timezone.utc).isoformat(),
     )
+
+
+@router.post("/community/advisory", response_model=CommunityAdvisoryResponse)
+async def generate_community_advisory(req: CommunityAdvisoryRequest):
+    return generate_community_advisory_sync(req)

@@ -61,21 +61,15 @@ async def chat_stream_endpoint(req: ChatRequest, request: Request):
     return StreamingResponse(event_generator(), media_type="text/event-stream")
 
 
-@router.post("/chat/sync", response_model=ChatSyncResponse)
-async def chat_sync_endpoint(req: ChatRequest, request: Request):
-    """
-    Synchronous fallback endpoint returning the complete grounded reply and citations.
-    """
-    chat_rate_limiter.enforce(request)
+def chat_sync_service(req: ChatRequest, client_ip: str = "127.0.0.1") -> ChatSyncResponse:
     llm_service = get_llm_service()
     profile_dict = req.profile.model_dump() if req.profile else None
-    client_ip = request.client.host if request.client else "127.0.0.1"
 
     collected_tokens = []
     is_emergency = False
     citations = []
 
-    async for event in llm_service.stream_chat(
+    for event in llm_service.stream_chat_sync(
         user_query=req.message,
         profile_data=profile_dict,
         language=req.language,
@@ -98,3 +92,13 @@ async def chat_sync_endpoint(req: ChatRequest, request: Request):
         citations=citations,
         language=req.language,
     )
+
+
+@router.post("/chat/sync", response_model=ChatSyncResponse)
+async def chat_sync_endpoint(req: ChatRequest, request: Request):
+    """
+    Synchronous fallback endpoint returning the complete grounded reply and citations.
+    """
+    chat_rate_limiter.enforce(request)
+    client_ip = request.client.host if request.client else "127.0.0.1"
+    return chat_sync_service(req, client_ip)

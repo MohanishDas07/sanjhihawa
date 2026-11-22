@@ -8,9 +8,7 @@ import os
 import sys
 import unittest
 
-sys.path.insert(
-    0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../apps/api"))
-)
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../apps/api")))
 
 from engine import (
     PM10_BREAKPOINTS,
@@ -126,7 +124,9 @@ class TestMassBalancePhysicalLimits(unittest.TestCase):
         self.assertLess(c_bath, 100.0)
 
         # Large open banquet hall: 1000 m3
-        c_hall = calculate_indoor_concentration(300.0, room_volume_m3=1000.0, cadr_m3_per_hour=100.0)
+        c_hall = calculate_indoor_concentration(
+            300.0, room_volume_m3=1000.0, cadr_m3_per_hour=100.0
+        )
         # Purifier has minimal impact in massive hall (remains > 140 ug/m3)
         self.assertGreater(c_hall, 140.0)
 
@@ -146,13 +146,22 @@ class TestDoseCohortMechanics(unittest.TestCase):
     def test_child_inhalation_rate_vs_adult(self):
         c_ambient = 150.0
         # Child has lower absolute tidal volume than adult
-        child_dose = calculate_hourly_inhaled_dose(c_ambient, age_band="child", activity_level="light")
-        adult_dose = calculate_hourly_inhaled_dose(c_ambient, age_band="adult", activity_level="light")
+        child_dose = calculate_hourly_inhaled_dose(
+            c_ambient, age_band="child", activity_level="light"
+        )
+        adult_dose = calculate_hourly_inhaled_dose(
+            c_ambient, age_band="adult", activity_level="light"
+        )
         self.assertLess(child_dose, adult_dose)
 
     def test_senior_breathing_sensitivity(self):
         slices = [
-            ActivitySlice(name="day", duration_hours=24.0, pm25_concentration=100.0, activity_level="sedentary")
+            ActivitySlice(
+                name="day",
+                duration_hours=24.0,
+                pm25_concentration=100.0,
+                activity_level="sedentary",
+            )
         ]
         res_normal = calculate_daily_member_dose("senior_1", "senior", False, slices)
         res_sensitive = calculate_daily_member_dose("senior_2", "senior", True, slices)
@@ -193,9 +202,30 @@ class TestSchedulerEdgeCases(unittest.TestCase):
     def test_multi_hour_duration_activity(self):
         # 3-hour outdoor sport activity
         varying_forecast = [
-            400, 420, 430, 410, 380, 350, 300, 250, 200, 150,
-            120, 110, 115, 125, 140, 180, 220, 270, 310, 340,
-            370, 390, 410, 420
+            400,
+            420,
+            430,
+            410,
+            380,
+            350,
+            300,
+            250,
+            200,
+            150,
+            120,
+            110,
+            115,
+            125,
+            140,
+            180,
+            220,
+            270,
+            310,
+            340,
+            370,
+            390,
+            410,
+            420,
         ]
         activity = FlexibleActivity(
             id="sports",

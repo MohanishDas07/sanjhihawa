@@ -55,9 +55,7 @@ class HourlyAirPoint(BaseModel):
     pm2_5: float = Field(..., ge=0.0)
     pm10: float | None = Field(None, ge=0.0)
     cpcb_aqi: int = Field(..., ge=0)
-    aqi_band_code: (
-        str  # "good", "satisfactory", "moderate", "poor", "very_poor", "severe"
-    )
+    aqi_band_code: str  # "good", "satisfactory", "moderate", "poor", "very_poor", "severe"
     aqi_band_name: str
     aqi_color_hex: str
     health_statement_en: str
@@ -130,9 +128,9 @@ class HouseholdProfile(BaseModel):
     ] = "two_wheeler_petrol"
     commute_distance_km: float = Field(10.0, ge=0.0, le=200.0)
     cooking_fuel: Literal["lpg", "induction", "biomass"] = "lpg"
-    home_type: Literal[
-        "standard_closed", "sealed_closed", "leaky_closed", "windows_open"
-    ] = "standard_closed"
+    home_type: Literal["standard_closed", "sealed_closed", "leaky_closed", "windows_open"] = (
+        "standard_closed"
+    )
     has_purifier: bool = False
     purifier_cadr: float = Field(0.0, ge=0.0, le=1500.0)
     budget_band: Literal["zero", "under_1k", "over_5k"] = "under_1k"
@@ -186,9 +184,7 @@ class RankedIntervention(BaseModel):
     description_mr: str
     category: str
     dose_saved_pct: float
-    cost_efficiency_score: (
-        float  # higher = more ug saved per rupee (Tier 0 gets top priority)
-    )
+    cost_efficiency_score: float  # higher = more ug saved per rupee (Tier 0 gets top priority)
 
 
 class PlanRequest(BaseModel):

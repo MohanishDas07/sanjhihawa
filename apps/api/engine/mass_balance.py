@@ -30,20 +30,10 @@ def calculate_indoor_concentration(
         return 0.0
 
     profile = ENVELOPE_PROFILES.get(envelope_type, ENVELOPE_PROFILES["standard_closed"])
-    a = (
-        custom_air_exchange
-        if custom_air_exchange is not None
-        else profile.air_exchange_rate
-    )
-    p = (
-        custom_penetration
-        if custom_penetration is not None
-        else profile.penetration_factor
-    )
+    a = custom_air_exchange if custom_air_exchange is not None else profile.air_exchange_rate
+    p = custom_penetration if custom_penetration is not None else profile.penetration_factor
     k_nat = (
-        custom_k_deposition
-        if custom_k_deposition is not None
-        else profile.natural_deposition_rate
+        custom_k_deposition if custom_k_deposition is not None else profile.natural_deposition_rate
     )
 
     # Purifier removal rate k_purifier = CADR * mixing / Volume

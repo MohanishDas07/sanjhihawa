@@ -53,7 +53,9 @@ class ToolLookupArgs(BaseModel):
     top_k: int = 3
 
 
-def _resolve_coordinates(city: str | None, lat: float | None, lon: float | None) -> tuple[str, float, float] | None:
+def _resolve_coordinates(
+    city: str | None, lat: float | None, lon: float | None
+) -> tuple[str, float, float] | None:
     """Resolves coordinates for a city using geocoding if lat/lon not supplied."""
     if lat is not None and lon is not None:
         c_name = city or "Custom Location"
@@ -133,9 +135,7 @@ def tool_get_day_plan(
         return {"error": f"Unknown city '{city}'. Cannot compute day plan without location."}
 
     resolved_city, resolved_lat, resolved_lon = coords
-    air = get_air_quality_sync(
-        resolved_lat, resolved_lon, resolved_city, force_fallback=False
-    )
+    air = get_air_quality_sync(resolved_lat, resolved_lon, resolved_city, force_fallback=False)
 
     if air.status == "no_data":
         return {
@@ -221,9 +221,7 @@ def tool_simulate(
         "cigs_saved": sim.cigs_saved,
         "total_cost_inr": sim.total_cost_inr,
         "pm25_emissions_avoided_g": sim.pm25_emissions_avoided_g,
-        "community_pm25_avoided_g": round(
-            sim.pm25_emissions_avoided_g * community_count, 2
-        ),
+        "community_pm25_avoided_g": round(sim.pm25_emissions_avoided_g * community_count, 2),
         "community_multiplier": community_count,
     }
 

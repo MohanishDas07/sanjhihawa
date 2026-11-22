@@ -39,10 +39,7 @@ def haversine_distance_km(lat1: float, lon1: float, lat2: float, lon2: float) ->
     dphi = math.radians(lat2 - lat1)
     dlambda = math.radians(lon2 - lon1)
 
-    a = (
-        math.sin(dphi / 2.0) ** 2
-        + math.cos(phi1) * math.cos(phi2) * math.sin(dlambda / 2.0) ** 2
-    )
+    a = math.sin(dphi / 2.0) ** 2 + math.cos(phi1) * math.cos(phi2) * math.sin(dlambda / 2.0) ** 2
     c = 2.0 * math.atan2(math.sqrt(a), math.sqrt(1.0 - a))
     return radius_km * c
 
@@ -89,15 +86,9 @@ def interpolate_idw(
         weighted_sum += s.pm25 * weight
         weight_total += weight
 
-    estimated = (
-        weighted_sum / weight_total if weight_total > 0 else nearest_station.pm25
-    )
+    estimated = weighted_sum / weight_total if weight_total > 0 else nearest_station.pm25
 
-    confidence = (
-        "high"
-        if nearest_dist < 5.0
-        else ("moderate" if nearest_dist <= 15.0 else "low")
-    )
+    confidence = "high" if nearest_dist < 5.0 else ("moderate" if nearest_dist <= 15.0 else "low")
 
     return InterpolatedPoint(
         latitude=target_lat,

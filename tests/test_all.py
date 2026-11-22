@@ -6,9 +6,7 @@ import os
 import sys
 
 # Ensure apps/api is in Python path for test discovery and execution
-sys.path.insert(
-    0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../apps/api"))
-)
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../apps/api")))
 
 # Ensure tests run deterministically offline without waiting for network timeouts
 os.environ.setdefault("SAANS_OFFLINE", "1")

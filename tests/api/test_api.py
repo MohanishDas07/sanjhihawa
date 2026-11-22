@@ -11,9 +11,7 @@ import unittest
 os.environ["SAANS_OFFLINE"] = "1"
 
 # Add apps/api to path
-sys.path.insert(
-    0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../apps/api"))
-)
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../apps/api")))
 
 from engine import (
     ActivitySlice,
@@ -145,9 +143,7 @@ class TestSaansAPIContracts(unittest.TestCase):
         self.assertEqual(req.profile.city_name, "Ghaziabad")
 
         # Simulate plan generation logic
-        air_data = get_air_quality_sync(
-            profile.latitude, profile.longitude, profile.city_name
-        )
+        air_data = get_air_quality_sync(profile.latitude, profile.longitude, profile.city_name)
         hourly_pm25 = [pt.pm2_5 for pt in air_data.hourly_forecast]
         outdoor_avg_pm25 = sum(hourly_pm25) / len(hourly_pm25)
 
@@ -179,14 +175,10 @@ class TestSaansAPIContracts(unittest.TestCase):
                     activity_level="light",
                 ),
             ]
-            res = calculate_daily_member_dose(
-                m.id, m.age_band, m.is_breathing_sensitive, slices
-            )
+            res = calculate_daily_member_dose(m.id, m.age_band, m.is_breathing_sensitive, slices)
             member_budgets.append(res)
             self.assertGreater(res.total_inhaled_dose_ug, 0.0)
-            self.assertGreater(
-                res.who_budget_ratio, 1.0
-            )  # Exceeds WHO 15 ug/m3 in winter smog
+            self.assertGreater(res.who_budget_ratio, 1.0)  # Exceeds WHO 15 ug/m3 in winter smog
             self.assertGreater(res.cigarette_equivalents, 0.0)
         self.assertEqual(len(member_budgets), 4)
 
@@ -294,7 +286,9 @@ class TestSaansAPIContracts(unittest.TestCase):
         self.assertGreaterEqual(len(g.results), 1)
 
         # Main FastAPI app metadata
-        self.assertEqual(main.app.title, "SanjhiHawa API - Clean Air Intelligence & Breath Budget Engine")
+        self.assertEqual(
+            main.app.title, "SanjhiHawa API - Clean Air Intelligence & Breath Budget Engine"
+        )
 
 
 if __name__ == "__main__":

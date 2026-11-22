@@ -123,9 +123,7 @@ def verify_numeric_traceability(
     return is_valid, untraceable
 
 
-def build_failclosed_template(
-    tool_results: list[dict[str, Any]], language: str = "en"
-) -> str:
+def build_failclosed_template(tool_results: list[dict[str, Any]], language: str = "en") -> str:
     """
     Constructs a 100% deterministic, mathematically grounded narrative strictly from tool outputs.
     Invoked when any generated text contains untraceable numbers (fail-closed rule).
@@ -133,9 +131,7 @@ def build_failclosed_template(
     air_res = next((t for t in tool_results if "current_cpcb_aqi" in t), None)
     plan_res = next((t for t in tool_results if "scheduled_shift" in t), None)
     sim_res = next((t for t in tool_results if "dose_reduction_pct" in t), None)
-    guidance_res = next(
-        (t for t in tool_results if "results" in t and len(t["results"]) > 0), None
-    )
+    guidance_res = next((t for t in tool_results if "results" in t and len(t["results"]) > 0), None)
 
     if air_res and plan_res:
         shift = plan_res["scheduled_shift"]

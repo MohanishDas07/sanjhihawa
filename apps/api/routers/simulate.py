@@ -5,7 +5,7 @@ What-If Simulator Router - Evaluates Intervention Deltas and Community Emissions
 from engine import run_simulation
 from fastapi import APIRouter
 from schemas.contracts import SimulateRequest, SimulateResponse
-from services.air_service import get_air_quality
+from services.air_service import get_air_quality_sync
 
 router = APIRouter(tags=["Simulation"])
 
@@ -16,12 +16,11 @@ DISCLAIMER_CIGS = (
 )
 
 
-@router.post("/simulate", response_model=SimulateResponse)
-async def simulate_interventions(req: SimulateRequest):
+def simulate_interventions_sync(req: SimulateRequest) -> SimulateResponse:
     profile = req.profile
 
     # Fetch ambient data to ground baseline
-    air_data = await get_air_quality(
+    air_data = get_air_quality_sync(
         latitude=profile.latitude,
         longitude=profile.longitude,
         city_name=profile.city_name,
@@ -64,3 +63,8 @@ async def simulate_interventions(req: SimulateRequest):
         community_co2e_avoided_kg=comm_co2e,
         applied_interventions=sim_res.applied_interventions,
     )
+
+
+@router.post("/simulate", response_model=SimulateResponse)
+async def simulate_interventions(req: SimulateRequest):
+    return simulate_interventions_sync(req)

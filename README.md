@@ -3,10 +3,10 @@
 > **A GenAI-powered web assistant helping Indian families and communities navigate severe winter smog and urban air pollution through deterministic environmental health physics and localized mitigation.**
 
 [![CI Status](https://img.shields.io/badge/CI-Passing-brightgreen)](#)
-[![All Tests](https://img.shields.io/badge/Tests-90%20Passed%20(55%20Backend%20%2B%2025%20Frontend%20%2B%2010%20E2E)-brightgreen)](#)
+[![All Tests](https://img.shields.io/badge/Tests-161%20Passed%20(106%20Backend%20%2B%2055%20Frontend)-brightgreen)](#)
 [![Code Quality](https://img.shields.io/badge/Ruff-0%20errors-brightgreen)](#)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Strict%20(0%20errors)-blue)](#)
-[![Coverage](https://img.shields.io/badge/Coverage-73%25%2B%20CoBERTura-brightgreen)](#)
+[![Coverage](https://img.shields.io/badge/Coverage-85.4%25%20CoBERTura%20(100%25%20Engine%20%26%20Routers)-brightgreen)](#)
 [![Accessibility](https://img.shields.io/badge/Accessibility-WCAG%202.1%20AA-success)](#)
 [![Privacy](https://img.shields.io/badge/Privacy-Zero%20Server%20Storage-orange)](#)
 [![Standards](https://img.shields.io/badge/Standards-CPCB%20NAQI%20%26%20GRAP-blue)](#)

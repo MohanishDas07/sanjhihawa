@@ -19,7 +19,7 @@ from schemas.contracts import (
     PlanResponse,
     RankedIntervention,
 )
-from services.air_service import get_air_quality
+from services.air_service import get_air_quality_sync
 
 router = APIRouter(tags=["Planning"])
 
@@ -30,12 +30,11 @@ DISCLAIMER_CIGS = (
 )
 
 
-@router.post("/plan", response_model=PlanResponse)
-async def generate_day_plan(req: PlanRequest):
+def generate_day_plan_sync(req: PlanRequest) -> PlanResponse:
     profile = req.profile
 
     # Fetch air quality forecast for profile location
-    air_data = await get_air_quality(
+    air_data = get_air_quality_sync(
         latitude=profile.latitude,
         longitude=profile.longitude,
         city_name=profile.city_name,
@@ -181,9 +180,7 @@ async def generate_day_plan(req: PlanRequest):
                 is_indoor=False,
             ),
         ]
-        dose_res = calculate_daily_member_dose(
-            m.id, m.age_band, m.is_breathing_sensitive, slices
-        )
+        dose_res = calculate_daily_member_dose(m.id, m.age_band, m.is_breathing_sensitive, slices)
         member_budgets.append(
             MemberBudgetSummary(
                 member_id=m.id,
@@ -292,3 +289,8 @@ async def generate_day_plan(req: PlanRequest):
         outdoor_worker_advice_hi=outdoor_advice_hi,
         outdoor_worker_advice_mr=outdoor_advice_mr,
     )
+
+
+@router.post("/plan", response_model=PlanResponse)
+async def generate_day_plan(req: PlanRequest):
+    return generate_day_plan_sync(req)
