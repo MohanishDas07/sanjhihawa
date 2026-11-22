@@ -144,6 +144,76 @@ def check_ip_rate_limit(client_ip: str) -> bool:
     return True
 
 
+def _handle_tool_call(
+    tc: dict[str, Any],
+    profile_data: dict[str, Any] | None,
+    tool_results: list[dict[str, Any]],
+    citations: list[dict[str, str]],
+) -> dict[str, Any]:
+    fn_name = tc["function"]["name"]
+    try:
+        fn_args = json.loads(tc["function"]["arguments"])
+    except (json.JSONDecodeError, TypeError, KeyError):
+        fn_args = {}
+
+    if fn_name == "get_day_plan" and profile_data and "profile_data" not in fn_args:
+        fn_args["profile_data"] = profile_data
+
+    res = execute_tool(fn_name, fn_args)
+    tool_results.append(res)
+
+    if fn_name == "lookup_guidance" and "results" in res:
+        for chunk in res["results"]:
+            citations.append(
+                {
+                    "id": chunk.get("source_id", "source"),
+                    "title": chunk.get("title", ""),
+                    "publisher": chunk.get("publisher", ""),
+                }
+            )
+
+    return {
+        "role": "tool",
+        "tool_call_id": tc["id"],
+        "content": json.dumps(res, ensure_ascii=False),
+    }
+
+
+def _verify_and_yield_stream(
+    narrative_text: str,
+    tool_results: list[dict[str, Any]],
+    query: str,
+    language: str,
+    citations: list[dict[str, str]],
+) -> Generator[dict[str, Any], None, None]:
+    user_nums = extract_numbers_from_text(query)
+    is_valid, untraceable = verify_numeric_traceability(
+        narrative_text, tool_results, user_context_numbers=user_nums
+    )
+    if not is_valid:
+        logger.warning(
+            f"Untraceable numbers in LLM reply ({untraceable}); failing closed to deterministic template."
+        )
+        narrative_text = build_failclosed_template(tool_results, language=language)
+
+    yield {
+        "event": "provider_info",
+        "data": {
+            "mode": "grounded_live",
+            "label": "Grounded Model (Verified Traceability)",
+            "note": "Output verified by numeric traceability guard.",
+        },
+    }
+
+    for word in narrative_text.split(" "):
+        yield {"event": "token", "data": {"token": word + " "}}
+
+    if citations:
+        yield {"event": "citations", "data": {"citations": citations}}
+
+    yield {"event": "done", "data": {"status": "completed"}}
+
+
 class LLMService:
     def __init__(self):
         self.api_key = (
@@ -306,35 +376,8 @@ class LLMService:
             if choice.get("tool_calls"):
                 messages.append(choice)
                 for tc in choice["tool_calls"]:
-                    fn_name = tc["function"]["name"]
-                    try:
-                        fn_args = json.loads(tc["function"]["arguments"])
-                    except (json.JSONDecodeError, TypeError, KeyError):
-                        fn_args = {}
-
-                    if fn_name == "get_day_plan" and profile_data and "profile_data" not in fn_args:
-                        fn_args["profile_data"] = profile_data
-
-                    res = execute_tool(fn_name, fn_args)
-                    tool_results.append(res)
-
-                    if fn_name == "lookup_guidance" and "results" in res:
-                        for chunk in res["results"]:
-                            citations.append(
-                                {
-                                    "id": chunk.get("source_id", "source"),
-                                    "title": chunk.get("title", ""),
-                                    "publisher": chunk.get("publisher", ""),
-                                }
-                            )
-
-                    messages.append(
-                        {
-                            "role": "tool",
-                            "tool_call_id": tc["id"],
-                            "content": json.dumps(res, ensure_ascii=False),
-                        }
-                    )
+                    tool_msg = _handle_tool_call(tc, profile_data, tool_results, citations)
+                    messages.append(tool_msg)
 
                 yield {
                     "event": "tool_executed",
@@ -355,32 +398,9 @@ class LLMService:
             else:
                 narrative_text = choice.get("content", "")
 
-        user_nums = extract_numbers_from_text(query)
-        is_valid, untraceable = verify_numeric_traceability(
-            narrative_text, tool_results, user_context_numbers=user_nums
+        yield from _verify_and_yield_stream(
+            narrative_text, tool_results, query, language, citations
         )
-        if not is_valid:
-            logger.warning(
-                f"Untraceable numbers in LLM reply ({untraceable}); failing closed to deterministic template."
-            )
-            narrative_text = build_failclosed_template(tool_results, language=language)
-
-        yield {
-            "event": "provider_info",
-            "data": {
-                "mode": "grounded_live",
-                "label": "Grounded Model (Verified Traceability)",
-                "note": "Output verified by numeric traceability guard.",
-            },
-        }
-
-        for word in narrative_text.split(" "):
-            yield {"event": "token", "data": {"token": word + " "}}
-
-        if citations:
-            yield {"event": "citations", "data": {"citations": citations}}
-
-        yield {"event": "done", "data": {"status": "completed"}}
 
     async def _stream_live_provider_async(
         self,
@@ -428,35 +448,8 @@ class LLMService:
             if choice.get("tool_calls"):
                 messages.append(choice)
                 for tc in choice["tool_calls"]:
-                    fn_name = tc["function"]["name"]
-                    try:
-                        fn_args = json.loads(tc["function"]["arguments"])
-                    except (json.JSONDecodeError, TypeError, KeyError):
-                        fn_args = {}
-
-                    if fn_name == "get_day_plan" and profile_data and "profile_data" not in fn_args:
-                        fn_args["profile_data"] = profile_data
-
-                    res = execute_tool(fn_name, fn_args)
-                    tool_results.append(res)
-
-                    if fn_name == "lookup_guidance" and "results" in res:
-                        for chunk in res["results"]:
-                            citations.append(
-                                {
-                                    "id": chunk.get("source_id", "source"),
-                                    "title": chunk.get("title", ""),
-                                    "publisher": chunk.get("publisher", ""),
-                                }
-                            )
-
-                    messages.append(
-                        {
-                            "role": "tool",
-                            "tool_call_id": tc["id"],
-                            "content": json.dumps(res, ensure_ascii=False),
-                        }
-                    )
+                    tool_msg = _handle_tool_call(tc, profile_data, tool_results, citations)
+                    messages.append(tool_msg)
 
                 yield {
                     "event": "tool_executed",
@@ -477,32 +470,10 @@ class LLMService:
             else:
                 narrative_text = choice.get("content", "")
 
-        user_nums = extract_numbers_from_text(query)
-        is_valid, untraceable = verify_numeric_traceability(
-            narrative_text, tool_results, user_context_numbers=user_nums
-        )
-        if not is_valid:
-            logger.warning(
-                f"Untraceable numbers in LLM reply ({untraceable}); failing closed to deterministic template."
-            )
-            narrative_text = build_failclosed_template(tool_results, language=language)
-
-        yield {
-            "event": "provider_info",
-            "data": {
-                "mode": "grounded_live",
-                "label": "Grounded Model (Verified Traceability)",
-                "note": "Output verified by numeric traceability guard.",
-            },
-        }
-
-        for word in narrative_text.split(" "):
-            yield {"event": "token", "data": {"token": word + " "}}
-
-        if citations:
-            yield {"event": "citations", "data": {"citations": citations}}
-
-        yield {"event": "done", "data": {"status": "completed"}}
+        for event in _verify_and_yield_stream(
+            narrative_text, tool_results, query, language, citations
+        ):
+            yield event
 
     async def stream_chat(
         self,

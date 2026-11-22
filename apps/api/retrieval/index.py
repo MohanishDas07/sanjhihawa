@@ -86,7 +86,7 @@ class BM25Index:
             else:
                 raise FileNotFoundError(f"Corpus file not found at {self.corpus_path}")
 
-        with open(self.corpus_path, "r", encoding="utf-8") as f:
+        with open(self.corpus_path, encoding="utf-8") as f:
             data = json.load(f)
 
         self.chunks = []

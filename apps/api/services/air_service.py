@@ -9,8 +9,9 @@ import math
 import os
 import sqlite3
 import time
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
+from typing import Any
 
 import httpx
 from engine import (
@@ -114,7 +115,7 @@ def find_closest_fixture(lat: float, lon: float) -> tuple[dict, str, float]:
             best_file = path
             best_city = c_name
 
-    with open(best_file, "r", encoding="utf-8") as f:
+    with open(best_file, encoding="utf-8") as f:
         return json.load(f), best_city, best_dist_km
 
 
@@ -960,7 +961,7 @@ def _build_response_from_fixture(
         )
 
     # Current hour selected according to local IST time (UTC + 5:30)
-    now_utc = datetime.now(timezone.utc)
+    now_utc = datetime.now(UTC)
     ist_hour = (now_utc + timedelta(hours=5, minutes=30)).hour
     current_pt = next(
         (p for p in hourly_points if p.hour == ist_hour),
@@ -1027,7 +1028,7 @@ def _build_response_from_fixture(
         one_sentence_verdict_en=verdict_en,
         one_sentence_verdict_hi=verdict_hi,
         one_sentence_verdict_mr=verdict_mr,
-        data_as_of=fixture_data.get("data_as_of", datetime.now(timezone.utc).isoformat()),
+        data_as_of=fixture_data.get("data_as_of", datetime.now(UTC).isoformat()),
         data_source=src,
         is_sample_or_fallback=True,
         fallback_banner_text=banner,
@@ -1092,7 +1093,7 @@ def get_air_quality_sync(
             one_sentence_verdict_en=f"No reading for {display_city} right now.",
             one_sentence_verdict_hi=f"वर्तमान में {display_city} के लिए कोई रीडिंग उपलब्ध नहीं है।",
             one_sentence_verdict_mr=f"सध्या {display_city} साठी कोणतेही रीडिंग उपलब्ध नाही.",
-            data_as_of=f"Data fetched at {datetime.now(timezone.utc).strftime('%H:%M UTC')}",
+            data_as_of=f"Data fetched at {datetime.now(UTC).strftime('%H:%M UTC')}",
             data_source="No Station Coverage",
             is_sample_or_fallback=False,
             fallback_banner_text=(
@@ -1112,6 +1113,141 @@ def get_air_quality_sync(
     )
 
 
+def _check_air_cache(r_lat: float, r_lon: float, now_ts: int) -> AirQualityResponse | None:
+    cursor = _conn.cursor()
+    cursor.execute(
+        "SELECT cached_at, payload FROM air_cache WHERE lat_rounded = ? AND lon_rounded = ?",
+        (r_lat, r_lon),
+    )
+    row = cursor.fetchone()
+    if row and (now_ts - row[0]) < TTL_SECONDS:
+        data = json.loads(row[1])
+        return AirQualityResponse(**data)
+    return None
+
+
+def _parse_open_meteo_response(
+    api_data: dict[str, Any],
+    latitude: float,
+    longitude: float,
+    r_lat: float,
+    r_lon: float,
+    city_name: str | None,
+) -> AirQualityResponse:
+    hourly = api_data.get("hourly", {})
+    times = hourly.get("time", [])
+    pm25_vals = hourly.get("pm2_5", [])
+    pm10_vals = hourly.get("pm10", [])
+
+    points: list[HourlyAirPoint] = []
+    for idx, t in enumerate(times[:24]):
+        is_filled = False
+        if idx >= len(pm25_vals) or pm25_vals[idx] is None:
+            if points:
+                val_25 = points[-1].pm2_5
+                is_filled = True
+            else:
+                continue
+        else:
+            val_25 = float(pm25_vals[idx])
+
+        if idx < len(pm10_vals) and pm10_vals[idx] is not None:
+            val_10 = float(pm10_vals[idx])
+        elif points and points[-1].pm10 is not None:
+            val_10 = points[-1].pm10
+            is_filled = True
+        else:
+            val_10 = None
+
+        aqi_val, band, _ = get_overall_cpcb_aqi(val_25, val_10)
+        grap = get_grap_stage(aqi_val)
+
+        points.append(
+            HourlyAirPoint(
+                hour=idx,
+                time_iso=t,
+                pm2_5=round(val_25, 1),
+                pm10=round(val_10, 1) if val_10 is not None else None,
+                cpcb_aqi=aqi_val,
+                aqi_band_code=band.code,
+                aqi_band_name=band.name,
+                aqi_color_hex=band.color_hex,
+                health_statement_en=band.health_statement_en,
+                health_statement_hi=band.health_statement_hi,
+                health_statement_mr=band.health_statement_mr,
+                grap_stage=grap.stage_number if grap else None,
+                is_filled=is_filled,
+            )
+        )
+
+    if not points:
+        return AirQualityResponse(
+            status="no_data",
+            city=city_name or f"Loc ({r_lat}, {r_lon})",
+            country="India",
+            latitude=latitude,
+            longitude=longitude,
+            current_pm2_5=None,
+            current_pm10=None,
+            current_cpcb_aqi=None,
+            current_aqi_band=None,
+            current_aqi_color="#888888",
+            dominant_pollutant="PM2.5",
+            one_sentence_verdict_en=f"No air quality forecast points available for {city_name or 'this location'}.",
+            one_sentence_verdict_hi=f"{city_name or 'इस स्थान'} के लिए कोई पूर्वानुमान बिंदु उपलब्ध नहीं हैं।",
+            one_sentence_verdict_mr=f"{city_name or 'या ठिकाणासाठी'} कोणतेही अंदाज उपलब्ध नाहीत.",
+            data_as_of=f"Data fetched at {datetime.now(UTC).strftime('%H:%M UTC')}",
+            data_source="Open-Meteo (Empty Grid)",
+            is_sample_or_fallback=False,
+            fallback_banner_text="EMPTY GRID: No modelled data points returned for this location.",
+            active_grap_stage=None,
+            hourly_forecast=[],
+            is_modelled=True,
+        )
+
+    utc_offset = api_data.get("utc_offset_seconds", 19800)
+    now_utc = datetime.now(UTC)
+    local_hour = (now_utc + timedelta(seconds=utc_offset)).hour
+    cur = next((p for p in points if p.hour == local_hour), points[0])
+    cur_aqi = cur.cpcb_aqi
+    cur_band = cur.aqi_band_code
+    cur_color = cur.aqi_color_hex
+
+    grap_stage_cur = get_grap_stage(cur_aqi)
+    grap_info = None
+    if grap_stage_cur:
+        grap_info = GRAPStageInfo(
+            stage_number=grap_stage_cur.stage_number,
+            name=grap_stage_cur.name,
+            aqi_threshold=grap_stage_cur.aqi_threshold_text,
+            mandatory_actions=grap_stage_cur.mandatory_actions_en,
+            citizen_advisory=grap_stage_cur.citizen_advisory_en,
+        )
+
+    return AirQualityResponse(
+        status="ok",
+        city=city_name or f"Loc ({r_lat}, {r_lon})",
+        country="India",
+        latitude=latitude,
+        longitude=longitude,
+        current_pm2_5=cur.pm2_5,
+        current_pm10=cur.pm10,
+        current_cpcb_aqi=cur_aqi,
+        current_aqi_band=cur_band,
+        current_aqi_color=cur_color,
+        dominant_pollutant="PM2.5",
+        one_sentence_verdict_en=f"Modelled air quality estimate is {cur_band.replace('_', ' ').title()} (AQI {cur_aqi}, estimated from hourly PM2.5).",
+        one_sentence_verdict_hi=f"मॉडल अनुमानित वायु गुणवत्ता {cur_band.replace('_', ' ').title()} (AQI {cur_aqi}) है।",
+        one_sentence_verdict_mr=f"मॉडेल अंदाजित हवेची गुणवत्ता {cur_band.replace('_', ' ').title()} (AQI {cur_aqi}) आहे.",
+        data_as_of=f"Data fetched at {datetime.now(UTC).strftime('%H:%M UTC')}",
+        data_source="Modelled estimate (CAMS via Open-Meteo), not a ground station",
+        is_sample_or_fallback=False,
+        active_grap_stage=grap_info,
+        hourly_forecast=points,
+        is_modelled=True,
+    )
+
+
 async def get_air_quality(
     latitude: float,
     longitude: float,
@@ -1127,23 +1263,13 @@ async def get_air_quality(
 
     r_lat, r_lon = round_coords(latitude, longitude)
     now_ts = int(time.time())
-
     is_offline = os.environ.get("SAANS_OFFLINE") == "1"
 
-    # Check cache unless forced fallback or offline test mode
     if not force_fallback and not is_offline:
-        cursor = _conn.cursor()
-        cursor.execute(
-            "SELECT cached_at, payload FROM air_cache WHERE lat_rounded = ? AND lon_rounded = ?",
-            (r_lat, r_lon),
-        )
-        row = cursor.fetchone()
-        if row and (now_ts - row[0]) < TTL_SECONDS:
-            data = json.loads(row[1])
-            return AirQualityResponse(**data)
+        cached = _check_air_cache(r_lat, r_lon, now_ts)
+        if cached:
+            return cached
 
-    # Attempt upstream Open-Meteo call if not forced fallback and not offline
-    if not force_fallback and not is_offline:
         url = "https://air-quality-api.open-meteo.com/v1/air-quality"
         params = {
             "latitude": r_lat,
@@ -1156,126 +1282,9 @@ async def get_air_quality(
             async with httpx.AsyncClient(timeout=4.5) as client:
                 resp = await client.get(url, params=params)
                 if resp.status_code == 200:
-                    api_data = resp.json()
-                    hourly = api_data.get("hourly", {})
-                    times = hourly.get("time", [])
-                    pm25_vals = hourly.get("pm2_5", [])
-                    pm10_vals = hourly.get("pm10", [])
-
-                    points: list[HourlyAirPoint] = []
-                    for idx, t in enumerate(times[:24]):
-                        is_filled = False
-                        if idx >= len(pm25_vals) or pm25_vals[idx] is None:
-                            # Forward fill if available, and mark filled
-                            if points:
-                                val_25 = points[-1].pm2_5
-                                is_filled = True
-                            else:
-                                continue
-                        else:
-                            val_25 = float(pm25_vals[idx])
-
-                        if idx < len(pm10_vals) and pm10_vals[idx] is not None:
-                            val_10 = float(pm10_vals[idx])
-                        elif points and points[-1].pm10 is not None:
-                            val_10 = points[-1].pm10
-                            is_filled = True
-                        else:
-                            val_10 = None
-
-                        aqi_val, band, _ = get_overall_cpcb_aqi(val_25, val_10)
-                        grap = get_grap_stage(aqi_val)
-
-                        points.append(
-                            HourlyAirPoint(
-                                hour=idx,
-                                time_iso=t,
-                                pm2_5=round(val_25, 1),
-                                pm10=round(val_10, 1) if val_10 is not None else None,
-                                cpcb_aqi=aqi_val,
-                                aqi_band_code=band.code,
-                                aqi_band_name=band.name,
-                                aqi_color_hex=band.color_hex,
-                                health_statement_en=band.health_statement_en,
-                                health_statement_hi=band.health_statement_hi,
-                                health_statement_mr=band.health_statement_mr,
-                                grap_stage=grap.stage_number if grap else None,
-                                is_filled=is_filled,
-                            )
-                        )
-
-                    if not points:
-                        # Audit 2 R9: return no_data rather than invented 150/80/120 defaults
-                        return AirQualityResponse(
-                            status="no_data",
-                            city=city_name or f"Loc ({r_lat}, {r_lon})",
-                            country="India",
-                            latitude=latitude,
-                            longitude=longitude,
-                            current_pm2_5=None,
-                            current_pm10=None,
-                            current_cpcb_aqi=None,
-                            current_aqi_band=None,
-                            current_aqi_color="#888888",
-                            dominant_pollutant="PM2.5",
-                            one_sentence_verdict_en=f"No air quality forecast points available for {city_name or 'this location'}.",
-                            one_sentence_verdict_hi=f"{city_name or 'इस स्थान'} के लिए कोई पूर्वानुमान बिंदु उपलब्ध नहीं हैं।",
-                            one_sentence_verdict_mr=f"{city_name or 'या ठिकाणासाठी'} कोणतेही अंदाज उपलब्ध नाहीत.",
-                            data_as_of=f"Data fetched at {datetime.now(timezone.utc).strftime('%H:%M UTC')}",
-                            data_source="Open-Meteo (Empty Grid)",
-                            is_sample_or_fallback=False,
-                            fallback_banner_text="EMPTY GRID: No modelled data points returned for this location.",
-                            active_grap_stage=None,
-                            hourly_forecast=[],
-                            is_modelled=True,
-                        )
-
-                    # Select point corresponding to current local hour
-                    utc_offset = api_data.get("utc_offset_seconds", 19800)
-                    now_utc = datetime.now(timezone.utc)
-                    local_hour = (now_utc + timedelta(seconds=utc_offset)).hour
-                    cur = next(
-                        (p for p in points if p.hour == local_hour),
-                        points[0],
+                    res_obj = _parse_open_meteo_response(
+                        resp.json(), latitude, longitude, r_lat, r_lon, city_name
                     )
-                    cur_aqi = cur.cpcb_aqi
-                    cur_band = cur.aqi_band_code
-                    cur_color = cur.aqi_color_hex
-
-                    grap_stage_cur = get_grap_stage(cur_aqi)
-                    grap_info = None
-                    if grap_stage_cur:
-                        grap_info = GRAPStageInfo(
-                            stage_number=grap_stage_cur.stage_number,
-                            name=grap_stage_cur.name,
-                            aqi_threshold=grap_stage_cur.aqi_threshold_text,
-                            mandatory_actions=grap_stage_cur.mandatory_actions_en,
-                            citizen_advisory=grap_stage_cur.citizen_advisory_en,
-                        )
-
-                    res_obj = AirQualityResponse(
-                        status="ok",
-                        city=city_name or f"Loc ({r_lat}, {r_lon})",
-                        country="India",
-                        latitude=latitude,
-                        longitude=longitude,
-                        current_pm2_5=cur.pm2_5,
-                        current_pm10=cur.pm10,
-                        current_cpcb_aqi=cur_aqi,
-                        current_aqi_band=cur_band,
-                        current_aqi_color=cur_color,
-                        dominant_pollutant="PM2.5",
-                        one_sentence_verdict_en=f"Modelled air quality estimate is {cur_band.replace('_', ' ').title()} (AQI {cur_aqi}, estimated from hourly PM2.5).",
-                        one_sentence_verdict_hi=f"मॉडल अनुमानित वायु गुणवत्ता {cur_band.replace('_', ' ').title()} (AQI {cur_aqi}) है।",
-                        one_sentence_verdict_mr=f"मॉडेल अंदाजित हवेची गुणवत्ता {cur_band.replace('_', ' ').title()} (AQI {cur_aqi}) आहे.",
-                        data_as_of=f"Data fetched at {datetime.now(timezone.utc).strftime('%H:%M UTC')}",
-                        data_source="Modelled estimate (CAMS via Open-Meteo), not a ground station",
-                        is_sample_or_fallback=False,
-                        active_grap_stage=grap_info,
-                        hourly_forecast=points,
-                        is_modelled=True,
-                    )
-
                     _conn.execute(
                         "INSERT OR REPLACE INTO air_cache (lat_rounded, lon_rounded, cached_at, payload) VALUES (?, ?, ?, ?)",
                         (r_lat, r_lon, now_ts, res_obj.model_dump_json()),
@@ -1287,7 +1296,6 @@ async def get_air_quality(
                 f"Failed to fetch live air data from Open-Meteo: {e}. Using offline fixtures."
             )
 
-    # Resilient offline fixture fallback
     return get_air_quality_sync(
         latitude=latitude,
         longitude=longitude,

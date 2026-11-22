@@ -16,8 +16,15 @@ exclude = [
 ]
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "W"]
-ignore = ["E501"]
+select = ["E", "F", "I", "W", "UP", "B", "C4", "SIM", "C901"]
+mccabe = { max-complexity = 10 }
+ignore = [
+    "E501",
+    "RUF001",
+    "RUF002",
+    "RUF003",
+    "B008",
+]
 
 [tool.coverage.run]
 source = ["apps/api"]

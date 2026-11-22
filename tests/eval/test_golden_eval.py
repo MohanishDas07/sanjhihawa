@@ -378,17 +378,8 @@ class TestGoldenEvaluationHarness(unittest.TestCase):
             f"\n[EVALUATION HARNESS] All {passed_count}/{total_count} golden test cases passed cleanly!"
         )
 
-    def test_audit_regression_probes(self):
-        """
-        Audit Item 2 & 3: Direct regression tests for audit probes:
-        - Gurugram routing vs jaggery
-        - 'figure' routing vs jaggery
-        - 'cut' commute vs simulation hijacking
-        - Asthmatic father at 6am safety advice
-        - 'breathless' emergency detection
-        - 'not wheezing' negation handling without emergency blockage
-        """
-        # Probe 1: Gurugram air quality (Must not return jaggery myth)
+    def test_audit_probe_gurugram_routing(self):
+        """Audit Probe 1: Gurugram air quality (Must not return jaggery myth)."""
         tokens = []
         is_emerg = False
         for evt in self.llm_service.stream_chat_sync("What is the air like in Gurugram today?"):
@@ -402,7 +393,8 @@ class TestGoldenEvaluationHarness(unittest.TestCase):
         self.assertNotIn("digestive", reply)
         self.assertIn("gurugram", reply)
 
-        # Probe 2: "Can you figure out the best time to walk?" (Must not match 'gur' in figure)
+    def test_audit_probe_figure_routing(self):
+        """Audit Probe 2: 'Can you figure out the best time to walk?' (Must not match 'gur' in figure)."""
         tokens = []
         for evt in self.llm_service.stream_chat_sync("Can you figure out the best time to walk?"):
             if evt["event"] == "token":
@@ -412,7 +404,8 @@ class TestGoldenEvaluationHarness(unittest.TestCase):
         self.assertNotIn("digestive", reply)
         self.assertTrue("scheduler" in reply or "shift" in reply or "walk" in reply)
 
-        # Probe 3: Purifier vs cut commute (Must address trade-off, not raw single-sided simulate)
+    def test_audit_probe_purifier_vs_commute(self):
+        """Audit Probe 3: Purifier vs cut commute (Must address trade-off, not raw single-sided simulate)."""
         tokens = []
         for evt in self.llm_service.stream_chat_sync(
             "Should I buy an air purifier or just cut my commute?"
@@ -423,7 +416,8 @@ class TestGoldenEvaluationHarness(unittest.TestCase):
         self.assertIn("purifier", reply)
         self.assertTrue("commute" in reply or "transit" in reply or "metro" in reply)
 
-        # Probe 4: Asthmatic father 6am walk (Must explicitly state NOT safe and mention inversion)
+    def test_audit_probe_asthmatic_father_walk(self):
+        """Audit Probe 4: Asthmatic father 6am walk (Must explicitly state NOT safe and mention inversion)."""
         tokens = []
         for evt in self.llm_service.stream_chat_sync(
             "Is it safe to take my asthmatic father for a walk at 6am?"
@@ -434,7 +428,8 @@ class TestGoldenEvaluationHarness(unittest.TestCase):
         self.assertTrue("not safe" in reply)
         self.assertTrue("inversion" in reply)
 
-        # Probe 5: Breathless daughter (Must trigger emergency redline)
+    def test_audit_probe_breathless_emergency(self):
+        """Audit Probe 5: Breathless daughter (Must trigger emergency redline)."""
         is_emerg = False
         for evt in self.llm_service.stream_chat_sync(
             "My daughter is breathless after school, what should I do?"
@@ -446,7 +441,8 @@ class TestGoldenEvaluationHarness(unittest.TestCase):
             "Acute 'breathless' must trigger static medical emergency intercept",
         )
 
-        # Probe 6: Not wheezing, just coughing (Negation must NOT trigger emergency intercept)
+    def test_audit_probe_negation_not_wheezing(self):
+        """Audit Probe 6: Not wheezing, just coughing (Negation must NOT trigger emergency intercept)."""
         tokens = []
         is_emerg = False
         for evt in self.llm_service.stream_chat_sync("My child is not wheezing, just coughing"):
@@ -457,7 +453,6 @@ class TestGoldenEvaluationHarness(unittest.TestCase):
         self.assertFalse(is_emerg, "'not wheezing' should not trigger emergency intercept")
         reply = "".join(tokens).lower()
         self.assertTrue("cough" in reply)
-        # Verify it does NOT cheerful schedule
         self.assertNotIn("recommends shifting flexible outdoor activities", reply)
 
 

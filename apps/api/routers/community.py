@@ -3,7 +3,7 @@ Community Advisory Card Generator Router.
 Generates shareable, printable advisory cards for RWAs, schools, and apartment complexes.
 """
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from engine import get_grap_stage
 from fastapi import APIRouter, HTTPException
@@ -35,7 +35,7 @@ def generate_community_advisory_sync(req: CommunityAdvisoryRequest) -> Community
     color = air_data.current_aqi_color
     grap = get_grap_stage(aqi)
 
-    date_str = datetime.now(timezone.utc).strftime("%d %b %Y, %I:%M %p UTC")
+    date_str = datetime.now(UTC).strftime("%d %b %Y, %I:%M %p UTC")
 
     # Multilingual headlines & bullet points
     if req.language == "hi":
@@ -98,7 +98,7 @@ def generate_community_advisory_sync(req: CommunityAdvisoryRequest) -> Community
         school_advisory=school_note if req.organization_type == "school" else None,
         rwa_actions=rwa_actions,
         verification_source=f"{air_data.data_source} (As of {air_data.data_as_of})",
-        generated_at_iso=datetime.now(timezone.utc).isoformat(),
+        generated_at_iso=datetime.now(UTC).isoformat(),
     )
 
 
