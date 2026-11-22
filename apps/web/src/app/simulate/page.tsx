@@ -85,7 +85,7 @@ export default function SimulatePage() {
         community_household_count: count,
       });
       setSimResult(res);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Simulation failed", err);
       setErrorMessage("Could not recalculate simulation. Please check connection.");
     } finally {

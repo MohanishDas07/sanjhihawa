@@ -90,7 +90,11 @@ export default function OnboardingPage() {
     });
   };
 
-  const handleMemberChange = (index: number, field: keyof FamilyMember, val: any) => {
+  const handleMemberChange = (
+    index: number,
+    field: keyof FamilyMember,
+    val: FamilyMember[keyof FamilyMember]
+  ) => {
     const updated = [...profile.members];
     updated[index] = { ...updated[index], [field]: val };
     setProfile({ ...profile, members: updated });
@@ -291,7 +295,7 @@ export default function OnboardingPage() {
             <select
               id="home-type-select"
               value={profile.home_type}
-              onChange={(e) => setProfile({ ...profile, home_type: e.target.value as any })}
+              onChange={(e) => setProfile({ ...profile, home_type: e.target.value as HouseholdProfile["home_type"] })}
               className="w-full font-mono text-sm p-2.5 border border-rule bg-paper text-ink focus:outline-none focus:ring-1 focus:ring-ink"
             >
               <option value="standard_closed">Standard Apartment (Windows closed, average infiltration)</option>
@@ -434,7 +438,7 @@ export default function OnboardingPage() {
             <select
               id="commute-mode-select"
               value={profile.commute_mode}
-              onChange={(e) => setProfile({ ...profile, commute_mode: e.target.value as any })}
+              onChange={(e) => setProfile({ ...profile, commute_mode: e.target.value as HouseholdProfile["commute_mode"] })}
               className="w-full font-mono text-sm p-2.5 border border-rule bg-paper text-ink focus:outline-none"
             >
               <option value="two_wheeler_petrol">Two-Wheeler / Motorcycle (Petrol, direct street exhaust exposure)</option>
@@ -472,7 +476,7 @@ export default function OnboardingPage() {
             <select
               id="cooking-fuel-select"
               value={profile.cooking_fuel}
-              onChange={(e) => setProfile({ ...profile, cooking_fuel: e.target.value as any })}
+              onChange={(e) => setProfile({ ...profile, cooking_fuel: e.target.value as HouseholdProfile["cooking_fuel"] })}
               className="w-full font-mono text-sm p-2.5 border border-rule bg-paper text-ink focus:outline-none"
             >
               <option value="lpg">LPG Cylinder / Piped Natural Gas (PNG)</option>
@@ -564,7 +568,7 @@ export default function OnboardingPage() {
                 <button
                   key={tier.id}
                   type="button"
-                  onClick={() => setProfile({ ...profile, budget_band: tier.id as any })}
+                  onClick={() => setProfile({ ...profile, budget_band: tier.id as HouseholdProfile["budget_band"] })}
                   className={`p-3 border text-left font-sans text-sm transition-colors ${
                     profile.budget_band === tier.id
                       ? "border-ink bg-paper font-bold text-ink"

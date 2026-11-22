@@ -167,6 +167,7 @@ export const Header: React.FC = () => {
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             aria-expanded={menuOpen}
+            aria-controls="mobile-navigation-drawer"
             aria-label="Toggle navigation menu"
             className="p-2 border border-rule bg-paper text-ink"
           >
@@ -183,7 +184,11 @@ export const Header: React.FC = () => {
 
       {/* Mobile Drawer */}
       {menuOpen && (
-        <nav className="md:hidden border-t hairline border-rule bg-paper px-4 py-3 space-y-2">
+        <nav
+          id="mobile-navigation-drawer"
+          aria-label="Mobile Navigation"
+          className="md:hidden border-t hairline border-rule bg-paper px-4 py-3 space-y-2"
+        >
           {navLinks.map((link) => {
             const label = lang === "hi" ? link.labelHi : (lang === "mr" ? link.labelMr : link.labelEn);
             return (

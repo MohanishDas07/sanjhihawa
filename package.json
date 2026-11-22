@@ -9,7 +9,7 @@
     "test:unit": "npm --prefix apps/web test",
     "test:a11y": "node --test apps/web/test/accessibility.test.mjs",
     "test:python": "python tests/test_all.py",
-    "test:coverage": "coverage run --source=apps/api tests/test_all.py && coverage report",
+    "test:coverage": "coverage run --source=apps/api tests/test_all.py && coverage report && coverage xml -o coverage.xml",
     "test:e2e": "npm --prefix apps/web run test:e2e",
     "build": "npm --prefix apps/web run build",
     "dev": "npm --prefix apps/web run dev",

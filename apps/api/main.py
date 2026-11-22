@@ -13,11 +13,11 @@ _current_dir = os.path.dirname(os.path.abspath(__file__))
 if _current_dir not in sys.path:
     sys.path.insert(0, _current_dir)
 
-from dotenv import load_dotenv
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from retrieval.index import get_retrieval_index
-from routers import air, chat, community, geocode, health, plan, simulate
+from dotenv import load_dotenv  # noqa: E402
+from fastapi import FastAPI  # noqa: E402
+from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
+from retrieval.index import get_retrieval_index  # noqa: E402
+from routers import air, chat, community, geocode, health, plan, simulate  # noqa: E402
 
 # Load environment variables from .env file if present
 load_dotenv()

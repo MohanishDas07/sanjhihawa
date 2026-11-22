@@ -81,7 +81,14 @@ export async function GET(
         const geoRes = await fetch(geoUrl, { cache: "no-store" });
         if (geoRes.ok) {
           const geoData = await geoRes.json();
-          const results = (geoData.results || []).map((r: any) => ({
+          interface OpenMeteoGeoItem {
+            name: string;
+            latitude: number;
+            longitude: number;
+            country?: string;
+            admin1?: string | null;
+          }
+          const results = (geoData.results || []).map((r: OpenMeteoGeoItem) => ({
             name: r.name,
             latitude: r.latitude,
             longitude: r.longitude,

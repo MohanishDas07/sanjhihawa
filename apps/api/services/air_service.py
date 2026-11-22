@@ -712,7 +712,9 @@ async def get_air_quality(
     Fetches 24-hour air quality forecast for coordinates.
     Employs 15-minute SQLite caching, 0.1° spatial rounding, and labeled offline fixtures.
     """
-    print(f"[DEBUG get_air_quality] lat={latitude}, lon={longitude}, city={city_name}", flush=True)
+    if os.environ.get("SAANS_OFFLINE") == "1" or os.environ.get("SAANS_TESTING") == "1":
+        return get_air_quality_sync(latitude, longitude, city_name, force_fallback)
+
     r_lat, r_lon = round_coords(latitude, longitude)
     now_ts = int(time.time())
 

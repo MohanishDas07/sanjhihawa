@@ -29,10 +29,11 @@ export default function YourDayPage() {
     try {
       const res = await generateDayPlan({ profile: userProfile });
       setPlan(res);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Failed to load plan", err);
+      const msg = err instanceof Error ? err.message : String(err);
       setErrorMessage(
-        err?.message?.includes("404") || err?.message?.includes("no_data")
+        msg.includes("404") || msg.includes("no_data")
           ? `No air quality readings available for ${userProfile.city_name}. Please choose another city in your profile.`
           : "Could not generate day plan from the exposure engine. Please check your connection and retry."
       );

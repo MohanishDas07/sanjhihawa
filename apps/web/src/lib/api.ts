@@ -10,6 +10,7 @@ import {
   AirQualityResponse,
   GeocodeResponse,
   ReverseGeocodeResponse,
+  HouseholdProfile,
   PlanRequest,
   PlanResponse,
   SimulateRequest,
@@ -216,7 +217,7 @@ export interface ChatSyncResponse {
  */
 export async function sendChatSync(
   message: string,
-  profile?: any,
+  profile?: HouseholdProfile | null,
   language: "en" | "hi" | "mr" = "en",
   simplifyForChild: boolean = false
 ): Promise<ChatSyncResponse> {
