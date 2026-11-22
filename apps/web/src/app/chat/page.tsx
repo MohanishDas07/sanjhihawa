@@ -26,7 +26,7 @@ export default function ChatPage() {
           publisher: "Central Pollution Control Board",
         },
       ],
-      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      timestamp: "",
     },
   ]);
 
@@ -39,6 +39,15 @@ export default function ChatPage() {
   useEffect(() => {
     const savedLang = (localStorage.getItem("saans_lang") as "en" | "hi" | "mr") || "en";
     setLang(savedLang);
+
+    // Populate client-side timestamp for the initial welcome message to prevent hydration mismatch
+    setMessages((prev) =>
+      prev.map((m) =>
+        m.id === "intro" && !m.timestamp
+          ? { ...m, timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) }
+          : m
+      )
+    );
 
     const onLangChange = () => {
       const current = (localStorage.getItem("saans_lang") as "en" | "hi" | "mr") || "en";
@@ -240,8 +249,8 @@ export default function ChatPage() {
                 )}
               </div>
 
-              <span className="text-[10px] font-mono text-ink-muted mt-1 px-1">
-                {m.sender === "user" ? "You" : "SanjhiHawa"} • {m.timestamp}
+              <span className="text-[10px] font-mono text-ink-muted mt-1 px-1" suppressHydrationWarning>
+                {m.sender === "user" ? "You" : "SanjhiHawa"} {m.timestamp ? `• ${m.timestamp}` : ""}
               </span>
             </div>
           ))}
