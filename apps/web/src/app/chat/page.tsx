@@ -32,7 +32,6 @@ export default function ChatPage() {
 
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [simplifyForChild, setSimplifyForChild] = useState(false);
   const [lang, setLang] = useState<"en" | "hi" | "mr">("en");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -115,7 +114,7 @@ export default function ChatPage() {
       // Get household profile from client storage
       const profile = getStoredProfile();
 
-      const res = await sendChatSync(textToSend, profile, lang, simplifyForChild);
+      const res = await sendChatSync(textToSend, profile, lang);
 
       const botMsg: Message = {
         id: "b_" + Date.now(),
@@ -153,38 +152,18 @@ export default function ChatPage() {
     <div className="max-w-4xl w-full mx-auto flex flex-col font-sans text-ink space-y-4">
       {/* Page Header */}
       <div className="border-b hairline border-rule pb-4 mb-2">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <span className="font-mono text-xs md:text-sm uppercase tracking-wider text-ink-muted font-bold">
-              {lang === "hi" ? "आर्टिफिशियल इंटेलिजेंस सहायक" : lang === "mr" ? "कृत्रिम बुद्धिमत्ता सहाय्यक" : "GENAI AIR ASSISTANT"}
-            </span>
-            <h1 className="font-sans text-3xl md:text-4xl font-extrabold mt-1 text-ink tracking-tight">
-              {lang === "hi" ? "सांझी हवा से पूछें (Ask SanjhiHawa)" : lang === "mr" ? "सांझी हवा विचारा" : "Ask SanjhiHawa"}
-            </h1>
-            <p className="text-sm md:text-base text-ink-muted mt-1 max-w-2xl leading-relaxed">
-              {lang === "hi"
-                ? "हवा विज्ञान, N95 मास्क, ट्रू HEPA प्यूरीफायर और दिनचर्या पर सवाल पूछें। संख्याएं केवल गणितीय इंजन से आती हैं।"
-                : "Grounded in our deterministic exposure engine and peer-reviewed air science. The LLM never hallucinates numbers."}
-            </p>
-          </div>
-
-          {/* Child Mode Switch */}
-          <div className="flex items-center space-x-2 bg-surface border hairline border-rule p-2.5 rounded-sm shrink-0 whitespace-nowrap self-start sm:self-auto">
-            <input
-              type="checkbox"
-              id="child-toggle"
-              checked={simplifyForChild}
-              onChange={(e) => setSimplifyForChild(e.target.checked)}
-              className="cursor-pointer accent-ink w-4 h-4"
-            />
-            <label htmlFor="child-toggle" className="text-xs md:text-sm font-mono text-ink cursor-pointer select-none font-medium whitespace-nowrap">
-              {lang === "hi"
-                ? "१० वर्षीय बच्चे के लिए सरल समझाएं"
-                : lang === "mr"
-                ? "१० वर्षांच्या मुलासाठी सोपे करा"
-                : "Explain to 10-year-old"}
-            </label>
-          </div>
+        <div>
+          <span className="font-mono text-xs md:text-sm uppercase tracking-wider text-ink-muted font-bold">
+            {lang === "hi" ? "आर्टिफिशियल इंटेलिजेंस सहायक" : lang === "mr" ? "कृत्रिम बुद्धिमत्ता सहाय्यक" : "GENAI AIR ASSISTANT"}
+          </span>
+          <h1 className="font-sans text-3xl md:text-4xl font-extrabold mt-1 text-ink tracking-tight">
+            {lang === "hi" ? "सांझी हवा से पूछें (Ask SanjhiHawa)" : lang === "mr" ? "सांझी हवा विचारा" : "Ask SanjhiHawa"}
+          </h1>
+          <p className="text-sm md:text-base text-ink-muted mt-1 max-w-2xl leading-relaxed">
+            {lang === "hi"
+              ? "हवा विज्ञान, N95 मास्क, ट्रू HEPA प्यूरीफायर और दिनचर्या पर सवाल पूछें। संख्याएं केवल गणितीय इंजन से आती हैं।"
+              : "Grounded in our deterministic exposure engine and peer-reviewed air science. The LLM never hallucinates numbers."}
+          </p>
         </div>
       </div>
 

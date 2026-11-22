@@ -51,7 +51,6 @@
   "chat": {
     "title": "Ask SanjhiHawa (AI Assistant)",
     "subtitle": "Grounded in our deterministic exposure engine and peer-reviewed air science. Zero hallucinated math.",
-    "child_mode": "Explain to 10-year-old",
     "safety_notice": "SanjhiHawa is an atmospheric exposure assistant for clean air decisions and routine planning.",
     "input_placeholder": "Ask about winter smog, N95 masks, purifier sizing, or routine optimization..."
   },
