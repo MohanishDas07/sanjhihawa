@@ -23,9 +23,9 @@ const config: Config = {
         },
         ink: {
           DEFAULT: "#17181A",
-          muted: "#4A4D52",
+          muted: "#26292E",
           light: "#F3EFE6",
-          lightMuted: "#9EA2A8",
+          lightMuted: "#C2C6CC",
         },
         rule: {
           DEFAULT: "#CFC8B8",
@@ -43,9 +43,9 @@ const config: Config = {
       },
       fontFamily: {
         serif: [
-          "Plus Jakarta Sans",
-          "var(--font-sans)",
           "Inter",
+          "Plus Jakarta Sans",
+          "system-ui",
           "-apple-system",
           "BlinkMacSystemFont",
           "Segoe UI",
@@ -55,9 +55,9 @@ const config: Config = {
           "sans-serif",
         ],
         sans: [
-          "Plus Jakarta Sans",
-          "var(--font-sans)",
           "Inter",
+          "Plus Jakarta Sans",
+          "system-ui",
           "-apple-system",
           "BlinkMacSystemFont",
           "Segoe UI",
@@ -69,29 +69,29 @@ const config: Config = {
         mono: [
           "JetBrains Mono",
           "var(--font-mono)",
+          "Segoe UI Mono",
           "SF Mono",
           "Fira Code",
           "Roboto Mono",
           "Menlo",
-          "Monaco",
           "Consolas",
           "monospace",
         ],
         devanagari: [
           "Tiro Devanagari Hindi",
           "var(--font-devanagari)",
+          "Noto Sans Devanagari",
           "Noto Serif Devanagari",
-          "Devanagari MT",
           "Mangal",
-          "serif",
+          "sans-serif",
         ],
       },
       fontSize: {
-        "3xs": ["0.6875rem", { lineHeight: "0.9375rem", letterSpacing: "0.04em" }], // 11px
-        "2xs": ["0.75rem", { lineHeight: "1.0625rem", letterSpacing: "0.03em" }],   // 12px
-        "xs": ["0.8125rem", { lineHeight: "1.1875rem" }],                           // 13px
-        "sm": ["0.9375rem", { lineHeight: "1.4375rem" }],                           // 15px
-        "base": ["1.0625rem", { lineHeight: "1.6875rem" }],                         // 17px
+        "3xs": ["0.75rem", { lineHeight: "1rem", letterSpacing: "0.03em" }],       // 12px
+        "2xs": ["0.8125rem", { lineHeight: "1.125rem", letterSpacing: "0.02em" }], // 13px
+        "xs": ["0.875rem", { lineHeight: "1.25rem" }],                             // 14px
+        "sm": ["1rem", { lineHeight: "1.5rem" }],                                  // 16px
+        "base": ["1.0625rem", { lineHeight: "1.6875rem" }],                        // 17px
         "lg": ["1.1875rem", { lineHeight: "1.75rem" }],                             // 19px
         "xl": ["1.375rem", { lineHeight: "1.875rem" }],                             // 22px
         "2xl": ["1.625rem", { lineHeight: "2.125rem" }],                           // 26px
