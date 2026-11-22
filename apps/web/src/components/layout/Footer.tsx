@@ -140,7 +140,7 @@ export const Footer: React.FC = () => {
               </p>
               <p>
                 <strong className="text-ink font-semibold">Public Health Notice:</strong>{" "}
-                SanjhiHawa provides environmental risk reduction models and exposure forecasting. It does not provide clinical medical diagnoses. Individuals with pre-existing cardiopulmonary conditions should consult a certified physician.
+                SanjhiHawa provides atmospheric modeling and clean air exposure mitigation tools for daily household planning.
               </p>
               <p className="text-2xs text-ink/60 leading-normal">
                 Particulate-to-cigarette dosage comparison is an epidemiological communication heuristic (Berkeley Earth, 2015) based on equivalent mortality risk from fine particulate mass inhalation.

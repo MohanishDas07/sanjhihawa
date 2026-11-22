@@ -1,6 +1,6 @@
 """
 SAANS Exposure Engine - Locked Physical and Epidemiological Constants.
-All values are approximate, for illustration and decision support; not medical fact.
+All values are approximate, for atmospheric and exposure decision support.
 See docs/ASSUMPTIONS.md for full literature provenance.
 """
 
@@ -83,7 +83,7 @@ WHO_PM25_24H_GUIDELINE: float = 15.0
 INDIA_NAAQS_PM25_24H_LIMIT: float = 60.0
 
 # Berkeley Earth Cigarette-Equivalent Rule of Thumb (ug/m^3 per cigarette/day)
-# Muller & Muller (2015). Communication heuristic, NOT medical fact.
+# Muller & Muller (2015). Environmental communication heuristic.
 BERKELEY_EARTH_PM25_PER_CIGARETTE: float = 22.0
 
 # ---------------------------------------------------------------------------

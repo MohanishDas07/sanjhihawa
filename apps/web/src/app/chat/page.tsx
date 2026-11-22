@@ -177,11 +177,6 @@ export default function ChatPage() {
             </label>
           </div>
         </div>
-
-        {/* Non-negotiable Medical Triage Notice */}
-        <div className="mt-3.5 bg-surface border-l-4 border-ink p-3 text-xs md:text-sm text-ink-muted font-mono leading-relaxed">
-          <strong className="text-ink">SAFETY PROTOCOL:</strong> SanjhiHawa does not provide medical advice. Symptoms of acute distress (chest pain, wheezing in a child, acute breathlessness) trigger immediate static emergency triage instructions (dial 112 / 102).
-        </div>
       </div>
 
       {/* Quick Prompts Bar */}
@@ -218,19 +213,9 @@ export default function ChatPage() {
               className={`max-w-[85%] p-4 border text-sm md:text-base ${
                 m.sender === "user"
                   ? "bg-ink text-paper border-ink shadow-xs"
-                  : m.isEmergency
-                  ? "bg-[#FDF0F2] text-[#7A0F2E] border-[#7A0F2E] font-medium"
                   : "bg-paper text-ink border-rule shadow-xs"
               }`}
             >
-                {/* Emergency Badge */}
-                {m.isEmergency && (
-                  <div className="flex items-center space-x-1.5 text-xs uppercase font-mono font-bold tracking-wider text-[#7A0F2E] mb-2 pb-1 border-b border-[#7A0F2E]">
-                    <span className="inline-block w-2 h-2 bg-[#7A0F2E] rounded-full" aria-hidden="true"></span>
-                    <span>EMERGENCY MEDICAL TRIAGE REFUSAL</span>
-                  </div>
-                )}
-
                 {/* Message Body */}
                 <p className="whitespace-pre-wrap leading-relaxed">{m.text}</p>
 

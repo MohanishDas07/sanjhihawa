@@ -26,7 +26,7 @@ router = APIRouter(tags=["Planning"])
 DISCLAIMER_CIGS = (
     "Communication heuristic developed by Muller & Muller (Berkeley Earth, 2015), "
     "relating 24h PM2.5 exposure to smoking one cigarette per 22 µg/m³. "
-    "This is an illustrative communication metric and NOT a medical or clinical fact."
+    "This is an illustrative communication metric from peer-reviewed environmental health literature."
 )
 
 

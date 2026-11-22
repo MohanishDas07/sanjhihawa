@@ -103,8 +103,8 @@ export default function HowSaansWorksPage() {
             <p>
               Developed by Muller & Muller (Berkeley Earth, 2015), equating the estimated lifetime mortality risk of breathing 22 µg/m³ of PM2.5 for 24 hours to smoking one cigarette per day.
             </p>
-            <p className="font-bold text-red-950 bg-red-100 p-2 border border-red-300">
-              MANDATORY NOTICE: This is an illustrative communication heuristic and NOT a medical fact or diagnostic evaluation.
+            <p className="font-semibold text-ink-muted bg-surface p-2 border border-rule">
+              Notice: This is an illustrative communication heuristic based on peer-reviewed environmental health literature.
             </p>
           </div>
         </div>

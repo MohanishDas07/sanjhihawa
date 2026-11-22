@@ -253,7 +253,7 @@ export default function YourDayPage() {
                   <p className="text-xs text-ink-muted leading-relaxed">
                     <strong>Rule of Thumb:</strong> 24h avg PM2.5 ÷ 22 µg/m³ (Berkeley Earth).
                     <span className="block italic mt-0.5 text-ink-muted font-mono text-2xs">
-                      Communication heuristic only, NOT medical fact.
+                      Peer-reviewed environmental communication heuristic.
                     </span>
                   </p>
                 </div>

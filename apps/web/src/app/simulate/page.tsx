@@ -275,7 +275,7 @@ export default function SimulatePage() {
                     </span>
                   </div>
                   <p className="text-2xs text-ink-muted leading-tight pt-1">
-                    Illustrative rule of thumb (Berkeley Earth: 22 µg/m³ ≈ 1 cig). Not a medical diagnosis.
+                    Illustrative exposure heuristic (Berkeley Earth: 22 µg/m³ ≈ 1 cig).
                   </p>
                 </div>
 

@@ -931,7 +931,7 @@ export default function LandingPage() {
                 Ask SanjhiHawa Assistant
               </h3>
               <p className="text-sm font-sans text-ink/80 leading-relaxed font-normal">
-                Conversational clean air guidance with strict medical redline triage and verified peer-reviewed citations.
+                Conversational clean air intelligence with boundary-layer modeling and verified peer-reviewed citations.
               </p>
             </div>
             <div className="pt-4 mt-3 border-t hairline border-rule">
@@ -1291,7 +1291,7 @@ export default function LandingPage() {
               localStorage.getItem(&quot;saans_household&quot;)
             </p>
             <p className="text-sm text-ink/80 leading-relaxed font-normal">
-              Your family ages, medical conditions, and routines are never written to a database. Calculations occur on ephemeral, stateless requests.
+              Your family profiles, exposure preferences, and daily routines are never written to a database. Calculations occur on ephemeral, stateless requests.
             </p>
           </div>
         </div>
