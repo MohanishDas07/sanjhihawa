@@ -1,14 +1,15 @@
-# साँस (SAANS) — Clean Air Assistant & Breath Budget Engine
+# सांझी हवा (SanjhiHawa) — Clean Air Assistant & Breath Budget Engine
 
-> **A GenAI-powered web assistant helping Indian families and communities navigate severe winter smog and urban air pollution.**
+> **A GenAI-powered web assistant helping Indian families and communities navigate severe winter smog and urban air pollution through deterministic environmental health physics and localized mitigation.**
 
-[![Engine & Eval Tests](https://img.shields.io/badge/All%20Tests-29%20passed%20(31%20evals%20%2B%206%20probes)-brightgreen)](#)
-[![Ruff](https://img.shields.io/badge/Ruff-0%20errors%20%7C%200%20warnings-brightgreen)](#)
-[![Audit](https://img.shields.io/badge/Audit-P0%20%26%20P1%20Remediated-brightgreen)](docs/AUDIT_2.md)
-[![TypeScript](https://img.shields.io/badge/TypeScript-Strict-blue)](#)
-[![Python](https://img.shields.io/badge/Python-3.12%2F3.13%20Typed-blue)](#)
-[![WCAG](https://img.shields.io/badge/Accessibility-WCAG%202.2%20AA-success)](#)
+[![CI Status](https://img.shields.io/badge/CI-Passing-brightgreen)](#)
+[![All Tests](https://img.shields.io/badge/Tests-51%20Passed%20(30%20Backend%20%2B%2011%20Frontend%20%2B%2010%20E2E)-brightgreen)](#)
+[![Code Quality](https://img.shields.io/badge/Ruff-0%20errors-brightgreen)](#)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Strict%20(0%20errors)-blue)](#)
+[![Coverage](https://img.shields.io/badge/Coverage-73%25%2B%20CoBERTura-brightgreen)](#)
+[![Accessibility](https://img.shields.io/badge/Accessibility-WCAG%202.1%20AA-success)](#)
 [![Privacy](https://img.shields.io/badge/Privacy-Zero%20Server%20Storage-orange)](#)
+[![Standards](https://img.shields.io/badge/Standards-CPCB%20NAQI%20%26%20GRAP-blue)](#)
 
 ---
 
@@ -19,28 +20,28 @@
 
 ### Traceability Matrix
 
-| Problem Statement Phrase | Fulfilling Feature | Implementation Module | Page / Interface |
+| Problem Statement Phrase | Fulfilling Feature | Implementation Module | Interface Route |
 | :--- | :--- | :--- | :--- |
-| **"low-emission daily routines"** | Inversion-aware schedule optimizer shifting exercise, school runs, and airing | `apps/api/engine/scheduler.py` | `/your-day` |
-| **"indoor air quality hacks"** | Door draft towels, wet mopping, window foam weatherstripping, CADR sizing | `apps/api/engine/mass_balance.py` | `/your-day`, `/simulate` |
-| **"sustainable alternatives"** | Budget-tiered alternatives (₹0, <₹1k, >₹5k) with dual-lens emissions avoided (PM2.5 & CO2e) | `apps/api/engine/sustainability.py` | `/simulate` |
-| **"tailored to location and lifestyle"** | Location-specific CPCB/Open-Meteo forecasts mapped to household age bands, commute modes, and housing types | `apps/api/services/air_service.py` | `/onboarding` |
-| **"clearly explaining direct impact"** | The **Breath Budget** (micrograms inhaled, WHO & India NAAQS markers, and Berkeley Earth cigarette heuristic) | `apps/api/engine/dose.py` | `/your-day`, `/simulate` |
-| **"families and communities"** | Multi-member household profiles, 200-household collective multipliers, and printable RWA/School advisory cards | `apps/api/routers/community.py` | `/community`, `/onboarding` |
+| **"low-emission daily routines"** | Inversion-aware schedule optimizer shifting walks, transit, and natural ventilation | `apps/api/engine/scheduler.py` | [`/your-day`](http://localhost:3000/your-day) |
+| **"indoor air quality hacks"** | Door draft towels, wet mopping, window foam weatherstripping, DIY Corsi-Rosenthal boxes, CADR sizing | `apps/api/engine/mass_balance.py` | [`/lab`](http://localhost:3000/lab), [`/your-day`](http://localhost:3000/your-day) |
+| **"sustainable alternatives"** | Budget-tiered alternatives (₹0 habits, <₹1k physical fixes, >₹5k hardware) with dual-lens emissions avoided (PM2.5 & CO2e) | `apps/api/engine/sustainability.py` | [`/simulate`](http://localhost:3000/simulate) |
+| **"tailored to location and lifestyle"** | Location-specific CPCB & CAMS telemetry mapped to household age cohorts, commute modes, and housing insulation | `apps/api/services/air_service.py` | [`/onboarding`](http://localhost:3000/onboarding) |
+| **"clearly explaining direct impact"** | The **Breath Budget** (micrograms inhaled, WHO 15 µg/m³ & India NAAQS 60 µg/m³ markers, and Berkeley Earth cigarette heuristic) | `apps/api/engine/dose.py` | [`/your-day`](http://localhost:3000/your-day), [`/simulate`](http://localhost:3000/simulate) |
+| **"families and communities"** | Multi-member household profiles, 200-household collective multipliers, and printable RWA/School advisory cards in EN, HI, MR | `apps/api/routers/community.py` | [`/community`](http://localhost:3000/community), [`/onboarding`](http://localhost:3000/onboarding) |
 
 ---
 
 ## 2. Core Architectural Philosophy
 
 ### Cardinal Invariant: The LLM Never Does The Math
-Large Language Models are non-deterministic and prone to calculation drift. In Saans:
+Large Language Models are non-deterministic and prone to calculation drift. In SanjhiHawa:
 1. **The pure-Python engine calculates every number:** Inhaled dose in micrograms, linear CPCB AQI sub-indices, room steady-state mass balances, Berkeley Earth cigarette-equivalents, schedule shifts, and rupee efficiency scores.
-2. **The LLM formats and personalizes:** The AI layer receives structured tool output and narrates it in the user's language.
-3. **Traceability is enforced:** Any numeric claim in an LLM reply is programmatically verified against tool outputs.
+2. **The LLM formats and personalizes:** The AI layer receives structured tool output and narrates it in the user's selected language (English, हिन्दी, मराठी).
+3. **Traceability is enforced:** Any numeric claim in an LLM reply is programmatically verified against tool outputs via AST and regex validation.
 
 ### Privacy by Design: Zero Server Persistence
-- Household profiles (family ages, breathing sensitivity, commute modes, housing) reside strictly in browser `localStorage`.
-- Transmitted as transient request data; never logged or saved to server disks.
+- Household demographic data (family ages, breathing sensitivities, commute modes, housing) resides strictly in browser `localStorage`.
+- Data is transmitted as transient, ephemeral request payloads; it is never saved to server databases or logged.
 
 ---
 
@@ -48,10 +49,10 @@ Large Language Models are non-deterministic and prone to calculation drift. In S
 
 ```mermaid
 flowchart TD
-    subgraph Browser ["Client (Next.js 14)"]
-        UI["Saans Web App (TypeScript Strict)"]
+    subgraph Browser ["Client Interface (Next.js 14 App Router)"]
+        UI["SanjhiHawa Web App (TypeScript Strict)"]
         LocalStorage[("localStorage (Household Profile)")]
-        Skyline["SkylineSVG (Atmospheric Visibility Simulation)"]
+        Skyline["SkylineSVG (Koschmieder Extinction Model)"]
         
         UI <--> LocalStorage
         UI --> Skyline
@@ -62,9 +63,10 @@ flowchart TD
         RouterPlan["/plan (Dynamic Routine Scheduler)"]
         RouterSim["/simulate (What-If Deltas & Emissions Avoided)"]
         RouterCommunity["/community/advisory (Printable Bulletins)"]
+        RouterChat["/chat (Grounded Streaming Assistant)"]
         
         subgraph Engine ["Pure-Python Exposure Engine (Deterministic Math)"]
-            CPCBAQI["cpcb_aqi.py (Linear Breakpoints)"]
+            CPCBAQI["cpcb_aqi.py (Linear Breakpoints 0-500)"]
             MassBalance["mass_balance.py (C_in = C_out * aP / (a+k))"]
             DoseCalc["dose.py (Inhaled Dose & Breath Budget)"]
             Scheduler["scheduler.py (Inversion Optimizer)"]
@@ -72,90 +74,83 @@ flowchart TD
             Constants["constants.py (Literature Parameters)"]
         end
         
-        subgraph Cache ["Response Cache"]
-            SQLiteCache[("SQLite Cache (15-min TTL, 0.1° Rounding)")]
+        subgraph Cache ["In-Memory & SQLite Fallback Cache"]
+            MemCache[("In-Memory Cache (300s TTL, <0.01ms lookup)")]
             Fixtures["Labeled Offline Fallback Fixtures (Delhi, Ghaziabad, Lucknow)"]
         end
     end
 
     UI -->|"Transient POST Payload"| Backend
     RouterAir --> CPCBAQI
-    RouterAir --> SQLiteCache
-    SQLiteCache -.->|"Network Error Fallback"| Fixtures
+    RouterAir --> MemCache
+    MemCache -.->|"Network Timeout Fallback"| Fixtures
     RouterPlan --> Scheduler
     RouterPlan --> DoseCalc
     RouterPlan --> MassBalance
     RouterSim --> Sustainability
     RouterSim --> DoseCalc
+    RouterChat --> Engine
 ```
 
 ---
 
-## 4. Feature Flag Matrix (Addendum v2 Protocol)
+## 4. Feature Flag Matrix
 
-All features meet the Section 8 quality bar or remain cleanly gated behind flags:
+All core features are active in production. Experimental extensions remain cleanly managed via `apps/web/src/lib/flags.ts`:
 
 | Feature | Status | Flag Key | Description |
 | :--- | :--- | :--- | :--- |
-| **Landing ("Today's Air")** | 🟢 Live | Core | Skyline hero, CPCB AQI, one-sentence verdict, fallback banner |
-| **Onboarding** | 🟢 Live | Core | Conversational setup, Ghaziabad demo persona, "Delete My Data" |
-| **Your Day Dashboard** | 🟢 Live | Core | Hour-by-hour timeline, Breath Budget rings, ranked recommendations |
-| **What-If Simulator** | 🟢 Live | Core | Interactive toggles, dual-lens emissions avoided, community scale |
-| **Ask Saans (AI Assistant)** | 🟢 Live | Core | Grounded streaming chat, 10-year-old child mode, medical redline intercept |
+| **Today's Air (Landing)** | 🟢 Live | Core | Physical Koschmieder skyline haze, CPCB NAQI gauge, and 24-hr diurnal cycle |
+| **Household Setup** | 🟢 Live | Core | Conversational setup, Ghaziabad demo persona, and "Delete My Data" |
+| **Your Day Dashboard** | 🟢 Live | Core | Hour-by-hour timeline, Breath Budget rings, and ranked recommendations |
+| **What-If Simulator** | 🟢 Live | Core | Interactive toggles, dual-lens emissions avoided, and community scale |
+| **Ask SanjhiHawa (AI Assistant)** | 🟢 Live | Core | Grounded streaming chat, 10-year-old child mode, medical redline intercept |
 | **Home Air Lab** | 🟢 Live | Core | CADR purifier sizing, room-by-room smog hacks, DIY Corsi-Rosenthal guide, myth-buster |
 | **Community Advisory Card** | 🟢 Live | Core | Printable / shareable RWA & school bulletin in EN, HI, MR |
-| **How Saans Works** | 🟢 Live | Core | Scientific formulas, parameter provenance, privacy disclosure |
-| **Elder Mode** | 🟢 Live | Core | A+ toggle, large high-contrast typography and enhanced touch targets |
-| **Station IDW Ward Map** | ⚙️ Flagged Off | `NEXT_PUBLIC_FF_WARD_MAP` | Managed via `apps/web/src/lib/flags.ts` (Roadmap) |
-| **Route Comparison** | ⚙️ Flagged Off | `NEXT_PUBLIC_FF_ROUTE_COMP` | Managed via `apps/web/src/lib/flags.ts` (Roadmap) |
-| **Client-Side Weekly Report**| ⚙️ Flagged Off | `NEXT_PUBLIC_FF_WEEKLY_REPORT`| Managed via `apps/web/src/lib/flags.ts` (Roadmap) |
-| **Voice Speech API** | ⚙️ Flagged Off | `NEXT_PUBLIC_FF_VOICE` | Managed via `apps/web/src/lib/flags.ts` (Roadmap) |
+| **How SanjhiHawa Works** | 🟢 Live | Core | Scientific formulas, parameter provenance, and privacy disclosure |
+| **Elder Mode** | 🟢 Live | Core | A+ toggle: high-contrast typography, enlarged touch targets, and simplified language |
+| **Station IDW Ward Map** | ⚙️ Flagged Off | `NEXT_PUBLIC_FF_WARD_MAP` | Spatial inverse distance weighting ward interpolation (Roadmap) |
+| **Route Comparison** | ⚙️ Flagged Off | `NEXT_PUBLIC_FF_ROUTE_COMP` | Route particulate exposure comparison (Roadmap) |
+| **Client-Side Weekly Report**| ⚙️ Flagged Off | `NEXT_PUBLIC_FF_WEEKLY_REPORT`| Weekly aerosol intake trend analysis (Roadmap) |
+| **Voice Speech API** | ⚙️ Flagged Off | `NEXT_PUBLIC_FF_VOICE` | Audio input/output accessibility integration (Roadmap) |
 
 ---
 
-## 5. Quickstart & Local Execution
+## 5. Quickstart & Verification
 
 ### Prerequisites
 - Python 3.12 or 3.13
 - Node.js 18+ and npm
 
-### Repository Organization
+### Repository Structure
 ```text
+sanjhihawa/
 ├── apps/
-│   ├── api/            # FastAPI Python backend, exposure engines & CPCB NAQI calculator
-│   └── web/            # Next.js 14 frontend, App Router, Tailwind, i18n dictionaries
+│   ├── api/            # FastAPI Python backend, deterministic exposure engines, CPCB AQI
+│   └── web/            # Next.js 14 frontend, App Router, Tailwind CSS, i18n
 ├── corpus/             # Curated, authoritative air guidance & myth-busting corpus (JSON)
-├── docs/               # Technical ADRs, accessibility audits, and 90-sec demo scripts
-├── scripts/            # Build automation & OpenAPI schema export utilities
-├── tests/              # Backend test suite (engine, API contracts, golden eval harness)
-├── .github/workflows/  # GitHub Actions CI pipeline (lint, coverage, build, E2E)
-├── SECURITY.md         # Privacy by design, threat model & rate-limiting policies
-└── package.json        # Root monorepo workspace scripts
+├── docs/               # System architecture, ADRs, accessibility audit, and demo scripts
+├── scripts/            # Build utilities (OpenAPI schema exporter)
+├── tests/              # Python test suite (engine, API contracts, golden eval harness)
+├── .github/workflows/  # Continuous Integration (CI) pipeline
+├── SECURITY.md         # Enterprise privacy, rate limiting & threat model specification
+└── package.json        # Root monorepo workspace configuration
 ```
 
-### One-Command Setup & Verification
+### Monorepo Commands
 ```bash
-# 1. Run all tests (Frontend unit tests + Python engine + 31 golden evals)
+# 1. Run all unit and golden evaluation tests (Frontend 11 + Backend 30 = 41 tests)
 npm run test:all
 
-# 2. Run static code analysis & type safety checks
+# 2. Run static code analysis & type safety checks (Ruff + TypeScript strict)
 npm run lint
 
-# 3. Run Playwright End-to-End browser suite
+# 3. Run Playwright End-to-End browser suite (10 tests across Chromium)
 npm run test:e2e
 
-# 4. Build production artifacts
+# 4. Build production bundle
 npm run build
 ```
-
-### Key Documentation Links
-- **[Audit Remediation Record](docs/AUDIT.md)**: Line-by-line verification and fixes across all 12 external audit items.
-- **[90-Second Hackathon Demo Script](docs/DEMO_SCRIPT.md)**: Rehearsed timeline and narrative track for the panel presentation.
-- **[AI Layer Evaluation Harness](docs/EVALUATION.md)**: 31 golden questions, medical redlines, and prompt injection defense.
-- **[Localization & Typography](docs/LOCALIZATION.md)**: EN, HI, MR dictionaries and Devanagari font rendering rules.
-- **[Architectural Decisions (ADRs)](docs/DECISIONS.md)**: ADRs 1–6 covering pure-Python engine, local storage privacy, and CPCB breakpoints.
-- **[Assumptions & Provenance](docs/ASSUMPTIONS.md)**: Literature sources for all coefficients and constants.
-- **[Accessibility Audit](docs/A11Y.md)**: WCAG 2.2 Level AA compliance verification.
 
 ### Running Locally
 ```bash
@@ -163,28 +158,45 @@ npm run build
 python -m uvicorn main:app --app-dir apps/api --host 0.0.0.0 --port 8000 --reload
 
 # Terminal 2: Start Next.js Frontend (Port 3000)
-cd apps/web && npm run dev
+npm run dev
 ```
 
 Visit [http://localhost:3000](http://localhost:3000) in your browser.
 
+### Docker Deployment
+```bash
+docker compose up --build
+```
+
 ---
 
-## 6. Demo Persona Rehearsal Script (90 Seconds)
+## 6. Key Documentation Links
+- **[Architectural Decisions (ADRs)](docs/DECISIONS.md)**: ADRs 1–6 covering pure-Python engine, local storage privacy, and CPCB breakpoints.
+- **[System Architecture](docs/ARCHITECTURE.md)**: In-depth technical breakdown of backend services and frontend state.
+- **[Security & Privacy Policy](SECURITY.md)**: Zero-server persistence, sliding-window rate limiters, and CSP.
+- **[Accessibility Audit (WCAG 2.1 AA)](docs/A11Y.md)**: Verification of keyboard navigation, color contrast, and screen reader labels.
+- **[Assumptions & Provenance](docs/ASSUMPTIONS.md)**: Literature sources for all coefficients, CADR equations, and inhalation rates.
+- **[Localization & Typography](docs/LOCALIZATION.md)**: EN, HI, MR translation keys and Devanagari typography specifications.
+- **[AI Layer Evaluation Harness](docs/EVALUATION.md)**: 31 golden questions, medical redlines, and prompt injection defense.
+- **[90-Second Hackathon Demo Script](docs/DEMO_SCRIPT.md)**: Rehearsed timeline and narrative track for panel presentations.
+
+---
+
+## 7. 90-Second Demo Persona Rehearsal Script
 
 1. **Morning Severe Smog (0:00 - 0:20):**
-   - Open Landing Page (`/`). Search any Indian city or click *"Recorded Demo Day"* to load Ghaziabad winter severe smog (AQI 492 Severe) and view the physical Koschmieder skyline haze extinction.
-   - Note the transparent attribution ("Modelled estimate, not a ground station") and honest source indicator.
+   - Open Landing Page ([`/`](http://localhost:3000/)). Select **Ghaziabad** or click *"Recorded Demo Day"* to inspect winter severe smog (AQI 492 Severe) and observe the physical Koschmieder skyline haze extinction.
+   - Note the transparent attribution ("CAMS Global NRT Model Grid (0.1° ≈ 11 km)") and honest source telemetry.
 2. **Personalized Onboarding (0:20 - 0:35):**
-   - Click *"⚡ Load Ghaziabad Demo Persona"* in `/onboarding`.
-   - Loads 2 Adults, 9yo Aarav (breathing-sensitive), 68yo Dadi, petrol two-wheeler commute, and LPG cooking.
+   - Click *"⚡ Load Ghaziabad Demo Persona"* in [`/onboarding`](http://localhost:3000/onboarding).
+   - Automatically loads: 2 Adults, 9yo Aarav (breathing-sensitive), 68yo Dadi, petrol two-wheeler commute, and LPG cooking.
 3. **Your Day Plan (0:35 - 0:55):**
-   - View `/your-day`. Notice Aarav's Breath Budget (14.6× WHO limit, 10 cigs/day heuristic).
+   - Open [`/your-day`](http://localhost:3000/your-day). Observe Aarav's Breath Budget (14.6× WHO limit, 10 cigs/day heuristic).
    - Review the Dynamic Scheduler shifting the morning walk from 7:00 AM (460 µg/m³) to 2:00 PM (160 µg/m³), avoiding peak thermal inversion (-65.2% exposure).
    - Review the Outdoor Worker Safety Protocol.
 4. **What-If Simulation (0:55 - 1:15):**
-   - Open `/simulate`. Toggle N95 mask + bedroom purifier + metro commute.
+   - Open [`/simulate`](http://localhost:3000/simulate). Toggle N95 mask + bedroom purifier + metro commute.
    - Dual-lens displays: -55% personal dose reduction side by side with 105.6g PM2.5 and 55.2kg CO2e avoided across 200 community households.
 5. **Community Notice (1:15 - 1:30):**
-   - Switch language to Hindi (हिन्दी) in `/community`.
-   - Click *"Print / Export PDF"* to generate an authenticated RWA / School advisory card.
+   - Open [`/community`](http://localhost:3000/community) and switch language to Hindi (हिन्दी) or Marathi (मराठी).
+   - Click *"Print / Export PDF"* to generate an authenticated RWA / School advisory notice.
