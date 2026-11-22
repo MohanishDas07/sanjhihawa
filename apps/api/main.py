@@ -6,6 +6,7 @@ Provides deterministic air quality, exposure calculation, and simulation endpoin
 import logging
 import os
 import sys
+from contextlib import asynccontextmanager
 
 from dotenv import load_dotenv
 from fastapi import FastAPI
@@ -24,12 +25,25 @@ logging.basicConfig(
 )
 logger = logging.getLogger("saans.api")
 
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Warm up retrieval index in memory to avoid per-request cold-start disk I/O
+    try:
+        get_retrieval_index()
+        logger.info("Authoritative guidance corpus pre-warmed in memory.")
+    except (OSError, ValueError) as e:
+        logger.warning(f"Could not pre-warm retrieval index: {e}")
+    yield
+
+
 app = FastAPI(
     title="SanjhiHawa API - Clean Air Intelligence & Breath Budget Engine",
     description="Deterministic exposure engine, CPCB AQI calculator, and AI tool interface.",
     version="1.0.0",
     docs_url="/docs",
     openapi_url="/api/v1/openapi.json",
+    lifespan=lifespan,
 )
 
 
@@ -120,16 +134,6 @@ app.include_router(plan.router, prefix="/api/v1")
 app.include_router(simulate.router, prefix="/api/v1")
 app.include_router(community.router, prefix="/api/v1")
 app.include_router(chat.router, prefix="/api/v1")
-
-
-@app.on_event("startup")
-async def startup_event():
-    # Warm up retrieval index in memory to avoid per-request cold-start disk I/O
-    try:
-        get_retrieval_index()
-        logger.info("Authoritative guidance corpus pre-warmed in memory.")
-    except (OSError, ValueError) as e:
-        logger.warning(f"Could not pre-warm retrieval index: {e}")
 
 
 @app.get("/")
