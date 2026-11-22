@@ -6,6 +6,7 @@ interface SkylineSVGProps {
   pm25?: number | null;
   sourceLabel?: string;
   cityName?: string;
+  lang?: "en" | "hi" | "mr";
 }
 
 const CITY_SMOG_ASSETS: Record<string, { image: string; landmark: string; basin: string }> = {
@@ -73,7 +74,7 @@ function resolveCityAsset(cityName?: string) {
  * - Dynamic physical atmospheric smog density overlay adjusts opacity and diffusion with actual PM2.5 readings.
  * - Accessible visual range and PM2.5 measurement badge in bottom-right corner.
  */
-export const SkylineSVG: React.FC<SkylineSVGProps> = ({ pm25, sourceLabel, cityName }) => {
+export const SkylineSVG: React.FC<SkylineSVGProps> = ({ pm25, sourceLabel, cityName, lang = "en" }) => {
   const hasReading = typeof pm25 === "number" && !isNaN(pm25) && pm25 >= 0;
   const cityAsset = resolveCityAsset(cityName);
 
@@ -158,13 +159,21 @@ export const SkylineSVG: React.FC<SkylineSVGProps> = ({ pm25, sourceLabel, cityN
         {hasReading ? (
           <div className="flex items-center space-x-2">
             <span className="w-2 h-2 rounded-full bg-amber-600 animate-pulse" />
-            <span className="font-semibold">Visibility {formattedVisibility}</span>
+            <span className="font-semibold">
+              {lang === "hi" ? "दृश्यता" : lang === "mr" ? "दृश्यमानता" : "Visibility"} {formattedVisibility}
+            </span>
             <span className="text-ink-muted">({pm25} µg/m³ PM2.5)</span>
-            <span className="text-ink-muted hidden sm:inline">• Modelled Estimate</span>
+            <span className="text-ink-muted hidden sm:inline">
+              • {lang === "hi" ? "मॉडल अनुमानित" : lang === "mr" ? "मॉडेल अंदाज" : "Modelled Estimate"}
+            </span>
           </div>
         ) : (
           <span className="text-ink-muted font-sans italic text-xs">
-            No air reading loaded • Search any Indian city or select a regional corridor
+            {lang === "hi"
+              ? "कोई रीडिंग उपलब्ध नहीं • भारतीय शहर खोजें या राष्ट्रीय गलियारा चुनें"
+              : lang === "mr"
+              ? "कोणतेही रीडिंग उपलब्ध नाही • शहर शोधा किंवा प्रादेशिक कॉरिडोअर निवडा"
+              : "No air reading loaded • Search any Indian city or select a regional corridor"}
           </span>
         )}
       </div>

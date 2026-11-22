@@ -211,6 +211,7 @@ export default function LandingPage() {
           pm25={airData?.status === "no_data" ? null : airData?.current_pm2_5}
           sourceLabel={airData?.data_source}
           cityName={city}
+          lang={lang}
         />
 
         {/* Hero Air Data Panel */}

@@ -51,17 +51,32 @@ export const Header: React.FC = () => {
         <div className="flex items-center space-x-3">
           <span className="font-bold text-ink uppercase tracking-wider">SANJHIHAWA</span>
           <span>|</span>
-          <span className="hidden sm:inline">Winter Smog & Clean Air Decision System</span>
-          <span className="sm:hidden">Clean Air System</span>
+          <span className="hidden sm:inline">
+            {lang === "hi"
+              ? "शीतकालीन स्मॉग और स्वच्छ वायु निर्णय प्रणाली"
+              : lang === "mr"
+              ? "हिवाळी धूर आणि स्वच्छ हवा निर्णय प्रणाली"
+              : "Winter Smog & Clean Air Decision System"}
+          </span>
+          <span className="sm:hidden">
+            {lang === "hi" ? "स्वच्छ वायु प्रणाली" : lang === "mr" ? "स्वच्छ हवा प्रणाली" : "Clean Air System"}
+          </span>
           <span className="hidden lg:flex items-center space-x-1.5 pl-3 border-l hairline border-rule text-2xs md:text-xs font-mono text-emerald-800 font-bold">
             <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
-            <span>DETERMINISTIC ENGINE ACTIVE</span>
+            <span>
+              {lang === "hi"
+                ? "प्रमाणित गणितीय इंजन सक्रिय"
+                : lang === "mr"
+                ? "प्रमाणित गणितीय इंजिन सक्रिय"
+                : "DETERMINISTIC ENGINE ACTIVE"}
+            </span>
           </span>
         </div>
 
         <div className="flex items-center space-x-3">
           {/* Elder Mode Toggle */}
           <button
+            type="button"
             onClick={toggleElderMode}
             aria-pressed={elderMode}
             className={`px-3 py-1 border text-xs md:text-sm font-sans transition-colors ${
@@ -71,7 +86,11 @@ export const Header: React.FC = () => {
             }`}
             title="Toggle Elder Mode (Larger fonts & high contrast)"
           >
-            A+ Elder Mode
+            {lang === "hi"
+              ? (elderMode ? "✓ वरिष्ठ मोड सक्रिय" : "A+ वरिष्ठ मोड")
+              : lang === "mr"
+              ? (elderMode ? "✓ ज्येष्ठ मोड सक्रिय" : "A+ ज्येष्ठ मोड")
+              : (elderMode ? "✓ Elder Mode Active" : "A+ Elder Mode")}
           </button>
 
           {/* Language Switcher */}
