@@ -62,6 +62,8 @@ export default function CommunityPage() {
         </div>
 
         <button
+          type="button"
+          aria-label="Print or export advisory"
           onClick={() => window.print()}
           className="px-5 py-2.5 bg-ink text-paper font-mono text-xs uppercase font-bold hover:opacity-90 flex items-center space-x-2"
         >

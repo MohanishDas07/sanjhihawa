@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   HouseholdProfile,
@@ -13,7 +13,7 @@ import {
   deleteStoredProfile,
   DEMO_GHAZIABAD_PROFILE,
 } from "@/lib/storage";
-import { searchCities } from "@/lib/api";
+import { CitySearchCombobox } from "@/components/location/CitySearchCombobox";
 import { POPULAR_INDIAN_CITIES, CityOption } from "@/lib/cities";
 import { useTranslation, translateCity } from "@/lib/i18n";
 
@@ -24,51 +24,9 @@ export default function OnboardingPage() {
   const [step, setStep] = useState<number>(1);
   const [savedSuccess, setSavedSuccess] = useState<boolean>(false);
 
-  // Search state for ANY Indian city
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [searchResults, setSearchResults] = useState<GeocodeItem[]>([]);
-  const [isSearching, setIsSearching] = useState<boolean>(false);
-  const [showDropdown, setShowDropdown] = useState<boolean>(false);
-  const searchContainerRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     setProfile(getStoredProfile());
   }, []);
-
-  // Close search dropdown on click outside
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (searchContainerRef.current && !searchContainerRef.current.contains(e.target as Node)) {
-        setShowDropdown(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  // Debounced search for any Indian city
-  useEffect(() => {
-    if (!searchQuery.trim() || searchQuery.trim().length < 2) {
-      setSearchResults([]);
-      setIsSearching(false);
-      return;
-    }
-
-    const timer = setTimeout(async () => {
-      setIsSearching(true);
-      try {
-        const res = await searchCities(searchQuery);
-        setSearchResults(res.results || []);
-        setShowDropdown(true);
-      } catch {
-        setSearchResults([]);
-      } finally {
-        setIsSearching(false);
-      }
-    }, 300);
-
-    return () => clearTimeout(timer);
-  }, [searchQuery]);
 
   const handleSelectCity = (item: GeocodeItem) => {
     setProfile({
@@ -77,8 +35,6 @@ export default function OnboardingPage() {
       latitude: item.latitude,
       longitude: item.longitude,
     });
-    setSearchQuery("");
-    setShowDropdown(false);
   };
 
   const handleQuickSelectCity = (c: CityOption) => {
@@ -207,57 +163,11 @@ export default function OnboardingPage() {
             </div>
 
             {/* Live Search for ANY Indian city */}
-            <div ref={searchContainerRef} className="relative">
-              <div className="relative">
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onFocus={() => {
-                    if (searchResults.length > 0) setShowDropdown(true);
-                  }}
-                  placeholder="🔍 Search any Indian city, district or town (e.g. Pune, Mumbai, Bengaluru, Jaipur, Patna)..."
-                  className="w-full font-sans text-sm p-2.5 pl-3 pr-20 border border-rule bg-paper text-ink focus:outline-none focus:border-ink placeholder:text-ink-muted/60"
-                  aria-label="Search any Indian city"
-                />
-                {isSearching && (
-                  <span className="absolute right-3 top-2.5 text-xs text-ink-muted animate-pulse font-mono">
-                    Searching...
-                  </span>
-                )}
-              </div>
-
-              {/* Autocomplete Dropdown */}
-              {showDropdown && searchResults.length > 0 && (
-                <div className="absolute z-20 top-full left-0 right-0 mt-1 bg-paper border border-ink shadow-lg max-h-60 overflow-y-auto">
-                  {searchResults.map((item, idx) => (
-                    <button
-                      key={`${item.name}-${item.latitude}-${idx}`}
-                      type="button"
-                      onClick={() => handleSelectCity(item)}
-                      className="w-full text-left px-3 py-2 text-sm hover:bg-surface border-b border-rule last:border-b-0 flex items-center justify-between"
-                    >
-                      <div>
-                        <span className="font-semibold text-ink">{item.name}</span>
-                        {item.admin1 && (
-                          <span className="text-xs text-ink-muted ml-2">
-                            {item.admin1}
-                          </span>
-                        )}
-                      </div>
-                      <span className="text-2xs font-mono text-ink-muted">
-                        {item.latitude.toFixed(2)}°N, {item.longitude.toFixed(2)}°E
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              )}
-
-              {showDropdown && !isSearching && searchQuery.trim().length >= 2 && searchResults.length === 0 && (
-                <div className="absolute z-20 top-full left-0 right-0 mt-1 bg-paper border border-rule p-3 text-xs text-ink-muted">
-                  No Indian place found matching "{searchQuery}". Try searching a major district or city name.
-                </div>
-              )}
+            <div className="w-full">
+              <CitySearchCombobox
+                currentCity={profile.city_name}
+                onSelectCity={handleSelectCity}
+              />
             </div>
 
             {/* Popular Urban Hubs Grid */}
@@ -310,6 +220,7 @@ export default function OnboardingPage() {
 
           <div className="flex justify-end pt-4">
             <button
+              type="button"
               onClick={() => setStep(2)}
               className="px-6 py-2.5 bg-ink text-paper text-sm font-semibold hover:opacity-90 transition-opacity"
             >
@@ -330,6 +241,7 @@ export default function OnboardingPage() {
               </p>
             </div>
             <button
+              type="button"
               onClick={addMember}
               className="font-mono text-xs px-3 py-1.5 border border-rule bg-paper hover:bg-surface text-ink"
             >
@@ -399,6 +311,8 @@ export default function OnboardingPage() {
 
                   {profile.members.length > 1 && (
                     <button
+                      type="button"
+                      aria-label={`Remove member ${member.label || idx + 1}`}
                       onClick={() => removeMember(idx)}
                       className="text-red-700 hover:text-red-900 font-mono text-xs px-2 py-1"
                       title="Remove"
@@ -413,12 +327,14 @@ export default function OnboardingPage() {
 
           <div className="flex justify-between pt-4 border-t hairline border-rule">
             <button
+              type="button"
               onClick={() => setStep(1)}
               className="px-4 py-2 border border-rule bg-surface text-ink text-sm font-medium"
             >
               ← Back
             </button>
             <button
+              type="button"
               onClick={() => setStep(3)}
               className="px-6 py-2.5 bg-ink text-paper text-sm font-semibold hover:opacity-90"
             >
@@ -487,12 +403,14 @@ export default function OnboardingPage() {
 
           <div className="flex justify-between pt-4 border-t hairline border-rule">
             <button
+              type="button"
               onClick={() => setStep(2)}
               className="px-4 py-2 border border-rule bg-surface text-ink text-sm font-medium"
             >
               ← Back
             </button>
             <button
+              type="button"
               onClick={() => setStep(4)}
               className="px-6 py-2.5 bg-ink text-paper text-sm font-semibold hover:opacity-90"
             >
@@ -584,12 +502,14 @@ export default function OnboardingPage() {
 
           <div className="flex justify-between pt-4 border-t hairline border-rule">
             <button
+              type="button"
               onClick={() => setStep(3)}
               className="px-4 py-2 border border-rule bg-surface text-ink text-sm font-medium"
             >
               ← Back
             </button>
             <button
+              type="button"
               onClick={handleSaveAndProceed}
               className="px-8 py-3 bg-ink text-paper text-sm font-bold tracking-wide hover:opacity-90 shadow-sm"
             >
@@ -605,6 +525,7 @@ export default function OnboardingPage() {
           <span className="font-bold text-ink uppercase">Privacy Guarantee:</span> This profile is stored strictly in your browser's localStorage. Zero accounts, zero server tracking.
         </div>
         <button
+          type="button"
           onClick={handleResetData}
           className="text-red-700 hover:text-red-900 underline whitespace-nowrap"
         >

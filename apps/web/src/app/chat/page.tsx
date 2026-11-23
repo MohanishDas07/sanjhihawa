@@ -164,6 +164,7 @@ export default function ChatPage() {
         <div className="flex flex-wrap gap-2">
           {quickPrompts.map((p, idx) => (
             <button
+              type="button"
               key={idx}
               onClick={() => handleSend(p.query)}
               disabled={loading}
@@ -254,6 +255,8 @@ export default function ChatPage() {
           />
 
           <button
+            type="button"
+            aria-label="Send message"
             onClick={() => handleSend()}
             disabled={loading || !input.trim()}
             className="px-5 py-2 bg-ink text-paper text-sm font-semibold hover:bg-ink-muted transition-colors disabled:opacity-50 font-mono uppercase"
