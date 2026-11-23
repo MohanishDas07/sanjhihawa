@@ -8,7 +8,8 @@
     "start": "next start -p 3000",
     "test": "node --test test/*.test.mjs",
     "test:a11y": "node --test test/accessibility.test.mjs",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "lint": "next lint"
   },
   "dependencies": {
     "next": "14.2.35",
@@ -21,6 +22,8 @@
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
     "autoprefixer": "10.4.19",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "14.2.35",
     "postcss": "8.5.33",
     "tailwindcss": "3.4.4",
     "typescript": "5.4.5"

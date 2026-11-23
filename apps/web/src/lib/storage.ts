@@ -27,6 +27,25 @@ export const DEMO_GHAZIABAD_PROFILE: HouseholdProfile = {
   budget_band: "under_1k",
 };
 
+function encodePayload(str: string): string {
+  try {
+    return "enc_" + btoa(encodeURIComponent(str));
+  } catch {
+    return str;
+  }
+}
+
+function decodePayload(raw: string): string {
+  if (raw.startsWith("enc_")) {
+    try {
+      return decodeURIComponent(atob(raw.slice(4)));
+    } catch {
+      return raw.slice(4);
+    }
+  }
+  return raw;
+}
+
 export function getStoredProfile(): HouseholdProfile {
   if (typeof window === "undefined") {
     return DEMO_GHAZIABAD_PROFILE;
@@ -34,7 +53,12 @@ export function getStoredProfile(): HouseholdProfile {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return DEMO_GHAZIABAD_PROFILE;
-    return JSON.parse(raw) as HouseholdProfile;
+    const decoded = decodePayload(raw);
+    const parsed = JSON.parse(decoded) as HouseholdProfile;
+    if (!parsed || typeof parsed !== "object" || typeof parsed.city_name !== "string") {
+      return DEMO_GHAZIABAD_PROFILE;
+    }
+    return parsed;
   } catch {
     return DEMO_GHAZIABAD_PROFILE;
   }
@@ -43,7 +67,8 @@ export function getStoredProfile(): HouseholdProfile {
 export function saveStoredProfile(profile: HouseholdProfile): void {
   if (typeof window === "undefined") return;
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
+    const serialized = JSON.stringify(profile);
+    localStorage.setItem(STORAGE_KEY, encodePayload(serialized));
   } catch (err) {
     console.error("Failed to save profile locally", err);
   }

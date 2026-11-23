@@ -135,3 +135,37 @@ test("A11y Focus Rings: Skip-to-content link has visible focus outline styles", 
     "CSS must define visible styles when skip-to-content receives keyboard focus"
   );
 });
+
+test("A11y ARIA Combobox: City search input conforms to WAI-ARIA 1.2 Combobox pattern", () => {
+  const comboboxPath = path.join(srcDir, "components/location/CitySearchCombobox.tsx");
+  const content = fs.readFileSync(comboboxPath, "utf-8");
+
+  assert.ok(content.includes('role="combobox"'), "City search input must declare role='combobox'");
+  assert.ok(content.includes("aria-expanded="), "City search input must bind aria-expanded");
+  assert.ok(content.includes('aria-haspopup="listbox"'), "City search input must declare aria-haspopup='listbox'");
+  assert.ok(content.includes('role="listbox"'), "Dropdown menu must declare role='listbox'");
+  assert.ok(content.includes('role="option"'), "Dropdown items must declare role='option'");
+  assert.ok(content.includes("aria-selected="), "Dropdown options must declare aria-selected");
+});
+
+test("A11y Tablist & State: Member budgets and cost filters declare accessible roles and states", () => {
+  const yourDayPath = path.join(srcDir, "app/your-day/page.tsx");
+  const content = fs.readFileSync(yourDayPath, "utf-8");
+
+  assert.ok(content.includes('role="tablist"'), "Your Day page must declare role='tablist' for member selectors");
+  assert.ok(content.includes('role="tab"'), "Member selector buttons must declare role='tab'");
+  assert.ok(content.includes("aria-selected="), "Member tabs must bind aria-selected state");
+  assert.ok(content.includes("aria-pressed="), "Cost filter buttons must bind aria-pressed state");
+});
+
+test("A11y Lab & Simulator: Units and ACH controls bind explicit aria-pressed states", () => {
+  const labPath = path.join(srcDir, "app/lab/page.tsx");
+  const simPath = path.join(srcDir, "app/simulate/page.tsx");
+
+  const labContent = fs.readFileSync(labPath, "utf-8");
+  assert.ok(labContent.includes("aria-pressed="), "Lab page unit and ACH buttons must bind aria-pressed");
+
+  const simContent = fs.readFileSync(simPath, "utf-8");
+  assert.ok(simContent.includes('type="checkbox"'), "Simulator interventions must use native accessible checkboxes");
+  assert.ok(simContent.includes("<label"), "Simulator options must wrap inputs in accessible labels");
+});

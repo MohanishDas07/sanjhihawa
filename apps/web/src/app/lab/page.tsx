@@ -119,9 +119,11 @@ export default function HomeAirLabPage() {
               {t("lab.cadr_title")}
             </h2>
           </div>
-            <div className="flex items-center space-x-2 mt-2 md:mt-0">
+            <div className="flex items-center space-x-2 mt-2 md:mt-0" role="group" aria-label="Measurement units">
               <span className="text-xs font-mono text-ink-muted">Units:</span>
               <button
+                type="button"
+                aria-pressed={unit === "ft"}
                 onClick={() => setUnit("ft")}
                 className={`px-3 py-1 text-xs font-mono border ${
                   unit === "ft" ? "bg-ink text-paper border-ink" : "bg-paper text-ink border-rule"
@@ -130,6 +132,8 @@ export default function HomeAirLabPage() {
                 Feet (ft)
               </button>
               <button
+                type="button"
+                aria-pressed={unit === "m"}
                 onClick={() => setUnit("m")}
                 className={`px-3 py-1 text-xs font-mono border ${
                   unit === "m" ? "bg-ink text-paper border-ink" : "bg-paper text-ink border-rule"
@@ -192,8 +196,10 @@ export default function HomeAirLabPage() {
                 <label className="block text-sm font-sans font-bold text-ink mb-1.5">
                   Target Air Changes per Hour (ACH)
                 </label>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 gap-2" role="group" aria-label="Target Air Changes per Hour">
                   <button
+                    type="button"
+                    aria-pressed={targetAch === 4}
                     onClick={() => setTargetAch(4)}
                     className={`p-3 text-left border ${
                       targetAch === 4 ? "bg-paper border-ink font-bold shadow-xs" : "bg-surface border-rule"
@@ -203,6 +209,8 @@ export default function HomeAirLabPage() {
                     <div className="text-xs text-ink/75 mt-1 font-medium">Normal seasonal filtration</div>
                   </button>
                   <button
+                    type="button"
+                    aria-pressed={targetAch === 5}
                     onClick={() => setTargetAch(5)}
                     className={`p-3 text-left border ${
                       targetAch === 5 ? "bg-paper border-ink font-bold shadow-xs" : "bg-surface border-rule"

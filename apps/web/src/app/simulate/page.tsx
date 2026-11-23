@@ -142,12 +142,14 @@ export default function SimulatePage() {
         {/* Preset Buttons */}
         <div className="flex space-x-2 font-mono text-xs">
           <button
+            type="button"
             onClick={selectAllZero}
             className="px-3 py-1.5 border border-rule bg-surface hover:bg-paper text-ink"
           >
             {t("simulate.btn_preset_free")}
           </button>
           <button
+            type="button"
             onClick={selectFullShield}
             className="px-3 py-1.5 bg-ink text-paper hover:opacity-90 font-bold"
           >
@@ -172,10 +174,10 @@ export default function SimulatePage() {
             {SIMULATOR_OPTIONS.map((opt) => {
               const active = selectedIds.includes(opt.id);
               return (
-                <div
+                <label
                   key={opt.id}
-                  onClick={() => toggleIntervention(opt.id)}
-                  className={`p-4 border cursor-pointer transition-all ${
+                  htmlFor={`intervention-${opt.id}`}
+                  className={`block p-4 border cursor-pointer transition-all ${
                     active
                       ? "bg-surface border-ink shadow-sm"
                       : "bg-paper border-rule hover:border-ink/60 opacity-80"
@@ -186,8 +188,7 @@ export default function SimulatePage() {
                       id={`intervention-${opt.id}`}
                       type="checkbox"
                       checked={active}
-                      onChange={() => {}} // handled by parent div
-                      aria-label={opt.name}
+                      onChange={() => toggleIntervention(opt.id)}
                       className="mt-1 h-4 w-4 rounded border-rule text-ink focus:ring-ink"
                     />
                     <div className="flex-1 space-y-1">
@@ -204,7 +205,7 @@ export default function SimulatePage() {
                       </p>
                     </div>
                   </div>
-                </div>
+                </label>
               );
             })}
           </div>

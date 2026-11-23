@@ -97,6 +97,7 @@ export default function YourDayPage() {
           </p>
           <div className="flex justify-center gap-3 pt-2">
             <button
+              type="button"
               onClick={() => profile && loadPlan(profile)}
               className="px-4 py-2 bg-ink text-paper text-xs font-mono font-bold hover:opacity-90"
             >
@@ -180,10 +181,13 @@ export default function YourDayPage() {
               </div>
 
               {/* Member Selector Tabs */}
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2" role="tablist" aria-label="Household members">
                 {plan?.member_budgets.map((mb, idx) => (
                   <button
+                    type="button"
                     key={mb.member_id}
+                    role="tab"
+                    aria-selected={selectedMemberIdx === idx}
                     onClick={() => setSelectedMemberIdx(idx)}
                     className={`px-3.5 py-2 text-xs md:text-sm font-sans font-medium transition-colors border ${
                       selectedMemberIdx === idx
@@ -383,8 +387,10 @@ export default function YourDayPage() {
               </div>
 
               {/* Tier Filter Buttons */}
-              <div className="flex items-center space-x-2 font-mono text-xs">
+              <div className="flex items-center space-x-2 font-mono text-xs" role="group" aria-label="Filter recommendations by cost">
                 <button
+                  type="button"
+                  aria-pressed={activeTierFilter === "all"}
                   onClick={() => setActiveTierFilter("all")}
                   className={`px-2.5 py-1 border ${
                     activeTierFilter === "all" ? "bg-ink text-paper border-ink" : "bg-paper text-ink border-rule"
@@ -393,6 +399,8 @@ export default function YourDayPage() {
                   All
                 </button>
                 <button
+                  type="button"
+                  aria-pressed={activeTierFilter === "zero"}
                   onClick={() => setActiveTierFilter("zero")}
                   className={`px-2.5 py-1 border ${
                     activeTierFilter === "zero" ? "bg-ink text-paper border-ink" : "bg-paper text-ink border-rule"
@@ -401,6 +409,8 @@ export default function YourDayPage() {
                   ₹0 Free
                 </button>
                 <button
+                  type="button"
+                  aria-pressed={activeTierFilter === "under_1k"}
                   onClick={() => setActiveTierFilter("under_1k")}
                   className={`px-2.5 py-1 border ${
                     activeTierFilter === "under_1k" ? "bg-ink text-paper border-ink" : "bg-paper text-ink border-rule"
@@ -409,6 +419,8 @@ export default function YourDayPage() {
                   &lt; ₹1,000
                 </button>
                 <button
+                  type="button"
+                  aria-pressed={activeTierFilter === "over_5k"}
                   onClick={() => setActiveTierFilter("over_5k")}
                   className={`px-2.5 py-1 border ${
                     activeTierFilter === "over_5k" ? "bg-ink text-paper border-ink" : "bg-paper text-ink border-rule"
